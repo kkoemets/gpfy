@@ -1,0 +1,2 @@
+telegram_token = {$telegramToken}
+bscscan_api_key = {$bscScanApiKey}
