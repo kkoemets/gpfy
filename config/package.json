@@ -9,7 +9,8 @@
   },
   "scripts": {
     "create-config-file": "node ./create-config-file.js --bot",
-    "run-bot": "python ../src/run_telegram_bot.py"
+    "run-bot": "nohup python ../src/run_telegram_bot.py &",
+    "run-bot-dev": "python ../src/run_telegram_bot.py"
   },
   "author": "Kristjan Koemets",
   "license": "ISC",
