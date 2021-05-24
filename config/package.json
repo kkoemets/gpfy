@@ -9,8 +9,11 @@
   },
   "scripts": {
     "create-config-file": "node ./create-config-file.js --bot",
-    "run-bot": "nohup python ../src/run_telegram_bot.py &",
-    "run-bot-dev": "python ../src/run_telegram_bot.py"
+    "run-bot": "nohup python3 ../src/run_telegram_bot.py &",
+    "run-bot-dev": "python3 ../src/run_telegram_bot.py",
+    "docker-build-bot": "docker build -t gpfy ..",
+    "docker-run-bot": "docker run -dp 3000:3000 gpfy",
+    "docker-stop-bot": "docker stop $(docker ps -q --filter ancestor=gpfy )"
   },
   "author": "Kristjan Koemets",
   "license": "ISC",
@@ -18,6 +21,5 @@
     "prettier": "^2.3.0",
     "python-shell": "^3.0.0"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

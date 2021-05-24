@@ -18,11 +18,7 @@ def configure_commands(dispatcher):
 
 
 def set_known_command(dispatcher):
-    for command in [
-        ("start", start),
-        ("cummies", cummies),
-        ("help", help_command)
-    ]:
+    for command in commands:
         dispatcher.add_handler(CommandHandler(command[0], command[1]))
 
 
@@ -33,13 +29,13 @@ def echo_unknown_message_or_command(dispatcher):
 def start(update: Update, _: CallbackContext) -> None:
     user = update.effective_user
     update.message.reply_markdown_v2(
-        fr'Hi {user.mention_markdown_v2()}\!',
+        fr'Hi {user.mention_markdown_v2()}\! I am here to help you with your crypto needs.',
         reply_markup=ForceReply(selective=True),
     )
 
 
 def help_command(update: Update, _: CallbackContext) -> None:
-    update.message.reply_text('Help!')
+    update.message.reply_text('\n'.join(list(map(lambda command: '/' + command[0] + ' : ' + command[2], commands))))
 
 
 def echo(update: Update, _: CallbackContext) -> None:
@@ -50,3 +46,10 @@ def cummies(update: Update, _: CallbackContext) -> None:
     price = get_cummies_average_price()
     logging.info(price)
     update.message.reply_text('Cummies average price-{0} USD'.format(str(price)))
+
+
+commands = [
+    ("start", start, "Start conversation"),
+    ("cummies", cummies, "Show summary for $cummies"),
+    ("help", help_command, "List commands")
+]
