@@ -15,7 +15,7 @@
     "run-bot-dev": "python3 ../src/run_telegram_bot.py",
     "docker-build-bot": "docker build -t gpfy ..",
     "docker-run-bot": "docker run -dp 3000:3000 gpfy",
-    "docker-stop-bot": "docker stop $(docker ps -q --filter ancestor=gpfy )"
+    "docker-stop-bot": "docker ps -a -q  --filter ancestor=gpfy"
   },
   "author": "Kristjan Koemets",
   "license": "ISC",
