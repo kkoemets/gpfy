@@ -9,6 +9,7 @@
   },
   "scripts": {
     "pylint": "pylint ../src/com --rcfile ../.pylintrc",
+    "run-tests": "PYTHONPATH=../src nosetests ../tests",
     "create-config-file": "node ./create-config-file.js --bot",
     "run-bot": "nohup python3 ../src/run_telegram_bot.py &",
     "run-bot-dev": "python3 ../src/run_telegram_bot.py",
