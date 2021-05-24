@@ -1,9 +1,8 @@
 import logging
 
+from com.gpfy.scan.dex_guru.dex_guru_scanner import get_cummies_average_price
 from telegram import Update, ForceReply
 from telegram.ext import CommandHandler, MessageHandler, Filters, CallbackContext
-
-from com.gpfy.scan.dex_guru.dex_guru_scanner import get_cummies_average_price
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -35,7 +34,8 @@ def start(update: Update, _: CallbackContext) -> None:
 
 
 def help_command(update: Update, _: CallbackContext) -> None:
-    update.message.reply_text('\n'.join(list(map(lambda command: '/' + command[0] + ' : ' + command[2], commands))))
+    update.message.reply_text(
+        '\n'.join(list(map(lambda command: '/' + command[0] + ' : ' + command[2], commands))))
 
 
 def echo(update: Update, _: CallbackContext) -> None:
