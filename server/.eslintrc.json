@@ -1,0 +1,28 @@
+{
+  "env": {
+    "browser": false,
+    "es6": true,
+    "node": true
+  },
+
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "tsconfig.json",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "mocha",
+    "chai-expect"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "prettier/@typescript-eslint",
+    "plugin:mocha/recommended",
+    "plugin:chai-expect/recommended"
+  ],
+  "rules": {}
+}
