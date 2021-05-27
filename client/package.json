@@ -5,14 +5,14 @@
   "main": "index.js",
   "type": "commonjs",
   "directories": {
-    "test": "../tests"
+    "test": "tests"
   },
   "scripts": {
-    "pylint": "pylint ../src/com --rcfile ../.pylintrc",
-    "run-tests": "PYTHONPATH=../src nosetests ../tests",
-    "create-config-file": "node ./create-config-file.js --bot",
-    "run-bot": "nohup python3 ../src/run_telegram_bot.py &",
-    "run-bot-dev": "python3 ../src/run_telegram_bot.py",
+    "pylint": "pylint src/com --rcfile .pylintrc",
+    "run-client-tests": "PYTHONPATH=../src nosetests tests",
+    "create-client-config-file": "node create-config-file.js --bot",
+    "run-bot-client": "nohup python3 src/run_telegram_bot.py &",
+    "run-bot-dev-client": "python3 src/run_telegram_bot.py",
     "docker-build-bot": "docker build -t gpfy ..",
     "docker-run-bot": "docker run -dp 3000:3000 gpfy",
     "docker-stop-bot": "docker ps -a -q  --filter ancestor=gpfy"
@@ -20,7 +20,6 @@
   "author": "Kristjan Koemets",
   "license": "ISC",
   "devDependencies": {
-    "prettier": "^2.3.0",
     "python-shell": "^3.0.0"
   },
   "dependencies": {}

@@ -8,13 +8,17 @@ import debug from 'debug';
 import { RestController } from './rest/RestController';
 import { MonitoringController } from './rest/MonitoringController';
 import { getLogger } from './util/get-logger';
+import { ContractController } from './rest/ContractController';
 
 const log = getLogger();
 
 const app: express.Application = express();
 export const server: http.Server = http.createServer(app);
 const port = 3001;
-const routes: Array<RestController> = [new MonitoringController(app)];
+const routes: Array<RestController> = [
+  new MonitoringController(app),
+  new ContractController(app),
+];
 const debugLog: debug.IDebugger = debug('app');
 
 app.use(express.json());

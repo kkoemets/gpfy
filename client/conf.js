@@ -1,7 +1,7 @@
-const outputFile = `../src/configuration.py`;
+const outputFile = `src/configuration.py`;
 const templateFile = `configuration.template`;
 const replacementsFile = {
-  bot: "bot.json",
+    bot: "bot.json",
 };
 
 module.exports = { outputFile, templateFile, replacementsFile };
