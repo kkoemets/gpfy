@@ -4,7 +4,7 @@
   "description": "Project configuration scripts",
   "main": "create-config-files.js",
   "scripts": {
-    "create-config-files": "node create-config-files.js --bot.json"
+    "create-config-files": "node create-config-files.js"
   },
   "author": "Kristjan Koemets",
   "license": "ISC"

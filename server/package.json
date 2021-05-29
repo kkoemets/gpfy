@@ -50,7 +50,6 @@
     "express": "^4.17.1",
     "express-validator": "^6.10.0",
     "express-winston": "^4.1.0",
-    "mongoose": "^5.12.3",
     "node-fetch": "^2.6.1",
     "npx": "^10.2.2",
     "tslib": "~2.0.3",
