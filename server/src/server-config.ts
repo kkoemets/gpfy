@@ -1,1 +1,3 @@
-export const DEX_GURU_HOST = 'http://dex:3124';
+import { dexGuruProxyHost, dexGuruProxyPort } from './configuration';
+
+export const DEX_GURU_HOST = dexGuruProxyHost + ':' + dexGuruProxyPort;

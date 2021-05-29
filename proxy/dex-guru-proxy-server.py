@@ -3,10 +3,11 @@ import urllib
 
 from flask import Flask
 
+from configuration import dex_guru_proxy_host, dex_guru_proxy_port
+
 app = Flask(__name__)
 
 dex_guru_host = 'https://api.dex.guru/'
-
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -19,4 +20,4 @@ def catch_all(path):
 
 
 if __name__ == '__main__':
-    app.run(host='dex', port=3124)
+    app.run(host=dex_guru_proxy_host.replace('http://', ''), port=dex_guru_proxy_port)

@@ -1,0 +1,14 @@
+{
+  "server": {
+    "templateFile": "server-configuration.template",
+    "outputFile": "../server/src/configuration.ts"
+  },
+  "client": {
+    "templateFile": "client-configuration.template",
+    "outputFile": "../client/src/configuration.py"
+  },
+  "dexGuruProxy": {
+    "templateFile": "dex-guru-proxy-configuration.template",
+    "outputFile": "../proxy/configuration.py"
+  }
+}

@@ -5,7 +5,9 @@ import urllib.request
 from telegram import Update, ForceReply
 from telegram.ext import CommandHandler, MessageHandler, Filters, CallbackContext
 
-from configuration import server_host
+from configuration import server_host, server_port
+
+server_url = server_host + ':' + server_port
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -46,7 +48,7 @@ def echo(update: Update, _: CallbackContext) -> None:
 
 
 def cummies(update: Update, _: CallbackContext) -> None:
-    url = server_host + \
+    url = server_url + \
           '/bot/contract/summary?contract=0x27ae27110350b98d564b9a3eed31baebc82d878d'
     logger.info('Sending rq to ' + url)
     response_json = json.loads(urllib.request.urlopen(urllib.request.Request(

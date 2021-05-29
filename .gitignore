@@ -1,4 +1,8 @@
-/client/src/configuration.py
 /bscscan-telegram.iml
 /.idea/
 /venv/
+/proxy/configuration.py
+/client/src/configuration.py
+/server/src/configuration.ts
+/config/bot-dev.json
+/config/bot-docker-dev.json

@@ -1,0 +1,7 @@
+{
+  "telegramToken": "your_token",
+  "serverHost": "http://localhost",
+  "serverPort": "3001",
+  "dexGuruProxyHost": "http://localhost",
+  "dexGuruProxyPort": "3124"
+}

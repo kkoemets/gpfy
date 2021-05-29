@@ -1,7 +1,7 @@
 {
   "name": "config",
   "version": "1.0.0",
-  "description": "Configuration scripts, managers",
+  "description": "Scripts to make client management easier",
   "main": "index.js",
   "type": "commonjs",
   "directories": {
@@ -10,7 +10,6 @@
   "scripts": {
     "pylint": "pylint src/com --rcfile .pylintrc",
     "run-client-tests": "PYTHONPATH=../src nosetests tests",
-    "create-client-config-file": "node create-config-file.js --bot",
     "run-bot-client": "nohup python3 src/run_telegram_bot.py &",
     "run-bot-client-dev": "python3 src/run_telegram_bot.py"
   },

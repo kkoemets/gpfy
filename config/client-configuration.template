@@ -1,0 +1,3 @@
+telegram_token = {$telegramToken}
+server_host = {$serverHost}
+server_port = {$serverPort}
