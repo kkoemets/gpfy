@@ -1,6 +1,6 @@
 import { getLogger } from '../../util/get-logger';
 import * as fetch from 'node-fetch';
-import { DEX_GURU_HOST } from '../../internal-config';
+import { DEX_GURU_HOST } from '../../server-config';
 import { ContractSummary } from './contract-summary';
 
 const log = getLogger();

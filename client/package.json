@@ -12,10 +12,7 @@
     "run-client-tests": "PYTHONPATH=../src nosetests tests",
     "create-client-config-file": "node create-config-file.js --bot",
     "run-bot-client": "nohup python3 src/run_telegram_bot.py &",
-    "run-bot-dev-client": "python3 src/run_telegram_bot.py",
-    "docker-build-bot": "docker build -t gpfy ..",
-    "docker-run-bot": "docker run -dp 3000:3000 gpfy",
-    "docker-stop-bot": "docker ps -a -q  --filter ancestor=gpfy"
+    "run-bot-client-dev": "python3 src/run_telegram_bot.py"
   },
   "author": "Kristjan Koemets",
   "license": "ISC",

@@ -1,4 +1,4 @@
 {
   "telegramToken": "your_token",
-  "bscScanApiKey": "your_api_key"
+  "serverHost": "http://localhost:3001"
 }

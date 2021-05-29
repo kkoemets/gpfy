@@ -3,3 +3,4 @@ COPY . .
 RUN pip3 install -r requirements.txt
 CMD ["src/run_telegram_bot.py"]
 ENTRYPOINT ["python3"]
+EXPOSE 3000

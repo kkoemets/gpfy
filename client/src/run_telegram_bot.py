@@ -3,7 +3,7 @@
 
 from telegram.ext import Updater
 
-from com.gpfy.telegram.configure_commands import configure_commands
+from configure_commands import configure_commands
 from configuration import telegram_token
 
 

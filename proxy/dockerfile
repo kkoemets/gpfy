@@ -1,0 +1,6 @@
+FROM python:3
+COPY . .
+RUN pip3 install -r requirements.txt
+CMD ["dex-guru-proxy-server.py"]
+ENTRYPOINT ["python3"]
+EXPOSE 3124
