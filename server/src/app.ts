@@ -1,6 +1,5 @@
 import * as express from 'express';
 import * as http from 'http';
-
 import * as winston from 'winston';
 import * as expressWinston from 'express-winston';
 import * as cors from 'cors';
@@ -9,6 +8,8 @@ import { RestController } from './rest/RestController';
 import { MonitoringController } from './rest/MonitoringController';
 import { getLogger } from './util/get-logger';
 import { ContractController } from './rest/ContractController';
+
+import 'express-async-errors';
 
 const log = getLogger();
 
