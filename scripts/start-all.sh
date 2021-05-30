@@ -13,8 +13,7 @@ if [ "$1" = "dev" ]; then
 
       cd proxy || exit
       pwd
-      nohup python3 dex-guru-proxy-server.py & dex_pid=$!
-      echo "Dex guru proxy PID: $dex_pid"
+      nohup python3 dex-guru-proxy-server.py &
       cd ..
       pwd
 
@@ -26,17 +25,14 @@ if [ "$1" = "dev" ]; then
       npm run build
       cd build/src || exit
       pwd
-      nohup node app.js & server_pid=$!
-      echo "Server PID: $server_pid"
+      nohup node app.js &
       cd ../../..
       pwd
 
       cd client/src || exit
       pwd
-      nohup python3 run_telegram_bot.py & client_pid=$!
-      echo "Client PID: $client_pid"
-
-      printf "DEX_PROXY=%d\nSERVER=%d\nCLIENT-%d" "$dex_pid" "$server_pid" "$client_pid" > pids.txt
+      nohup python3 run_telegram_bot.py &
+#
     else
       echo "Provide env variables file name in config folder, e.g. bot.json"
     fi
