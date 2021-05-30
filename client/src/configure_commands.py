@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 import urllib.request
 
 from telegram import Update, ForceReply
@@ -10,8 +11,8 @@ from configuration import SERVER_HOST, SERVER_PORT
 SERVER_URL = SERVER_HOST + ':' + SERVER_PORT
 
 logging.basicConfig(
-    filename='run_telegram_bot.log',
-    filemode='a',
+    filename='../logs/run_telegram_bot-' + str(int(time.time())) + '.log',
+    filemode='w',
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
 

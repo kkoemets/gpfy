@@ -26,7 +26,12 @@ app.use(express.json());
 app.use(cors());
 
 const loggerOptions: expressWinston.LoggerOptions = {
-  transports: [new winston.transports.Console()],
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({
+      filename: `logs/app-request-${Date.now()}.log`,
+    }),
+  ],
   format: winston.format.combine(
     winston.format.json(),
     winston.format.prettyPrint(),
