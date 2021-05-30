@@ -8,7 +8,7 @@
     "test": "tests"
   },
   "scripts": {
-    "pylint": "pylint src/com --rcfile .pylintrc",
+    "pylint": "pylint src --rcfile .pylintrc",
     "run-client-tests": "PYTHONPATH=../src nosetests tests",
     "run-bot-client": "nohup python3 src/run_telegram_bot.py &",
     "run-bot-client-dev": "python3 src/run_telegram_bot.py"

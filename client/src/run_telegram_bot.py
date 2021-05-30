@@ -3,12 +3,12 @@
 
 from telegram.ext import Updater
 
+from configuration import TELEGRAM_TOKEN
 from configure_commands import configure_commands
-from configuration import telegram_token
 
 
 def main() -> None:
-    updater = Updater(telegram_token)
+    updater = Updater(TELEGRAM_TOKEN)
 
     dispatcher = updater.dispatcher
 

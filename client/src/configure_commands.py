@@ -5,11 +5,13 @@ import urllib.request
 from telegram import Update, ForceReply
 from telegram.ext import CommandHandler, MessageHandler, Filters, CallbackContext
 
-from configuration import server_host, server_port
+from configuration import SERVER_HOST, SERVER_PORT
 
-server_url = server_host + ':' + server_port
+SERVER_URL = SERVER_HOST + ':' + SERVER_PORT
 
 logging.basicConfig(
+    filename='run_telegram_bot.log',
+    filemode='a',
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
 
@@ -19,6 +21,7 @@ logger = logging.getLogger(__name__)
 def configure_commands(dispatcher):
     set_known_command(dispatcher)
     echo_unknown_message_or_command(dispatcher)
+    dispatcher.add_error_handler(error_handler)
 
 
 def set_known_command(dispatcher):
@@ -28,6 +31,11 @@ def set_known_command(dispatcher):
 
 def echo_unknown_message_or_command(dispatcher):
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+
+
+def error_handler(update: Update, context: CallbackContext) -> None:
+    logger.error(msg="Exception while handling an update:", exc_info=context.error)
+    update.message.reply_text('Sorry, something went wrong with me.')
 
 
 def start(update: Update, _: CallbackContext) -> None:
@@ -48,12 +56,13 @@ def echo(update: Update, _: CallbackContext) -> None:
 
 
 def cummies(update: Update, _: CallbackContext) -> None:
-    url = server_url + \
+    url = SERVER_URL + \
           '/bot/contract/summary?contract=0x27ae27110350b98d564b9a3eed31baebc82d878d'
-    logger.info('Sending rq to ' + url)
-    response_json = json.loads(urllib.request.urlopen(urllib.request.Request(
-        url,
-        headers={'User-Agent': 'Mozilla/5.0'})).read().decode('utf8'))
+    logger.info('Sending rq to %s', url)
+
+    response_json = json.loads(
+        urllib.request.urlopen(urllib.request.Request(
+            url, headers={'User-Agent': 'Mozilla/5.0'})).read().decode('utf8'))
     logger.info(response_json)
     text = response_json['summaryText']
     logging.info(text)
@@ -62,6 +71,6 @@ def cummies(update: Update, _: CallbackContext) -> None:
 
 commands = [
     ("start", start, "Start conversation"),
-    ("cummies", cummies, "Show summary for $cummies"),
+    ("cummies", cummies, "Show summary for $CUMMIES"),
     ("help", help_command, "List commands")
 ]

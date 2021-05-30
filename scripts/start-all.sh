@@ -36,7 +36,7 @@ if [ "$1" = "dev" ]; then
       nohup python3 run_telegram_bot.py & client_pid=$!
       echo "Client PID: $client_pid"
 
-      echo "PIDs: Dex-$dex_pid Server-$server_pid Client-$client_pid"
+      printf "DEX_PROXY=%d\nSERVER=%d\nCLIENT-%d" "$dex_pid" "$server_pid" "$client_pid" > pids.txt
     else
       echo "Provide env variables file name in config folder, e.g. bot.json"
     fi
