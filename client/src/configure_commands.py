@@ -1,6 +1,5 @@
 import json
 import logging
-import time
 import urllib.request
 
 from telegram import Update, ForceReply
@@ -63,11 +62,16 @@ def cummies(update: Update, _: CallbackContext) -> None:
 
     response_json = json.loads(
         urllib.request.urlopen(urllib.request.Request(
-            url, headers={'User-Agent': 'Mozilla/5.0'})).read().decode('utf8'))
+            url, headers=get_headers(update))).read().decode('utf8'))
     logger.info(response_json)
     text = response_json['summaryText']
     logging.info(text)
     update.message.reply_text(text)
+
+
+def get_headers(update: Update):
+    return {'userid': update.message.from_user.id,
+            'username': update.message.from_user.first_name}
 
 
 commands = [
