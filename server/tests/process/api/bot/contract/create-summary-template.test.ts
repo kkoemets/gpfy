@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { ContractSummary } from '../../../../../src/process/dexguru/contract-summary';
+import { ContractSummary } from '../../../../../src/process/contract-summary';
 import { createSummaryTemplate } from '../../../../../src/api/bot/contract/create-summary-template';
 import { expect } from 'chai';
 
@@ -17,7 +17,8 @@ describe('createSummaryTemplate', function () {
       '      Transactions (24h): 1122\n' +
       '      Volume: (24h): $313992.26\n' +
       '      Price change (24h): $-0.037662\n' +
-      '      Liquidity: $961165.37';
+      '      Liquidity: $961165.37\n' +
+      '      Holders: N/A';
     expect(actual).to.equal(expected);
   });
 });

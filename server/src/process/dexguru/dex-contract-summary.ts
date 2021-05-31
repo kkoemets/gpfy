@@ -1,4 +1,4 @@
-export interface ContractSummary {
+export interface DexContractSummary {
   id: string;
   symbol: string;
   name: string;

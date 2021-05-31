@@ -1,5 +1,5 @@
 import { createSummaryTemplate } from './create-summary-template';
-import { findSummary } from '../../../process/dexguru/find-summary';
+import { findSummary } from '../../../process/find-summary';
 
 export const findContractSummaryApi = async (
   contract: string,

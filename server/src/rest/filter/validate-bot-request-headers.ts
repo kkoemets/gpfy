@@ -9,12 +9,14 @@ export const validateBotRequestHeaders = (
   res: express.Response,
   next: express.NextFunction,
 ): void => {
-  validateHeaders(req.headers, (err) => (err ? res.sendStatus(403) : next()));
+  validateHeaders(req.headers, (err?: Error) =>
+    err ? res.sendStatus(403) : next(),
+  );
 };
 
 const validateHeaders = (
   { userid, username }: IncomingHttpHeaders,
-  callback,
+  callback: (err?: Error) => void,
 ) => {
   log.info(`Received headers userid-${userid} username-${username}`);
   if (!userid || !username) {

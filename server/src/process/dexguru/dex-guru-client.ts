@@ -1,7 +1,7 @@
 import { getLogger } from '../../util/get-logger';
-import * as fetch from 'node-fetch';
+import fetch from 'node-fetch';
 import { DEX_GURU_HOST } from '../../server-config';
-import { ContractSummary } from './contract-summary';
+import { DexContractSummary } from './dex-contract-summary';
 
 const log = getLogger();
 
@@ -9,7 +9,7 @@ export const findContractSummary = async ({
   contract,
 }: {
   contract: string;
-}): Promise<ContractSummary> => {
+}): Promise<DexContractSummary> => {
   const url = `${DEX_GURU_HOST}/v1/tokens/${contract}`;
   log.info(`Requesting ${url}`);
   const contactSummary = await getJson(url);
