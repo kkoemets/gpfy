@@ -14,12 +14,18 @@ export const createSummaryTemplate = (summary: ContractSummary): string => {
   } = summary;
 
   return `${description}
-      Current price: $${round(priceUSD, 6)}
-      Transactions (24h): ${txns24h}
-      Volume: (24h): $${round(volume24hUSD, 2)}
-      Price change (24h): $${round(priceChange24h, 6)}
-      Liquidity: $${round(liquidityUSD, 2)}
-      Holders: ${holdersAmount || 'N/A'}`;
+      💵Current price: 
+            $${round(priceUSD, 6)}
+      💳Transactions (24h): 
+            ${txns24h}
+      ↔Volume: (24h): 
+            $${round(volume24hUSD, 2)}
+      🧐Price change (24h): 
+            $${round(priceChange24h, 6)}
+      💸Liquidity: 
+            $${round(liquidityUSD, 2)}
+      🤴🏼Holders: 
+            ${holdersAmount || 'N/A'}`;
 };
 
 const round = (num: number, decimals: number) =>

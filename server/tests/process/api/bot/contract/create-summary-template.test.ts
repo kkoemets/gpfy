@@ -13,12 +13,18 @@ describe('createSummaryTemplate', function () {
 
     const expected =
       'CumRocket/CUMMIES\n' +
-      '      Current price: $0.044392\n' +
-      '      Transactions (24h): 1122\n' +
-      '      Volume: (24h): $313992.26\n' +
-      '      Price change (24h): $-0.037662\n' +
-      '      Liquidity: $961165.37\n' +
-      '      Holders: N/A';
+      '      💵Current price: \n' +
+      '            $0.044392\n' +
+      '      💳Transactions (24h): \n' +
+      '            1122\n' +
+      '      ↔Volume: (24h): \n' +
+      '            $313992.26\n' +
+      '      🧐Price change (24h): \n' +
+      '            $-0.037662\n' +
+      '      💸Liquidity: \n' +
+      '            $961165.37\n' +
+      '      🤴🏼Holders: \n' +
+      '            N/A';
     expect(actual).to.equal(expected);
   });
 });
