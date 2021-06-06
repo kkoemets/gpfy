@@ -1,6 +1,6 @@
 import * as fs from 'fs';
-import { ContractSummary } from '../../../../../src/process/contract-summary';
-import { createSummaryTemplate } from '../../../../../src/api/bot/contract/create-summary-template';
+import { ContractSummary } from '../../../../src/process/contract-summary';
+import { createSummaryTemplate } from '../../../../src/api/bot/contract/create-summary-template';
 import { expect } from 'chai';
 
 describe('createSummaryTemplate', function () {
