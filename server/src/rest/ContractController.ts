@@ -29,7 +29,9 @@ export class ContractController extends RestController {
 
           const summaryText = contract
             ? await findContractSummaryApi(contract)
-            : await findContractSummaryByNameApi(coinFullName || '');
+            : await findContractSummaryByNameApi(coinFullName || '').catch(
+                () => 'Could not find price for ' + coinFullName,
+              );
           res.json({ summaryText });
         },
       );

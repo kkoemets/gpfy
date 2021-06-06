@@ -21,7 +21,8 @@ logger = logging.getLogger(__name__)
 
 def configure_commands(dispatcher):
     set_known_command(dispatcher)
-    echo_unknown_message_or_command(dispatcher)
+    echo_unknown_message(dispatcher)
+    try_to_handle_nonstandard_command(dispatcher)
     dispatcher.add_error_handler(error_handler)
 
 
@@ -30,8 +31,12 @@ def set_known_command(dispatcher):
         dispatcher.add_handler(CommandHandler(command[0], command[1]))
 
 
-def echo_unknown_message_or_command(dispatcher):
+def echo_unknown_message(dispatcher):
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+
+
+def try_to_handle_nonstandard_command(dispatcher):
+    dispatcher.add_handler(MessageHandler(Filters.command, handle_nonstandard_command))
 
 
 def error_handler(update: Update, context: CallbackContext) -> None:
@@ -56,11 +61,40 @@ def echo(update: Update, _: CallbackContext) -> None:
     update.message.reply_text(update.message.text)
 
 
+def handle_nonstandard_command(update: Update, _: CallbackContext) -> None:
+    text = update.message.text
+    logger.info("Trying to handle non-standard command-{0}".format(text))
+    if "/price@" in text:
+        _.args = [str(text.replace("/price@", ""))]
+        price(update, _)
+        return
+
+    update.message.reply_text(text)
+
+
+def price(update: Update, cb: CallbackContext) -> None:
+    logger.info("Trying to find price for -" + str(cb.args))
+    if len(cb.args) != 1:
+        logger.info("Too many args")
+        return
+
+    arg = cb.args.pop()
+
+    url = SERVER_URL + '/bot/contract/summary?coinFullName=' + arg
+    logger.info('Sending rq to %s', url)
+
+    find_coin_summary_and_respond(update, url)
+
+
 def cummies(update: Update, _: CallbackContext) -> None:
     url = SERVER_URL + \
           '/bot/contract/summary?contract=0x27ae27110350b98d564b9a3eed31baebc82d878d'
     logger.info('Sending rq to %s', url)
 
+    find_coin_summary_and_respond(update, url)
+
+
+def find_coin_summary_and_respond(update, url):
     response_json = json.loads(
         urllib.request.urlopen(urllib.request.Request(
             url, headers=get_headers(update))).read().decode('utf8'))
@@ -78,5 +112,6 @@ def get_headers(update: Update):
 commands = [
     ("start", start, "Start conversation"),
     ("cummies", cummies, "Show summary for $CUMMIES"),
+    ("price", price, "Show summary for a coin. E.g. /price@cumrocket"),
     ("help", help_command, "List commands")
 ]
