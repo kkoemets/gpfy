@@ -20,7 +20,7 @@ describe('ContractControllerRestTest', function () {
       });
   });
 
-  it('Should return response on call by coin full na,e', function () {
+  it('Should return response on call by coin full name - cumrocket', function () {
     return chai
       .request(server)
       .get('/bot/contract/summary?coinFullName=cumrocket')
@@ -28,6 +28,17 @@ describe('ContractControllerRestTest', function () {
       .set('username', 'usr')
       .then((res) => {
         expect(res.text).to.contains('CumRocket/CUMMIES');
+      });
+  });
+
+  it('Should return response on call by coin full name - ethereum', function () {
+    return chai
+      .request(server)
+      .get('/bot/contract/summary?coinFullName=ethereum')
+      .set('userid', 'kek')
+      .set('username', 'usr')
+      .then((res) => {
+        expect(res.text).to.contains('Ethereum Token/ETH');
       });
   });
 });
