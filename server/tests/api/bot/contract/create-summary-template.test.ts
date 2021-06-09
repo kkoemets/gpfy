@@ -24,7 +24,9 @@ describe('createSummaryTemplate', function () {
       '      💸Liquidity: \n' +
       '            $961165.37\n' +
       '      🤴🏼Holders (BSC): \n' +
-      '            N/A';
+      '            N/A: \n' +
+      '      📈Stats provided by: \n' +
+      '            PANCAKESWAP';
     expect(actual).to.equal(expected);
   });
 });

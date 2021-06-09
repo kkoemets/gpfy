@@ -9,6 +9,7 @@ export const createSummaryTemplate = (summary: ContractSummary): string => {
       volume24hUSD,
       priceChange24h,
       liquidityUSD,
+      AMM,
     },
     holdersAmount,
   } = summary;
@@ -25,7 +26,9 @@ export const createSummaryTemplate = (summary: ContractSummary): string => {
       💸Liquidity: 
             $${round(liquidityUSD, 2)}
       🤴🏼Holders (BSC): 
-            ${holdersAmount || 'N/A'}`;
+            ${holdersAmount || 'N/A'}: 
+      📈Stats provided by: 
+            ${AMM?.toUpperCase()}`;
 };
 
 const round = (num: number, decimals: number) =>
