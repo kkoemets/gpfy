@@ -54,6 +54,8 @@
     "express-validator": "^6.10.0",
     "express-winston": "^4.1.0",
     "node-fetch": "^2.6.1",
+    "node-ts-cache": "^4.2.3",
+    "node-ts-cache-storage-memory": "^4.2.3",
     "npx": "^10.2.2",
     "tslib": "~2.0.3",
     "tslog": "^3.2.0",

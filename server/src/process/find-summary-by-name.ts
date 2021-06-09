@@ -7,7 +7,7 @@ import { findContract as findContractFromCmc } from './coinmarketcap/coinmarketc
 import {
   getCachedContractByName,
   setCachedContractByName,
-} from './token-cache-manager';
+} from './cache/token-cache-manager';
 
 const log = getLogger();
 

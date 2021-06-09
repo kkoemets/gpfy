@@ -24,7 +24,7 @@ export const createSummaryTemplate = (summary: ContractSummary): string => {
             $${round(priceChange24h, 6)}
       💸Liquidity: 
             $${round(liquidityUSD, 2)}
-      🤴🏼Holders: 
+      🤴🏼Holders (BSC): 
             ${holdersAmount || 'N/A'}`;
 };
 

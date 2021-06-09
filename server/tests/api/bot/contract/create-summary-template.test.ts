@@ -23,7 +23,7 @@ describe('createSummaryTemplate', function () {
       '            $-0.037662\n' +
       '      💸Liquidity: \n' +
       '            $961165.37\n' +
-      '      🤴🏼Holders: \n' +
+      '      🤴🏼Holders (BSC): \n' +
       '            N/A';
     expect(actual).to.equal(expected);
   });
