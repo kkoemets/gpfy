@@ -20,7 +20,7 @@ export const findContract = async ({
 
   const beginTokenIdentifier = '"contractAddress":"';
   const indexOfStartingPositionOfContract = html.indexOf(beginTokenIdentifier);
-  if (!indexOfStartingPositionOfContract) {
+  if (indexOfStartingPositionOfContract < 0) {
     log.info('Did not find contract');
     return null;
   }

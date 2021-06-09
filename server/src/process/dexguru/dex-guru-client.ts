@@ -10,10 +10,12 @@ export const findContractSummary = async ({
 }: {
   contract: string;
 }): Promise<DexContractSummary> => {
-  const url = `${DEX_GURU_HOST}/v1/tokens/${contract}`;
+  const url = `${DEX_GURU_HOST}/v1/tokens/search/${contract}`;
   log.info(`Requesting ${url}`);
-  const contactSummary = await getJson(url);
-  return { ...contactSummary };
+  const { data } = await getJson(url);
+  return (
+    data.find(({ AMM }: { AMM: string }) => AMM === 'pancakeswap') || data[0]
+  );
 };
 
 async function getJson(url: string) {

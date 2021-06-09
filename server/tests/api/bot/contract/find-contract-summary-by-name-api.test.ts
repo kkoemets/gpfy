@@ -5,7 +5,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 chaiUse(chaiAsPromised);
 
 describe('findContractSummaryByNameApi', function () {
-  it('connect: test promise', function () {
+  it('Test promise', function () {
     return expect(findContractSummaryByNameApi('fdf3r3w'))
       .to.eventually.be.rejectedWith('Could not find contract')
       .and.be.an.instanceOf(Error);
