@@ -16,7 +16,7 @@ export class CoinmarketcapController extends RestController {
       .get(
         validateBotRequestHeaders,
         async (_: express.Request, res: express.Response) => {
-          const cmcSummary = await findMarketCapSummaryApi();
+          const { cmcSummary } = await findMarketCapSummaryApi();
           res.json({ cmcSummary });
         },
       );
