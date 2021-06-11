@@ -81,27 +81,35 @@ def price(update: Update, cb: CallbackContext) -> None:
     arg = cb.args.pop()
 
     url = SERVER_URL + '/bot/contract/summary?coinFullName=' + arg
-    logger.info('Sending rq to %s', url)
+    log_request(url)
 
     find_coin_summary_and_respond(update, url)
+
+
+def log_request(url):
+    logger.info('Sending rq to %s', url)
 
 
 def cummies(update: Update, _: CallbackContext) -> None:
     url = SERVER_URL + \
           '/bot/contract/summary?contract=0x27ae27110350b98d564b9a3eed31baebc82d878d'
-    logger.info('Sending rq to %s', url)
-
+    log_request(url)
     find_coin_summary_and_respond(update, url)
 
 
 def find_coin_summary_and_respond(update, url):
-    response_json = json.loads(
-        urllib.request.urlopen(urllib.request.Request(
-            url, headers=get_headers(update))).read().decode('utf8'))
+    response_json = get_json(update, url)
     logger.info(response_json)
     text = response_json['summaryText']
     logging.info(text)
     update.message.reply_text(text)
+
+
+def get_json(update, url):
+    response_json = json.loads(
+        urllib.request.urlopen(urllib.request.Request(
+            url, headers=get_headers(update))).read().decode('utf8'))
+    return response_json
 
 
 def get_headers(update: Update):
@@ -109,9 +117,20 @@ def get_headers(update: Update):
             'username': update.message.from_user.first_name}
 
 
+def mcap(update: Update, _: CallbackContext) -> None:
+    url = SERVER_URL + \
+          '/coinmarketcap/mcap-summary'
+    log_request(url)
+
+    summary = get_json(update, url)['cmcSummary']
+    logging.info(summary)
+    update.message.reply_text(summary)
+
+
 commands = [
     ("start", start, "Start conversation"),
     ("cummies", cummies, "Show summary for $CUMMIES"),
     ("price", price, "Show summary for a coin. E.g. /price@cumrocket"),
+    ("mcap", mcap, "Show CMC summary"),
     ("help", help_command, "List commands")
 ]
