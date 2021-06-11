@@ -1,4 +1,4 @@
-import { RestController } from './RestController';
+import { RestController } from './rest-controller';
 import express from 'express';
 
 export class MonitoringController extends RestController {

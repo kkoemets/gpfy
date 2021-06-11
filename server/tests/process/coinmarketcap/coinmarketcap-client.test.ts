@@ -1,5 +1,8 @@
 import { expect } from 'chai';
-import { findContract } from '../../../src/process/coinmarketcap/coinmarketcap-client';
+import {
+  findContract,
+  findMarketCapSummary,
+} from '../../../src/process/coinmarketcap/coinmarketcap-client';
 
 describe('coinmarketcapClient', function () {
   it('Fetch contract', async function () {
@@ -10,5 +13,11 @@ describe('coinmarketcapClient', function () {
   it('Fetch invalid contract', async function () {
     const contract = await findContract({ coinOfficialName: 'dsfdsgsd33' });
     expect(contract).to.be.null;
+  });
+
+  it('Fetch market cap summary', async function () {
+    expect((await findMarketCapSummary()).mcap).match(
+      new RegExp(/^[zA-Z0-9$,\\?]*$/),
+    ).to.be.not.null;
   });
 });

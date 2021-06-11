@@ -8,6 +8,7 @@ import {
   getCachedContractByName,
   setCachedContractByName,
 } from './cache/token-cache-manager';
+import { COULD_NOT_FIND_CONTRACT } from '../api/api-errors';
 
 const log = getLogger();
 
@@ -21,7 +22,7 @@ export const findSummaryByName = async (
     (await findContractFromCoingecko({ coinOfficialName })) ||
     (await findContractFromCmc({ coinOfficialName }));
   if (!contract) {
-    return Promise.reject(Error('Could not find contract'));
+    return COULD_NOT_FIND_CONTRACT;
   }
 
   await setCachedContractByName({ coinOfficialName, contract });

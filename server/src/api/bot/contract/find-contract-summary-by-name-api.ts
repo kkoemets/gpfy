@@ -2,6 +2,7 @@ import { createSummaryTemplate } from './create-summary-template';
 import { getLogger } from '../../../util/get-logger';
 import { findSummaryByName } from '../../../process/find-summary-by-name';
 import { ContractSummary } from '../../../process/contract-summary';
+import { COULD_NOT_FIND_CONTRACT } from '../../api-errors';
 
 const log = getLogger();
 
@@ -12,7 +13,7 @@ export const findContractSummaryByNameApi = async (
 
   const coinOfficialName = coinOfficialNameInput?.trim()?.toLowerCase();
   if (!coinOfficialName) {
-    return Promise.reject(Error('Could not find contract'));
+    return COULD_NOT_FIND_CONTRACT;
   }
 
   const contractSummary: ContractSummary = await findSummaryByName(

@@ -1,4 +1,5 @@
 import express from 'express';
+
 export abstract class RestController {
   app: express.Application;
 

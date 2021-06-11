@@ -4,12 +4,13 @@ import * as winston from 'winston';
 import * as expressWinston from 'express-winston';
 import * as cors from 'cors';
 import debug from 'debug';
-import { RestController } from './rest/RestController';
-import { MonitoringController } from './rest/MonitoringController';
+import { RestController } from './rest/rest-controller';
+import { MonitoringController } from './rest/monitoring-controller';
 import { getLogger } from './util/get-logger';
-import { ContractController } from './rest/ContractController';
+import { ContractController } from './rest/contract-controller';
 
 import 'express-async-errors';
+import { CoinmarketcapController } from './rest/coinmarketcap-controller';
 
 const log = getLogger();
 
@@ -19,6 +20,7 @@ const port = 3001;
 const routes: Array<RestController> = [
   new MonitoringController(app),
   new ContractController(app),
+  new CoinmarketcapController(app),
 ];
 const debugLog: debug.IDebugger = debug('app');
 

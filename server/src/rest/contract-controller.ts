@@ -1,4 +1,4 @@
-import { RestController } from './RestController';
+import { RestController } from './rest-controller';
 import express from 'express';
 import { findContractSummaryApi } from '../api/bot/contract/find-contract-summary-api';
 import { validateBotRequestHeaders } from './filter/validate-bot-request-headers';
