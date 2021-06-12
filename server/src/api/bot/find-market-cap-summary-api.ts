@@ -39,8 +39,12 @@ const createMarketCapSummaryTemplate = ({
   btcDominance: string;
   ethDominance: string;
 }): string => {
-  return `💰Market Cap: ${mcap}
-💱Volume 24h: ${volume24H}
-💲BTC dominance: ${btcDominance}
-🦄ETH dominance: ${ethDominance}`;
+  return `💰Market Cap: 
+        ${mcap}
+💱Volume 24h: 
+        ${volume24H}
+💲BTC dominance:
+        S${btcDominance}
+🦄ETH dominance: 
+        ${ethDominance}`;
 };
