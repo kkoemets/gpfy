@@ -44,7 +44,7 @@ const createMarketCapSummaryTemplate = ({
 💱Volume 24h: 
         ${volume24H}
 💲BTC dominance:
-        S${btcDominance}
+        ${btcDominance}
 🦄ETH dominance: 
         ${ethDominance}`;
 };
