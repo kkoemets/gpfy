@@ -30,18 +30,46 @@ export const findContract = async ({
   );
 };
 
-export const findMarketCapSummary = async (): Promise<{ mcap: string }> => {
+export const findMarketCapSummary = async (): Promise<{
+  mcap: string;
+  volume24H: string;
+  btcDominance: string;
+  ethDominance: string;
+}> => {
   const html = await getHtml('https://coinmarketcap.com/');
-  const start = 'href="/charts/" class="cmc-link">';
-  const end = '</a></span><span class="sc-2bz68i-0 cVPJov">24h Vol';
 
-  const mcap = html.substring(
-    html.indexOf(start) + start.length,
-    html.indexOf(end),
+  const findValue = (start: string, end: string) => {
+    return html.substring(
+      html.indexOf(start) + start.length,
+      html.indexOf(end),
+    );
+  };
+
+  const mcap = findValue(
+    'href="/charts/" class="cmc-link">',
+    '</a></span><span class="sc-2bz68i-0 cVPJov">24h Vol',
   );
   log.info('Found market cap-' + mcap);
 
-  return { mcap };
+  const volume24H = findValue(
+    '24h Vol<!-- -->:  <a href="/charts/" class="cmc-link">',
+    '</a></span><span class="sc-2bz68i-0 cVPJov">Dominance',
+  );
+  log.info(`Found volume 24h-${volume24H}`);
+
+  const btcDominance = findValue(
+    'dominance-percentage" class="cmc-link">BTC<!-- -->: <!-- -->',
+    '<!-- --> <!-- -->ETH',
+  );
+  log.info(`Found found btc dominance-${btcDominance}`);
+
+  const ethDominance = findValue(
+    '<!-- -->ETH<!-- -->: <!-- -->',
+    '</a></span><span class="sc-2bz68i-0 cVPJov"><span class="icon-Gas-Filled"',
+  );
+  log.info(`Found found eth dominance-${ethDominance}`);
+
+  return { mcap, volume24H, btcDominance, ethDominance };
 };
 
 async function getHtml(url: string, coinOfficialName?: string) {

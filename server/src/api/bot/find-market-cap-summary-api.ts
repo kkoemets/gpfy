@@ -8,18 +8,39 @@ export const findMarketCapSummaryApi = async (): Promise<{
   cmcSummary: string;
 }> => {
   log.info('Finding coinmarketcap summary');
-  const { mcap } = await findMarketCapSummary();
+  const {
+    mcap,
+    volume24H,
+    btcDominance,
+    ethDominance,
+  } = await findMarketCapSummary();
   if (!mcap) {
     return COULD_NOT_FIND_MARKETCAP;
   }
 
-  const createMarketCapSummaryTemplate = ({
-    mcap: marketcap,
-  }: {
-    mcap: string;
-  }) => {
-    return 'Market Cap: ' + marketcap;
+  return {
+    cmcSummary: createMarketCapSummaryTemplate({
+      mcap,
+      volume24H,
+      btcDominance,
+      ethDominance,
+    }),
   };
+};
 
-  return { cmcSummary: createMarketCapSummaryTemplate({ mcap: mcap }) };
+const createMarketCapSummaryTemplate = ({
+  mcap,
+  volume24H,
+  btcDominance,
+  ethDominance,
+}: {
+  mcap: string;
+  volume24H: string;
+  btcDominance: string;
+  ethDominance: string;
+}): string => {
+  return `💰Market Cap: ${mcap}
+💱Volume 24h: ${volume24H}
+💲BTC dominance: ${btcDominance}
+🦄ETH dominance: ${ethDominance}`;
 };
