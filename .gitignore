@@ -8,3 +8,5 @@
 /config/bot-docker-dev.json
 /server/logs/*.log
 /client/logs/*.log
+/client/src/db.json
+/client/db.json
