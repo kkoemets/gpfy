@@ -1,25 +1,28 @@
-import { findMarketCapSummary } from "../../process/coinmarketcap/coinmarketcap-client";
-import { COULD_NOT_FIND_MARKETCAP } from "../api-errors";
-import { getLogger } from "../../util/get-logger";
-import { findGreedIndex } from "../../process/find-greed-index";
+import { findMarketCapSummary } from '../../process/coinmarketcap/coinmarketcap-client';
+import { COULD_NOT_FIND_MARKETCAP } from '../api-errors';
+import { getLogger } from '../../util/get-logger';
+import { findGreedIndex } from '../../process/find-greed-index';
 
 const log = getLogger();
 
 export const findMarketCapSummaryApi = async (): Promise<{
   cmcSummary: string;
 }> => {
-  log.info("Finding coinmarketcap summary");
+  log.info('Finding coinmarketcap summary');
   const {
     mcap,
     volume24H,
     btcDominance,
-    ethDominance
+    ethDominance,
   } = await findMarketCapSummary();
   if (!mcap) {
     return COULD_NOT_FIND_MARKETCAP;
   }
 
-  const { value: fearIndex, value_classification: fearClass } = await findGreedIndex();
+  const {
+    value: fearIndex,
+    value_classification: fearClass,
+  } = await findGreedIndex();
 
   return {
     cmcSummary: createMarketCapSummaryTemplate({
@@ -28,19 +31,19 @@ export const findMarketCapSummaryApi = async (): Promise<{
       btcDominance,
       ethDominance,
       fearIndex,
-      fearClass
-    })
+      fearClass,
+    }),
   };
 };
 
 const createMarketCapSummaryTemplate = ({
-                                          mcap,
-                                          volume24H,
-                                          btcDominance,
-                                          ethDominance,
-                                          fearIndex,
-                                          fearClass
-                                        }: {
+  mcap,
+  volume24H,
+  btcDominance,
+  ethDominance,
+  fearIndex,
+  fearClass,
+}: {
   mcap: string;
   volume24H: string;
   btcDominance: string;
@@ -56,7 +59,7 @@ const createMarketCapSummaryTemplate = ({
         ${btcDominance}
 🦄ETH dominance: 
         ${ethDominance}
-${Number(fearIndex) > 50 ? "🐂" : "🐻"}Fear index: 
+${Number(fearIndex) > 50 ? '🐂' : '🐻'}Fear/Greed index: 
         ${fearIndex}
 🦈Fear classification: 
         ${fearClass}`;

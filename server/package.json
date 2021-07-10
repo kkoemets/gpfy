@@ -40,7 +40,7 @@
     "build": "tsc -p tsconfig.release.json",
     "build:watch": "tsc -w -p tsconfig.release.json",
     "lint": "eslint --fix .. --ext .ts,.tsx",
-    "test": "mocha --require ts-node/register --extensions ts src 'tests/**/*.{ts,tsx}'",
+    "test": "mocha --timeout 10000 --require ts-node/register --extensions ts src 'tests/**/*.{ts,tsx}'",
     "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test"
   },
   "author": "Kristjan Koemets",

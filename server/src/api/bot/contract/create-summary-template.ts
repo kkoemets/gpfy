@@ -7,7 +7,7 @@ export const createSummaryTemplate = (summary: ContractSummary): string => {
       priceUSD,
       txns24h,
       volume24hUSD,
-      priceChange24h,
+      priceUSDChange24h,
       liquidityUSD,
       AMM,
     },
@@ -22,7 +22,7 @@ export const createSummaryTemplate = (summary: ContractSummary): string => {
       ↔Volume: (24h): 
             $${round(volume24hUSD, 2)}
       🧐Price change (24h): 
-            $${round(priceChange24h, 6)}
+            $${round(priceUSDChange24h, 6)}
       💸Liquidity: 
             $${round(liquidityUSD, 2)}
       🤴🏼Holders (BSC): 

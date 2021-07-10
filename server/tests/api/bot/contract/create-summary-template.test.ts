@@ -14,15 +14,15 @@ describe('createSummaryTemplate', function () {
     const expected =
       'CumRocket/CUMMIES\n' +
       '      💵Current price: \n' +
-      '            $0.044392\n' +
+      '            $0.03421\n' +
       '      💳Transactions (24h): \n' +
-      '            1122\n' +
+      '            1008\n' +
       '      ↔Volume: (24h): \n' +
-      '            $313992.26\n' +
+      '            $212257.5\n' +
       '      🧐Price change (24h): \n' +
-      '            $-0.037662\n' +
+      '            $0.051202\n' +
       '      💸Liquidity: \n' +
-      '            $961165.37\n' +
+      '            $1312827.51\n' +
       '      🤴🏼Holders (BSC): \n' +
       '            N/A \n' +
       '      📈Stats provided by: \n' +
