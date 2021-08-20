@@ -73,11 +73,15 @@ export const findMarketCapSummary = async (): Promise<{
 };
 
 async function getHtml(url: string, coinOfficialName?: string) {
+  const fullUrl = !coinOfficialName
+    ? `${url}`
+    : `${url}/${coinOfficialName?.toLowerCase()}`;
+
+  log.info(`Fetching data from-${fullUrl}`);
+
   return await (
     await fetch(
-      !coinOfficialName
-        ? `${url}`
-        : `${url}/${coinOfficialName?.toLowerCase()}`,
+      fullUrl,
       {
         headers: { 'User-Agent': 'Mozilla/5.0' },
       },
