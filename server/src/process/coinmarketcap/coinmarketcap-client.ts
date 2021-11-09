@@ -5,6 +5,28 @@ import { JSDOM } from "jsdom";
 
 const log = getLogger();
 
+const findContractFromAnchorHref: (
+  html: string,
+  url: string
+) => string | null = (html: string, url: string) => {
+  log.info("Did not find contract by contact address");
+  const document: Document = new JSDOM(html).window.document;
+
+  const contractByLink = (Array.prototype.slice.call(
+    document.querySelectorAll("a")
+  ) as HTMLAnchorElement[])
+    .map(({ href }) => href)
+    .find((href) => href.includes(url))
+    ?.replace(url, "");
+
+  if (contractByLink) {
+    log.info(`Contract-${contractByLink} by ${url} in anchor elements`);
+    return contractByLink;
+  }
+
+  return null;
+};
+
 export const findContract = async ({
   coinOfficialName,
 }: {
@@ -19,25 +41,14 @@ export const findContract = async ({
   const beginTokenIdentifier = '"contractAddress":"';
   const indexOfStartingPositionOfContract = html.indexOf(beginTokenIdentifier);
   if (indexOfStartingPositionOfContract < 0) {
-    log.info("Did not find contract by contact address");
-    const document: Document = new JSDOM(html).window.document;
-    const etherscan = "https://etherscan.io/token/";
+    const findFromAnchorHref: (url: string) => string | null = (url: string) =>
+      findContractFromAnchorHref(html, url);
 
-    const contractByEtherScan = (Array.prototype.slice.call(
-      document.querySelectorAll("a")
-    ) as HTMLAnchorElement[])
-      .map(({ href }) => href)
-      .find((href) => href.includes(etherscan))
-      ?.replace(etherscan, "");
-
-    if (contractByEtherScan) {
-      log.info(
-        `Contract-${contractByEtherScan} by etherscan in anchor elements`
-      );
-      return contractByEtherScan;
-    }
-
-    return null;
+    return (
+      ["https://bscscan.com/token/", "https://etherscan.io/token/"]
+        .map(findFromAnchorHref)
+        .find((c) => c) || null
+    );
   }
 
   const stringStartingWithContract = html
