@@ -5,9 +5,14 @@ import {
 } from '../../../src/process/coinmarketcap/coinmarketcap-client';
 
 describe('coinmarketcapClient', function () {
-  it('Fetch contract', async function () {
+  it('Fetch ethreum', async function () {
     const contract = await findContract({ coinOfficialName: 'ethereum' });
     expect(contract).to.be.equal('0x2170ed0880ac9a755fd29b2688956bd959f933f8');
+  });
+
+  it('Fetch binance-coin', async function () {
+    const contract = await findContract({ coinOfficialName: 'binance-coin' });
+    expect(contract).to.be.equal('0xB8c77482e45F1F44dE1745F52C74426C631bDD52');
   });
 
   it('Fetch invalid contract', async function () {
