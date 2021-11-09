@@ -32,7 +32,6 @@ export const findContract = async ({
 }: {
   coinOfficialName: string;
 }): Promise<string | null> => {
-  log.info(`Trying to find contract for token by name-${coinOfficialName}`);
   const html = await getHtml(
     "https://coinmarketcap.com/currencies",
     coinOfficialName
@@ -41,6 +40,7 @@ export const findContract = async ({
   const beginTokenIdentifier = '"contractAddress":"';
   const indexOfStartingPositionOfContract = html.indexOf(beginTokenIdentifier);
   if (indexOfStartingPositionOfContract < 0) {
+    log.info(`Trying to find contract for token by name-${coinOfficialName}`);
     const findFromAnchorHref: (url: string) => string | null = (url: string) =>
       findContractFromAnchorHref(html, url);
 
