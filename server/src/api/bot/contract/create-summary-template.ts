@@ -32,4 +32,4 @@ export const createSummaryTemplate = (summary: ContractSummary): string => {
 };
 
 const round = (num: number, decimals: number) =>
-  +`${Math.round(Number(num + 'e+' + decimals))}e-${decimals}`;
+  +`${Math.round(Number(num + "e+" + decimals))}e-${decimals}`;
