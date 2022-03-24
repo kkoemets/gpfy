@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import {
+  findCoinSummaryFromCmc,
   findContract,
   findMarketCapSummary,
 } from '../../../src/process/coinmarketcap/coinmarketcap-client';
@@ -31,5 +32,23 @@ describe('coinmarketcapClient', function () {
     expect(volume24H).match(new RegExp(/^[zA-Z0-9$,\\?]*$/)).to.be.not.null;
     expect(btcDominance).not.to.be.null;
     expect(ethDominance).not.to.be.null;
+  });
+
+  it('Fetch coin summary from cmc', async function () {
+    expect(
+      (
+        await findCoinSummaryFromCmc({
+          coinOfficialName: 'bitcoin',
+        })
+      ).length,
+    ).to.equal(7);
+  });
+
+  it('Fetch invalid coin summary from cmc', async function () {
+    return expect(
+      await findCoinSummaryFromCmc({
+        coinOfficialName: 'invalidcoin573',
+      }).catch((error) => error),
+    ).and.be.an.instanceOf(Error);
   });
 });

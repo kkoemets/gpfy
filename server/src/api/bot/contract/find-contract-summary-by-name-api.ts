@@ -1,8 +1,12 @@
-import { createSummaryTemplate } from './create-summary-template';
+import {
+  createSummaryTemplate,
+  createSummaryTemplateFromCmcSummary,
+} from './create-summary-template';
 import { getLogger } from '../../../util/get-logger';
 import { findSummaryByName } from '../../../process/find-summary-by-name';
 import { ContractSummary } from '../../../process/contract-summary';
 import { COULD_NOT_FIND_CONTRACT } from '../../api-errors';
+import { findCoinSummaryFromCmc } from '../../../process/coinmarketcap/coinmarketcap-client';
 
 const log = getLogger();
 
@@ -21,7 +25,9 @@ export const findContractSummaryByNameApi = async (
   ).catch((error) => error);
 
   if (contractSummary instanceof Error) {
-    return Promise.reject(contractSummary);
+    return createSummaryTemplateFromCmcSummary(
+      await findCoinSummaryFromCmc({ coinOfficialName }),
+    );
   }
 
   log.info(contractSummary);

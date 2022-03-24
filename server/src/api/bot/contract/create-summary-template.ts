@@ -31,5 +31,18 @@ export const createSummaryTemplate = (summary: ContractSummary): string => {
             ${AMM?.toUpperCase()}`;
 };
 
+export const createSummaryTemplateFromCmcSummary = (
+  summary: { valueText: string; value: string }[],
+): string => {
+  return summary
+    .map(
+      ({ valueText, value }) =>
+        `
+      ${valueText}: 
+            $${value}`,
+    )
+    .join();
+};
+
 const round = (num: number, decimals: number) =>
-  +`${Math.round(Number(num + "e+" + decimals))}e-${decimals}`;
+  +`${Math.round(Number(num + 'e+' + decimals))}e-${decimals}`;

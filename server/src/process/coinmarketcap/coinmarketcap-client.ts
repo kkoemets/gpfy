@@ -2,17 +2,24 @@ import { getLogger } from '../../util/get-logger';
 import fetch from 'node-fetch';
 
 import { JSDOM } from 'jsdom';
+import { COULD_NOT_FIND_CONTRACT } from '../../api/api-errors';
 
 const log = getLogger();
+
+const toDocument = (html: string): Document => new JSDOM(html).window.document;
+
+const slice = (
+  elements: NodeListOf<HTMLElement> | HTMLCollectionOf<HTMLElement>,
+) => Array.prototype.slice.call(elements);
 
 const findContractFromAnchorHref: (
   html: string,
   url: string,
 ) => string | null = (html: string, url: string) => {
   log.info('Did not find contract by contact address');
-  const document: Document = new JSDOM(html).window.document;
+  const document = toDocument(html);
 
-  const contractByLink = (Array.prototype.slice.call(
+  const contractByLink = (slice(
     document.querySelectorAll('a'),
   ) as HTMLAnchorElement[])
     .map(({ href }) => href)
@@ -27,15 +34,29 @@ const findContractFromAnchorHref: (
   return null;
 };
 
+const getHtml = async (url: string, coinOfficialName?: string) => {
+  const fullUrl = !coinOfficialName
+    ? `${url}`
+    : `${url}/${coinOfficialName?.toLowerCase()}`;
+
+  log.info(`Fetching data from-${fullUrl}`);
+
+  return await (
+    await fetch(fullUrl, {
+      headers: { 'User-Agent': 'Mozilla/5.0' },
+    })
+  ).text();
+};
+
+const getCoinHtml = async (coinOfficialName: string): Promise<string> =>
+  await getHtml('https://coinmarketcap.com/currencies', coinOfficialName);
+
 export const findContract = async ({
   coinOfficialName,
 }: {
   coinOfficialName: string;
 }): Promise<string | null> => {
-  const html = await getHtml(
-    'https://coinmarketcap.com/currencies',
-    coinOfficialName,
-  );
+  const html = await getCoinHtml(coinOfficialName);
 
   const beginTokenIdentifier = '"contractAddress":"';
   const indexOfStartingPositionOfContract = html.indexOf(beginTokenIdentifier);
@@ -102,16 +123,47 @@ export const findMarketCapSummary = async (): Promise<{
   return { mcap, volume24H, btcDominance, ethDominance };
 };
 
-async function getHtml(url: string, coinOfficialName?: string) {
-  const fullUrl = !coinOfficialName
-    ? `${url}`
-    : `${url}/${coinOfficialName?.toLowerCase()}`;
+export const findCoinSummaryFromCmc: ({
+  coinOfficialName,
+}: {
+  coinOfficialName: string;
+}) => Promise<{ valueText: string; value: string }[]> = async ({
+  coinOfficialName,
+}: {
+  coinOfficialName: string;
+}) => {
+  log.info('Retrieving coin summary from coinmarketcap');
+  const html: string = await getCoinHtml(coinOfficialName);
+  const document: Document = toDocument(html);
+  const htmlTableElements: HTMLTableElement[] = Array.from(
+    document.getElementsByTagName('table'),
+  );
 
-  log.info(`Fetching data from-${fullUrl}`);
+  log.debug('Tables found-' + htmlTableElements.length);
+  if (!htmlTableElements.length) {
+    return COULD_NOT_FIND_CONTRACT();
+  }
 
-  return await (
-    await fetch(fullUrl, {
-      headers: { 'User-Agent': 'Mozilla/5.0' },
+  const retrievedData: Promise<
+    { valueText: string; value: string }[]
+  > = htmlTableElements
+    .map((table: HTMLTableElement) => slice(table.rows))
+    .find((rows: HTMLTableRowElement[]) => {
+      return rows.find((row: HTMLTableRowElement) =>
+        row.innerHTML?.includes('Price'),
+      );
     })
-  ).text();
-}
+    ?.map((elements: HTMLTableElement) => {
+      const getHtmlTableCellElements = (tagName: string) =>
+        elements.getElementsByTagName(tagName).item(0)?.lastChild
+          ?.textContent || '';
+
+      return {
+        valueText: getHtmlTableCellElements('th'),
+        value: getHtmlTableCellElements('td'),
+      };
+    });
+  log.info(`Retrieved data${JSON.stringify(retrievedData)}`);
+
+  return retrievedData;
+};

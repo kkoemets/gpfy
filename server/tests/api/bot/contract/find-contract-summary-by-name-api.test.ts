@@ -16,4 +16,10 @@ describe('findContractSummaryByNameApi', function () {
       await findContractSummaryByNameApi('binance-coin'),
     ).to.include('BNB');
   });
+
+  it('Find BTC', async function () {
+    return expect(await findContractSummaryByNameApi('bitcoin')).to.include(
+      'BNB',
+    );
+  });
 });
