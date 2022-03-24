@@ -22,7 +22,7 @@ export const findSummaryByName = async (
     (await findContractFromCoingecko({ coinOfficialName })) ||
     (await findContractFromCmc({ coinOfficialName }));
   if (!contract) {
-    return COULD_NOT_FIND_CONTRACT;
+    return COULD_NOT_FIND_CONTRACT();
   }
 
   await setCachedContractByName({ coinOfficialName, contract });

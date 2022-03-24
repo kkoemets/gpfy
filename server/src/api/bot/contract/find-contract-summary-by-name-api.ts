@@ -13,7 +13,7 @@ export const findContractSummaryByNameApi = async (
 
   const coinOfficialName = coinOfficialNameInput?.trim()?.toLowerCase();
   if (!coinOfficialName) {
-    return COULD_NOT_FIND_CONTRACT;
+    return COULD_NOT_FIND_CONTRACT();
   }
 
   const contractSummary: ContractSummary = await findSummaryByName(

@@ -16,7 +16,7 @@ export const findMarketCapSummaryApi = async (): Promise<{
     ethDominance,
   } = await findMarketCapSummary();
   if (!mcap) {
-    return COULD_NOT_FIND_MARKETCAP;
+    return COULD_NOT_FIND_MARKETCAP();
   }
 
   const {
