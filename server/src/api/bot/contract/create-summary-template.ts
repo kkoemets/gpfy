@@ -39,7 +39,7 @@ export const createSummaryTemplateFromCmcSummary = (
       ({ valueText, value }) =>
         `
       ${valueText}: 
-            $${value}`,
+            ${value}`,
     )
     .join();
 };
