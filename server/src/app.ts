@@ -5,25 +5,22 @@ import * as expressWinston from 'express-winston';
 import * as cors from 'cors';
 import debug from 'debug';
 import { RestController } from './rest/rest-controller';
-import { MonitoringController } from './rest/monitoring-controller';
 import { getLogger } from './util/get-logger';
-import { ContractController } from './rest/contract-controller';
 
 import 'express-async-errors';
-import { CoinmarketcapController } from './rest/coinmarketcap-controller';
-import { LookIntoBitcoinController } from './rest/look-into-bitcoin-controller';
+import { InversifyConfig } from './injection/inversify-config';
+import { INVERSIFY_TYPES } from './injection/inversify-types';
 
 const log = getLogger();
 
-const app: express.Application = express();
+const container: InversifyConfig = new InversifyConfig();
+
+const app: express.Application = container.container.get<express.Application>(
+  INVERSIFY_TYPES.ExpressApplication,
+);
+
 export const server: http.Server = http.createServer(app);
 const port = 3001;
-const routes: Array<RestController> = [
-  new MonitoringController(app),
-  new ContractController(app),
-  new CoinmarketcapController(app),
-  new LookIntoBitcoinController(app),
-];
 const debugLog: debug.IDebugger = debug('app');
 
 app.use(express.json());
@@ -53,6 +50,10 @@ if (process.env.DEBUG) {
 }
 
 app.use(expressWinston.logger(loggerOptions));
+
+const routes: RestController[] = container.container.getAll<RestController>(
+  INVERSIFY_TYPES.RestController,
+);
 
 routes.forEach((controller) => controller.configureRoutes());
 server.listen(port, () => {

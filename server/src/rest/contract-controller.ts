@@ -5,13 +5,8 @@ import { validateBotRequestHeaders } from './filter/validate-bot-request-headers
 import { findContractSummaryByNameApi } from '../api/bot/contract/find-contract-summary-by-name-api';
 
 export class ContractController extends RestController {
-  constructor(app: express.Application) {
-    super(app);
-  }
-
   configureRoutes = (): express.Application => {
     const { app } = this;
-
     app
       .route('/bot/contract/summary')
       .get(

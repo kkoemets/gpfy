@@ -2,10 +2,6 @@ import { RestController } from './rest-controller';
 import express from 'express';
 
 export class MonitoringController extends RestController {
-  constructor(app: express.Application) {
-    super(app);
-  }
-
   configureRoutes = (): express.Application => {
     const { app } = this;
 

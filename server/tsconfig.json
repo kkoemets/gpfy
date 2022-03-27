@@ -20,7 +20,9 @@
     "noUnusedParameters": true,
     "noImplicitAny": true,
     "noImplicitThis": false,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "experimentalDecorators": true,
+    "types": ["reflect-metadata"]
   },
   "include": [
     "./src/**/*",
