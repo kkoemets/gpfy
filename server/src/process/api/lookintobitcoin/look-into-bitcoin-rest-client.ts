@@ -1,26 +1,30 @@
-import * as puppeteer from 'puppeteer';
+import { RestClient } from '../rest-client';
+import {
+  Btc2YearMovingAverageResponse,
+  LookIntoBitcoinApi,
+} from './look-into-bitcoin-api';
 import * as fs from 'fs';
-import { getLogger } from '../../util/get-logger';
+import * as puppeteer from 'puppeteer';
+import { getLogger } from '../../../util/get-logger';
+
+const logger = getLogger();
 
 const graphScreenshotPath = __dirname + '/btc2YearMovingAverageGraph.png';
 const lookIntoBitcoinUrl =
   'https://www.lookintobitcoin.com/charts/bitcoin-investor-tool/';
 
-const logger = getLogger();
+export class LookIntoBitcoinRestClient
+  extends RestClient
+  implements LookIntoBitcoinApi {
+  async findBtc2YearMovingAverageGraph(): Promise<Btc2YearMovingAverageResponse> {
+    await retrieveScreenshot();
 
-export interface Btc2YearMovingAverageResponse {
-  base64Img: string;
-  originUrl: string;
+    return {
+      base64Img: await fs.promises.readFile(graphScreenshotPath, 'base64'),
+      originUrl: lookIntoBitcoinUrl,
+    };
+  }
 }
-
-export const findBtc2YearMovingAverageGraph: () => Promise<Btc2YearMovingAverageResponse> = async () => {
-  await retrieveScreenshot();
-
-  return {
-    base64Img: await fs.promises.readFile(graphScreenshotPath, 'base64'),
-    originUrl: lookIntoBitcoinUrl,
-  };
-};
 
 const retrieveScreenshot: () => Promise<void> = async () => {
   const doesScreenshotExistAlready = fs.existsSync(graphScreenshotPath);

@@ -8,14 +8,15 @@ import { RestController } from './rest/rest-controller';
 import { getLogger } from './util/get-logger';
 
 import 'express-async-errors';
-import { InversifyConfig } from './injection/inversify-config';
 import { INVERSIFY_TYPES } from './injection/inversify-types';
+import { InversifyContainer } from './injection/inversify-container';
+import { Container } from 'inversify';
 
 const log = getLogger();
 
-const container: InversifyConfig = new InversifyConfig();
+const container: Container = InversifyContainer;
 
-const app: express.Application = container.container.get<express.Application>(
+const app: express.Application = container.get<express.Application>(
   INVERSIFY_TYPES.ExpressApplication,
 );
 
@@ -51,7 +52,7 @@ if (process.env.DEBUG) {
 
 app.use(expressWinston.logger(loggerOptions));
 
-const routes: RestController[] = container.container.getAll<RestController>(
+const routes: RestController[] = container.getAll<RestController>(
   INVERSIFY_TYPES.RestController,
 );
 

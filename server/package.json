@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Back-end for teh gpfy bot",
   "engines": {
-    "node": ">= 14.15 <15"
+    "node": ">= v16.14.0 <17"
   },
   "devDependencies": {
     "@types/chai-as-promised": "^7.1.4",

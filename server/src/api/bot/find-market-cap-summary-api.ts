@@ -1,7 +1,9 @@
-import { findMarketCapSummary } from '../../process/coinmarketcap/coinmarketcap-client';
 import { COULD_NOT_FIND_MARKETCAP } from '../api-errors';
 import { getLogger } from '../../util/get-logger';
 import { findGreedIndex } from '../../process/find-greed-index';
+import { INVERSIFY_TYPES } from '../../injection/inversify-types';
+import { CoinmarketcapApi } from '../../process/api/coinmarketcap/coinmarketcap-api';
+import { InversifyContainer } from '../../injection/inversify-container';
 
 const log = getLogger();
 
@@ -9,12 +11,15 @@ export const findMarketCapSummaryApi = async (): Promise<{
   cmcSummary: string;
 }> => {
   log.info('Finding coinmarketcap summary');
+
   const {
     mcap,
     volume24H,
     btcDominance,
     ethDominance,
-  } = await findMarketCapSummary();
+  } = await InversifyContainer.get<CoinmarketcapApi>(
+    INVERSIFY_TYPES.CoinmarketcapApi,
+  ).findMarketCapSummary();
   if (!mcap) {
     return COULD_NOT_FIND_MARKETCAP();
   }

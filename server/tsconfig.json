@@ -22,7 +22,11 @@
     "noImplicitThis": false,
     "strictNullChecks": true,
     "experimentalDecorators": true,
-    "types": ["reflect-metadata"]
+    "types": [
+      "reflect-metadata",
+      "mocha",
+      "node"
+    ]
   },
   "include": [
     "./src/**/*",

@@ -1,4 +1,6 @@
-import { findBtc2YearMovingAverageGraph } from './lookintobitcoin/look-into-bitcoin-client';
+import { InversifyContainer } from '../injection/inversify-container';
+import { LookIntoBitcoinApi } from './api/lookintobitcoin/look-into-bitcoin-api';
+import { INVERSIFY_TYPES } from '../injection/inversify-types';
 
 export interface Btc2YearMovingAverage {
   base64Img: string;
@@ -6,5 +8,7 @@ export interface Btc2YearMovingAverage {
 }
 
 export const findBtc2YearMovingAverage: () => Promise<Btc2YearMovingAverage> = async () => {
-  return findBtc2YearMovingAverageGraph();
+  return InversifyContainer.get<LookIntoBitcoinApi>(
+    INVERSIFY_TYPES.LookIntoBitcoinApi,
+  ).findBtc2YearMovingAverageGraph();
 };
