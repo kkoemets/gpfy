@@ -1,4 +1,4 @@
-import { DexContractSummary } from './dexguru/dex-contract-summary';
+import { DexContractSummary } from './api/dexguru/dex-contract-summary';
 
 export interface ContractSummary {
   dexContractSummary: DexContractSummary;
