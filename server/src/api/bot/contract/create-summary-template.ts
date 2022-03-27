@@ -34,14 +34,16 @@ export const createSummaryTemplate = (summary: ContractSummary): string => {
 export const createSummaryTemplateFromCmcSummary = (
   summary: { valueText: string; value: string }[],
 ): string => {
+  const emojis = ['💵', '↔', '🧐', '💸', '💳', '🐂', '✊'];
+  const uniqueEmojiCount: number = emojis.length;
   return summary
-    .map(
-      ({ valueText, value }) =>
-        `
-      ${valueText}: 
-            ${value}`,
-    )
-    .join();
+    .map(({ valueText, value }, index) => {
+      const circularIndex: number =
+        ((index % uniqueEmojiCount) + uniqueEmojiCount) % uniqueEmojiCount;
+      return `${emojis[circularIndex] + valueText}: 
+         ${value}\n`;
+    })
+    .join('');
 };
 
 const round = (num: number, decimals: number) =>
