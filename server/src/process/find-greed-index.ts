@@ -6,13 +6,13 @@ const log = getLogger();
 
 export const findGreedIndex = async (): Promise<GreedIndex> => {
   log.info('Finding greed index');
-  const data = await (
+  const data = (await (
     await fetch(`https://api.alternative.me/fng`, {
       headers: { 'User-Agent': 'Mozilla/5.0' },
     })
-  ).json();
+  ).json()) as { data: object[] };
 
   log.info(data);
 
-  return { ...data.data[0] };
+  return { ...(data.data[0] as GreedIndex) };
 };
