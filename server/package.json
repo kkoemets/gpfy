@@ -60,7 +60,6 @@
     "node-fetch": "^2.6.1",
     "node-ts-cache": "^4.4.0",
     "node-ts-cache-storage-memory": "^4.4.0",
-    "npx": "^10.2.2",
     "puppeteer": "^13.5.1",
     "reflect-metadata": "^0.1.13",
     "tslib": "~2.3.1",
