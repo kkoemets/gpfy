@@ -1,7 +1,9 @@
+import base64
 import json
 import logging
 import urllib.request
-
+from PIL import Image
+from io import BytesIO
 from telegram import Update, ForceReply
 from telegram.ext import CallbackContext, CommandHandler
 
@@ -85,6 +87,12 @@ def find_coin_summary_and_respond(update, url):
     update.message.reply_text(text)
 
 
+def _2_year(update: Update, context: CallbackContext) -> None:
+    update_command_calls(update)
+    context.bot.sendPhoto(chat_id=update.message.chat.id, photo=BytesIO(base64.b64decode(
+        get_json(update, SERVER_URL + '/bot/lookIntoBitcoin/2YearMovingAvg')['base64Img'])))
+
+
 def get_headers(update: Update):
     return {'userid': update.message.from_user.id,
             'username': update.message.from_user.first_name}
@@ -107,5 +115,6 @@ commands = [
     ("price", price, "Show summary for a coin. E.g. /price@cumrocket"),
     ("mcap", mcap, "Show CMC summary"),
     ("last10", last_10, "Show last ten used commands"),
+    ("2year", _2_year, "Show last ten used commands"),
     ("help", help_command, "List commands")
 ]
