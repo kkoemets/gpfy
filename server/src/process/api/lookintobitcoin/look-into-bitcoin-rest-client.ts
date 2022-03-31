@@ -6,6 +6,7 @@ import {
 import * as fs from 'fs';
 import * as puppeteer from 'puppeteer';
 import { getLogger } from '../../../util/get-logger';
+import { Viewport } from 'puppeteer';
 
 const logger = getLogger();
 
@@ -45,16 +46,25 @@ const retrieveScreenshot: () => Promise<void> = async () => {
 
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  await page.setViewport({
+  const viewport: Viewport = {
     width: 1000,
-    height: 800,
-  });
+    height: 1200,
+  };
+  await page.setViewport(viewport);
 
   await page.goto(lookIntoBitcoinUrl);
   await page.waitForTimeout(3000);
 
   logger.info('Creating new screenshot');
-  await page.screenshot({ path: graphScreenshotPath });
+  await page.screenshot({
+    path: graphScreenshotPath,
+    clip: {
+      x: 80,
+      y: 205,
+      width: viewport.width - 90,
+      height: viewport.height - 430,
+    },
+  });
   await browser.close();
 
   return;
