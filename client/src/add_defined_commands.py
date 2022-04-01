@@ -112,9 +112,9 @@ def log_request(url):
 commands = [
     ("start", start, "Start conversation"),
     ("cummies", cummies, "Show summary for $CUMMIES"),
-    ("price", price, "Show summary for a coin. E.g. /price@cumrocket"),
+    ("price", price, "Show summary for a coin. E.g. /price@bitcoin"),
     ("mcap", mcap, "Show CMC summary"),
     ("last10", last_10, "Show last ten used commands"),
-    ("2year", _2_year, "Show last ten used commands"),
+    ("2year", _2_year, "Show btc 2-Year MA Multiplier"),
     ("help", help_command, "List commands")
 ]
