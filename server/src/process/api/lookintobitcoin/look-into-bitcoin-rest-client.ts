@@ -5,8 +5,8 @@ import {
 } from './look-into-bitcoin-api';
 import * as fs from 'fs';
 import * as puppeteer from 'puppeteer';
+import { Browser, Viewport } from 'puppeteer';
 import { getLogger } from '../../../util/get-logger';
-import { Viewport } from 'puppeteer';
 
 const logger = getLogger();
 
@@ -44,7 +44,19 @@ const retrieveScreenshot: () => Promise<void> = async () => {
     await fs.promises.unlink(graphScreenshotPath);
   }
 
-  const browser = await puppeteer.launch();
+  const getBrowser = async (): Promise<Browser> => {
+    try {
+      return await puppeteer.launch();
+    } catch (e) {
+      return await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox'],
+      });
+    }
+  };
+
+  const browser: Browser = await getBrowser();
+
   const page = await browser.newPage();
   const viewport: Viewport = {
     width: 1000,
