@@ -6,7 +6,18 @@ import chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 const { expect } = chai;
 
-describe('ContractControllerRestTest', function () {
+describe('CryptoDataController', function () {
+  it('Find market cap summary', function () {
+    return chai
+      .request(server)
+      .get('/coinmarketcap/mcap-summary')
+      .set('userid', 'kek')
+      .set('username', 'usr')
+      .then((res) => {
+        expect(res.text).to.be.not.null;
+      });
+  });
+
   it('Should return response on call', function () {
     return chai
       .request(server)

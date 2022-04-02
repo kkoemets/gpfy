@@ -1,9 +1,7 @@
 import { Container } from 'inversify';
-import { CoinmarketcapController } from '../rest/coinmarketcap-controller';
 import { INVERSIFY_TYPES } from './inversify-types';
 import * as express from 'express';
 import { RestController } from '../rest/rest-controller';
-import { ContractController } from '../rest/contract-controller';
 import { ImageController } from '../rest/image-controller';
 import { MonitoringController } from '../rest/monitoring-controller';
 import { CoinmarketcapApi } from '../process/api/coinmarketcap/coinmarketcap-api';
@@ -18,6 +16,7 @@ import { LookIntoBitcoinRestClient } from '../process/api/lookintobitcoin/look-i
 import { LookIntoBitcoinApi } from '../process/api/lookintobitcoin/look-into-bitcoin-api';
 import { BlockChainCenterRestClient } from '../process/api/blockchaincenter/block-chain-center-rest-client';
 import { BlockChainCenterApi } from '../process/api/blockchaincenter/block-chain-center-api';
+import { CryptoDataController } from '../rest/crypto-data-controller';
 
 export class InversifyConfig {
   private readonly _container: Container;
@@ -31,12 +30,7 @@ export class InversifyConfig {
 
     this._container
       .bind<RestController>(INVERSIFY_TYPES.RestController)
-      .to(CoinmarketcapController)
-      .inSingletonScope();
-
-    this._container
-      .bind<RestController>(INVERSIFY_TYPES.RestController)
-      .to(ContractController)
+      .to(CryptoDataController)
       .inSingletonScope();
 
     this._container

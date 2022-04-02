@@ -1,9 +1,9 @@
 import * as fs from 'fs';
-import { createSummaryTemplate } from '../../../../../src/rest/controller-api/bot/contract/create-summary-template';
 import { expect } from 'chai';
 import { ContractSummary } from '../../../../../src/process/crypto-data';
+import { createSummaryTemplate } from '../../../../../src/rest/controller-api/bot/contract/contract-summary';
 
-describe('createSummaryTemplate', function () {
+describe('contactSummary', function () {
   it('Correct format', function () {
     const summary: ContractSummary = JSON.parse(
       fs.readFileSync(__dirname + '/test-contract-summary.json').toString(),

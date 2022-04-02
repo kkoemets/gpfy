@@ -1,18 +1,25 @@
 import {
+  ContractSummary,
+  findSummary,
+  findSummaryByName,
+} from '../../../process/crypto-data';
+import { CoinmarketcapApi } from '../../../process/api/coinmarketcap/coinmarketcap-api';
+import { InversifyContainer } from '../../../injection/inversify-container';
+import { INVERSIFY_TYPES } from '../../../injection/inversify-types';
+import { COULD_NOT_FIND_CONTRACT } from '../api-errors';
+import {
   createSummaryTemplate,
   createSummaryTemplateFromCmcSummary,
-} from './create-summary-template';
-import { getLogger } from '../../../../util/get-logger';
-import { COULD_NOT_FIND_CONTRACT } from '../../api-errors';
-import { CoinmarketcapApi } from '../../../../process/api/coinmarketcap/coinmarketcap-api';
-import { INVERSIFY_TYPES } from '../../../../injection/inversify-types';
-import { InversifyContainer } from '../../../../injection/inversify-container';
-import {
-  ContractSummary,
-  findSummaryByName,
-} from '../../../../process/crypto-data';
+} from './contract/contract-summary';
+import { getLogger } from '../../../util/get-logger';
 
 const log = getLogger();
+
+export const findContractSummaryApi = async (
+  contract: string,
+): Promise<string> => {
+  return createSummaryTemplate(await findSummary(contract));
+};
 
 export const findContractSummaryByNameApi = async (
   coinOfficialNameInput: string,

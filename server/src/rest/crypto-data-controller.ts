@@ -1,12 +1,26 @@
 import { RestController } from './rest-controller';
 import express from 'express';
-import { findContractSummaryApi } from './controller-api/bot/contract/find-contract-summary-api';
 import { validateBotRequestHeaders } from './filter/validate-bot-request-headers';
-import { findContractSummaryByNameApi } from './controller-api/bot/contract/find-contract-summary-by-name-api';
+import { findMarketCapSummaryApi } from './controller-api/bot/find-market-cap-summary-api';
+import {
+  findContractSummaryApi,
+  findContractSummaryByNameApi,
+} from './controller-api/bot/crypto-data-controller-api';
 
-export class ContractController extends RestController {
+export class CryptoDataController extends RestController {
   configureRoutes = (): express.Application => {
     const { app } = this;
+
+    app
+      .route('/coinmarketcap/mcap-summary')
+      .get(
+        validateBotRequestHeaders,
+        async (_: express.Request, res: express.Response) => {
+          const { cmcSummary } = await findMarketCapSummaryApi();
+          res.json({ cmcSummary });
+        },
+      );
+
     app
       .route('/bot/contract/summary')
       .get(
