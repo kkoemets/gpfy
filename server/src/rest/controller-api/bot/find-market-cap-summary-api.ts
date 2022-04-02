@@ -7,13 +7,12 @@ import { findGreedIndex } from '../../../process/crypto-data';
 
 const log = getLogger();
 
-const coinmarketcapApi: CoinmarketcapApi =
-  InversifyContainer.get<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi);
-
 export const findMarketCapSummaryApi = async (): Promise<{
   cmcSummary: string;
 }> => {
   log.info('Finding coinmarketcap summary');
+  const coinmarketcapApi: CoinmarketcapApi =
+    InversifyContainer.get<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi);
 
   const { mcap, volume24H, btcDominance, ethDominance } =
     await coinmarketcapApi.findMarketCapSummary();

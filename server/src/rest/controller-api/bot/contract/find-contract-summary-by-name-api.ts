@@ -14,13 +14,12 @@ import {
 
 const log = getLogger();
 
-const coinmarketcapApi: CoinmarketcapApi =
-  InversifyContainer.get<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi);
-
 export const findContractSummaryByNameApi = async (
   coinOfficialNameInput: string,
 ): Promise<string> => {
   log.info(`Finding summary for-${coinOfficialNameInput}`);
+  const coinmarketcapApi: CoinmarketcapApi =
+    InversifyContainer.get<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi);
 
   const coinOfficialName = coinOfficialNameInput?.trim()?.toLowerCase();
   if (!coinOfficialName) {
