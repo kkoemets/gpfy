@@ -45,11 +45,15 @@ export abstract class PuppeteerRestClient extends RestClient {
 
       const getBrowser = async (): Promise<Browser> => {
         try {
-          return await puppeteer.launch();
-        } catch (e) {
           return await puppeteer.launch({
             headless: true,
             args: ['--no-sandbox'],
+          });
+        } catch (e) {
+          return await puppeteer.launch({
+            headless: true,
+            executablePath: '/usr/bin/chromium-browser',
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
           });
         }
       };
