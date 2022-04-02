@@ -7,7 +7,7 @@ const api: LookIntoBitcoinApi = InversifyContainer.get<LookIntoBitcoinApi>(
   INVERSIFY_TYPES.LookIntoBitcoinApi,
 );
 
-describe('find2YearMovingAverageGraph', function () {
+describe('LookIntoBitcoinApi', function () {
   it('Find', async function () {
     const { base64Img, originUrl } = await api.findBtc2YearMovingAverageGraph();
 

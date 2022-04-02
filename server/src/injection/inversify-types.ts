@@ -6,4 +6,5 @@ export const INVERSIFY_TYPES = {
   CoingeckoApi: Symbol.for('CoingeckoApi'),
   DexGuruApi: Symbol.for('DexGuruApi'),
   LookIntoBitcoinApi: Symbol.for('LookIntoBitcoinApi'),
+  BlockChainCenterApi: Symbol.for('BlockChainCenterApi'),
 };

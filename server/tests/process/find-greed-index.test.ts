@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { findGreedIndex } from '../../src/process/find-greed-index';
+import { findGreedIndex } from '../../src/process/crypto-data';
 
 describe('findGreedIndex', function () {
   it('Fetch', async function () {

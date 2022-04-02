@@ -1,4 +1,4 @@
-import { ContractSummary } from '../../../process/contract-summary';
+import { ContractSummary } from '../../../../process/crypto-data';
 
 export const createSummaryTemplate = (summary: ContractSummary): string => {
   const {

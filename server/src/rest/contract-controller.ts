@@ -1,8 +1,8 @@
 import { RestController } from './rest-controller';
 import express from 'express';
-import { findContractSummaryApi } from '../api/bot/contract/find-contract-summary-api';
+import { findContractSummaryApi } from './controller-api/bot/contract/find-contract-summary-api';
 import { validateBotRequestHeaders } from './filter/validate-bot-request-headers';
-import { findContractSummaryByNameApi } from '../api/bot/contract/find-contract-summary-by-name-api';
+import { findContractSummaryByNameApi } from './controller-api/bot/contract/find-contract-summary-by-name-api';
 
 export class ContractController extends RestController {
   configureRoutes = (): express.Application => {
@@ -12,12 +12,12 @@ export class ContractController extends RestController {
       .get(
         validateBotRequestHeaders,
         async (req: express.Request, res: express.Response) => {
-          const contract:
-            | string
-            | undefined = req?.query?.contract?.toString()?.trim();
-          const coinFullName:
-            | string
-            | undefined = req?.query?.coinFullName?.toString()?.trim();
+          const contract: string | undefined = req?.query?.contract
+            ?.toString()
+            ?.trim();
+          const coinFullName: string | undefined = req?.query?.coinFullName
+            ?.toString()
+            ?.trim();
           if (![contract, coinFullName].filter((el) => el).length) {
             throw new Error();
           }

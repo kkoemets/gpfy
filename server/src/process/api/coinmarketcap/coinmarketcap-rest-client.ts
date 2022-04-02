@@ -2,14 +2,15 @@ import { CoinmarketcapApi } from './coinmarketcap-api';
 import { getLogger } from '../../../util/get-logger';
 import fetch from 'node-fetch';
 import { JSDOM } from 'jsdom';
-import { COULD_NOT_FIND_CONTRACT } from '../../../api/api-errors';
+import { COULD_NOT_FIND_CONTRACT } from '../../../rest/controller-api/api-errors';
 import { RestClient } from '../rest-client';
 
 const log = getLogger();
 
 export class CoinmarketcapRestClient
   extends RestClient
-  implements CoinmarketcapApi {
+  implements CoinmarketcapApi
+{
   async findMarketCapSummary(): Promise<{
     mcap: string;
     volume24H: string;
@@ -92,25 +93,24 @@ export class CoinmarketcapRestClient
       return COULD_NOT_FIND_CONTRACT();
     }
 
-    const retrievedData: Promise<
-      { valueText: string; value: string }[]
-    > = htmlTableElements
-      .map((table: HTMLTableElement) => slice(table.rows))
-      .find((rows: HTMLTableRowElement[]) => {
-        return rows.find((row: HTMLTableRowElement) =>
-          row.innerHTML?.includes('Price'),
-        );
-      })
-      ?.map((elements: HTMLTableElement) => {
-        const getHtmlTableCellElements = (tagName: string) =>
-          elements.getElementsByTagName(tagName).item(0)?.lastChild
-            ?.textContent || '';
+    const retrievedData: Promise<{ valueText: string; value: string }[]> =
+      htmlTableElements
+        .map((table: HTMLTableElement) => slice(table.rows))
+        .find((rows: HTMLTableRowElement[]) => {
+          return rows.find((row: HTMLTableRowElement) =>
+            row.innerHTML?.includes('Price'),
+          );
+        })
+        ?.map((elements: HTMLTableElement) => {
+          const getHtmlTableCellElements = (tagName: string) =>
+            elements.getElementsByTagName(tagName).item(0)?.lastChild
+              ?.textContent || '';
 
-        return {
-          valueText: getHtmlTableCellElements('th'),
-          value: getHtmlTableCellElements('td'),
-        };
-      });
+          return {
+            valueText: getHtmlTableCellElements('th'),
+            value: getHtmlTableCellElements('td'),
+          };
+        });
     log.info(`Retrieved data${JSON.stringify(retrievedData)}`);
 
     return retrievedData;
@@ -171,9 +171,9 @@ const findContractFromAnchorHref: (
   log.info('Did not find contract by contact address');
   const document = toDocument(html);
 
-  const contractByLink = (slice(
-    document.querySelectorAll('a'),
-  ) as HTMLAnchorElement[])
+  const contractByLink = (
+    slice(document.querySelectorAll('a')) as HTMLAnchorElement[]
+  )
     .map(({ href }) => href)
     .find((href) => href.includes(url))
     ?.replace(url, '');

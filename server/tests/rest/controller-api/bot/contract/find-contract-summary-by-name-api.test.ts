@@ -1,4 +1,4 @@
-import { findContractSummaryByNameApi } from '../../../../src/api/bot/contract/find-contract-summary-by-name-api';
+import { findContractSummaryByNameApi } from '../../../../../src/rest/controller-api/bot/contract/find-contract-summary-by-name-api';
 import { expect, use as chaiUse } from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 
