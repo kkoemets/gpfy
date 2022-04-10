@@ -1,5 +1,5 @@
 echo 'Running configuration script...'
-bash go-to-root && cd config && npm run create-config-files
+cd config && npm run create-config-files
 echo 'Configuration script done!'
 apt-get update
 apt-get install -y \
