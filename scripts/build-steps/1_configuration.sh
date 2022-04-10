@@ -1,3 +1,5 @@
+#!/bin/bash
+set -e
 echo 'Running configuration script...'
 cd config && npm run create-config-files
 echo 'Configuration script done!'
