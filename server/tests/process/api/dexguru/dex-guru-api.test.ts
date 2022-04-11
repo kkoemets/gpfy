@@ -19,16 +19,6 @@ describe('dexGuruClient', function () {
     expect(contractSummary.name).to.equal('CumRocket');
   });
 
-  it('Fetch contract summary - ethereum', async function () {
-    const contract = '0x2170ed0880ac9a755fd29b2688956bd959f933f8';
-    const contractSummary: DexContractSummary = await api.findContractSummary({
-      contract,
-    });
-
-    expect(contractSummary.symbol).to.equal('WETH');
-    expect(contractSummary.name).to.equal('WETH');
-  });
-
   it('Fetch contract summary - binance coin', async function () {
     const contract = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
     const contractSummary: DexContractSummary = await api.findContractSummary({
