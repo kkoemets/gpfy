@@ -1,0 +1,8 @@
+services:
+  server:
+    container_name: docker-gpfy-proxy
+    network_mode: "host"
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - 3124:3124

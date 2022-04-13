@@ -1,0 +1,8 @@
+services:
+  server:
+    container_name: docker-gpfy-server
+    network_mode: "host"
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3001

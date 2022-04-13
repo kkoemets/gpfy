@@ -1,5 +1,5 @@
 #!/bin/bash
 set -e
 echo 'Deploying dex guru proxy to localhost...'
-cd proxy && nohup python3 dex-guru-proxy-server.py &
+cd proxy && bash start.sh
 echo 'Deployment done!'
