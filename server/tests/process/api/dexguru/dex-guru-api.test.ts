@@ -1,11 +1,11 @@
-import { expect } from 'chai';
-import { DexContractSummary } from '../../../../src/process/api/dexguru/dex-contract-summary';
-import { InversifyContainer } from '../../../../src/injection/inversify-container';
-import { DexGuruApi } from '../../../../src/process/api/dexguru/dex-guru-api';
-import { INVERSIFY_TYPES } from '../../../../src/injection/inversify-types';
+import {expect} from 'chai';
+import {DexContractSummary} from '../../../../src/process/api/dexguru/dex-contract-summary';
+import {InversifyContainer} from '../../../../src/injection/inversify-container';
+import {DexGuruApi} from '../../../../src/process/api/dexguru/dex-guru-api';
+import {INVERSIFY_TYPES} from '../../../../src/injection/inversify-types';
 
 const api: DexGuruApi = InversifyContainer.get<DexGuruApi>(
-  INVERSIFY_TYPES.DexGuruApi,
+    INVERSIFY_TYPES.DexGuruApi,
 );
 
 describe('dexGuruClient', function () {
@@ -25,7 +25,7 @@ describe('dexGuruClient', function () {
       contract,
     });
 
-    expect(contractSummary.symbol).to.equal('WBNB');
-    expect(contractSummary.name).to.equal('WBNB Token');
+    expect(contractSummary.symbol).to.contains('BNB');
+    expect(contractSummary.name).to.contains('BNB');
   });
 });
