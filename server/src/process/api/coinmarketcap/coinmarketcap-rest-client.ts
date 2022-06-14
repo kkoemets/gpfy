@@ -20,21 +20,26 @@ export class CoinmarketcapRestClient
     const html = await getHtml('https://coinmarketcap.com/');
 
     const findValue = (start: string, end: string) => {
-      return html.substring(
-        html.indexOf(start) + start.length,
-        html.indexOf(end),
+      const removeAlignment = (foundValue: string) =>
+        foundValue.replace('<!-- -->', '');
+
+      return removeAlignment(
+        html.substring(html.indexOf(start) + start.length, html.indexOf(end)),
       );
     };
 
+    const withCommonEndPart = (s: string) =>
+      '</a></span><span class="sc-19xuzw1-0 bOVkgr">' + s;
+
     const mcap = findValue(
       'href="/charts/" class="cmc-link">',
-      '</a></span><span class="sc-2bz68i-0 cVPJov">24h Vol',
+      withCommonEndPart('24h Vol'),
     );
     log.info('Found market cap-' + mcap);
 
     const volume24H = findValue(
       '24h Vol<!-- -->:  <a href="/charts/" class="cmc-link">',
-      '</a></span><span class="sc-2bz68i-0 cVPJov">Dominance',
+      withCommonEndPart('Dominance'),
     );
     log.info(`Found volume 24h-${volume24H}`);
 
@@ -46,7 +51,7 @@ export class CoinmarketcapRestClient
 
     const ethDominance = findValue(
       '<!-- -->ETH<!-- -->: <!-- -->',
-      '</a></span><span class="sc-2bz68i-0 cVPJov"><span class="icon-Gas-Filled"',
+      withCommonEndPart('<span class="icon-Gas-Filled"'),
     );
     log.info(`Found found eth dominance-${ethDominance}`);
 

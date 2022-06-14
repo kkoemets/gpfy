@@ -30,14 +30,10 @@ describe('coinmarketcapClient', function () {
   });
 
   it('Fetch market cap summary', async function () {
-    const {
-      mcap,
-      volume24H,
-      btcDominance,
-      ethDominance,
-    } = await api.findMarketCapSummary();
-    expect(mcap).match(new RegExp(/^[zA-Z0-9$,\\?]*$/)).to.be.not.null;
-    expect(volume24H).match(new RegExp(/^[zA-Z0-9$,\\?]*$/)).to.be.not.null;
+    const { mcap, volume24H, btcDominance, ethDominance } =
+      await api.findMarketCapSummary();
+    expect(mcap).match(new RegExp(/^[zA-Z0-9$,.\\?]*$/)).to.be.not.null;
+    expect(volume24H).match(new RegExp(/^[zA-Z0-9$,.\\?]*$/)).to.be.not.null;
     expect(btcDominance).not.to.be.null;
     expect(ethDominance).not.to.be.null;
   });
