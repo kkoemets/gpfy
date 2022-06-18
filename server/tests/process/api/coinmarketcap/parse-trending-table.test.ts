@@ -7,7 +7,7 @@ describe('parseTrendingTable', function () {
   it('Parse data', async function () {
     const result: TrendingCoinData[] = parseTrendingTable({
       trendingHtmlPage: fs
-        .readFileSync(`${__dirname}/trending_page.html`)
+        .readFileSync(`${__dirname}/trending_page_table.html`)
         .toString(),
     });
     expect(result.length).to.equal(30);
