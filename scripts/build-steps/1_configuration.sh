@@ -3,8 +3,11 @@ set -e
 echo 'Running configuration script...'
 cd config && npm run create-config-files
 echo 'Configuration script done!'
-apt-get update
-apt-get install -y \
+echo 'Running apt updates...'
+sudo apt-get update
+echo 'apt updates are done!'
+echo 'Installing apt packages...'
+sudo apt-get install -y \
   fonts-liberation \
   gconf-service \
   libappindicator1 \
@@ -37,3 +40,4 @@ apt-get install -y \
   libxss1 \
   libxtst6 \
   xdg-utils
+echo 'apt packages installed!'

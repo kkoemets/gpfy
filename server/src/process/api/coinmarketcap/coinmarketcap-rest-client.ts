@@ -1,9 +1,9 @@
-import { CoinmarketcapApi } from './coinmarketcap-api';
+import { CoinmarketcapApi, TrendingCoinData } from './coinmarketcap-api';
 import { getLogger } from '../../../util/get-logger';
 import fetch from 'node-fetch';
-import { JSDOM } from 'jsdom';
 import { COULD_NOT_FIND_CONTRACT } from '../../../rest/controller-api/api-errors';
 import { RestClient } from '../rest-client';
+import { parseTrendingTable } from './parse-trending-table';
 
 const log = getLogger();
 
@@ -64,7 +64,7 @@ export class CoinmarketcapRestClient
     coinOfficialName: string;
   }): Promise<string | null> {
     const html = await getCoinHtml(coinOfficialName);
-    const document: Document = toDocument(html);
+    const document: Document = this.toDocument(html);
     const achorElements: HTMLAnchorElement[] = Array.from(
       document.getElementsByTagName('a'),
     );
@@ -88,7 +88,7 @@ export class CoinmarketcapRestClient
   }): Promise<{ valueText: string; value: string }[]> {
     log.info('Retrieving coin summary from coinmarketcap');
     const html: string = await getCoinHtml(coinOfficialName);
-    const document: Document = toDocument(html);
+    const document: Document = this.toDocument(html);
     const htmlTableElements: HTMLTableElement[] = Array.from(
       document.getElementsByTagName('table'),
     );
@@ -120,6 +120,14 @@ export class CoinmarketcapRestClient
 
     return retrievedData;
   }
+
+  async findTrendingCoins(): Promise<TrendingCoinData[]> {
+    return parseTrendingTable({
+      trendingHtmlPage: await getHtml(
+        'https://coinmarketcap.com/trending-cryptocurrencies/',
+      ),
+    });
+  }
 }
 
 const getHtml = async (url: string, coinOfficialName?: string) => {
@@ -139,60 +147,6 @@ const getHtml = async (url: string, coinOfficialName?: string) => {
 const getCoinHtml = async (coinOfficialName: string): Promise<string> =>
   await getHtml('https://coinmarketcap.com/currencies', coinOfficialName);
 
-export const findContract = async ({
-  coinOfficialName,
-}: {
-  coinOfficialName: string;
-}): Promise<string | null> => {
-  const html = await getCoinHtml(coinOfficialName);
-
-  const beginTokenIdentifier = '"contractAddress":"';
-  const indexOfStartingPositionOfContract = html.indexOf(beginTokenIdentifier);
-  if (indexOfStartingPositionOfContract < 0) {
-    log.info(`Trying to find contract for token by name-${coinOfficialName}`);
-    const findFromAnchorHref: (url: string) => string | null = (url: string) =>
-      findContractFromAnchorHref(html, url);
-
-    return (
-      ['https://bscscan.com/token/', 'https://etherscan.io/token/']
-        .map(findFromAnchorHref)
-        .find((c) => c) || null
-    );
-  }
-
-  const stringStartingWithContract = html
-    .substring(indexOfStartingPositionOfContract)
-    .substring(beginTokenIdentifier.length);
-  return stringStartingWithContract.substring(
-    0,
-    stringStartingWithContract.indexOf('"'),
-  );
-};
-
-const findContractFromAnchorHref: (
-  html: string,
-  url: string,
-) => string | null = (html: string, url: string) => {
-  log.info('Did not find contract by contact address');
-  const document = toDocument(html);
-
-  const contractByLink = (
-    slice(document.querySelectorAll('a')) as HTMLAnchorElement[]
-  )
-    .map(({ href }) => href)
-    .find((href) => href.includes(url))
-    ?.replace(url, '');
-
-  if (contractByLink) {
-    log.info(`Contract-${contractByLink} by ${url} in anchor elements`);
-    return contractByLink;
-  }
-
-  return null;
-};
-
 const slice = (
   elements: NodeListOf<HTMLElement> | HTMLCollectionOf<HTMLElement>,
 ) => Array.prototype.slice.call(elements);
-
-const toDocument = (html: string): Document => new JSDOM(html).window.document;

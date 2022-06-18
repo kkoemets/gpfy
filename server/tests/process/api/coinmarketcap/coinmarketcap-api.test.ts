@@ -1,6 +1,9 @@
 import { expect } from 'chai';
 import { InversifyContainer } from '../../../../src/injection/inversify-container';
-import { CoinmarketcapApi } from '../../../../src/process/api/coinmarketcap/coinmarketcap-api';
+import {
+  CoinmarketcapApi,
+  TrendingCoinData,
+} from '../../../../src/process/api/coinmarketcap/coinmarketcap-api';
 import { INVERSIFY_TYPES } from '../../../../src/injection/inversify-types';
 
 const api: CoinmarketcapApi = InversifyContainer.get<CoinmarketcapApi>(
@@ -56,5 +59,33 @@ describe('coinmarketcapClient', function () {
         })
         .catch((error) => error),
     ).and.be.an.instanceOf(Error);
+  });
+
+  it('Fetch trending coins from cmc', async function () {
+    const results: TrendingCoinData[] = await api.findTrendingCoins();
+
+    expect(results.length).to.equal(30);
+
+    results.forEach(
+      ({
+        position,
+        coinName,
+        price,
+        _24hChange,
+        _7dChange,
+        _30Change,
+        mcap,
+        _24hVol,
+      }) => {
+        expect(typeof position).to.equal('string');
+        expect(typeof coinName).to.equal('string');
+        expect(typeof price).to.equal('string');
+        expect(typeof _24hChange).to.equal('string');
+        expect(typeof _7dChange).to.equal('string');
+        expect(typeof _30Change).to.equal('string');
+        expect(typeof mcap).to.equal('string');
+        expect(typeof _24hVol).to.equal('string');
+      },
+    );
   });
 });
