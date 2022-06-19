@@ -5,6 +5,7 @@ import { findMarketCapSummaryApi } from './controller-api/bot/find-market-cap-su
 import {
   findContractSummaryApi,
   findContractSummaryByNameApi,
+  findTrendingCoinsApi,
 } from './controller-api/bot/crypto-data-controller-api';
 
 export class CryptoDataController extends RestController {
@@ -42,6 +43,16 @@ export class CryptoDataController extends RestController {
                 () => 'Could not find price for ' + coinFullName,
               );
           res.json({ summaryText });
+        },
+      );
+
+    app
+      .route('/coinmarketcap/trending')
+      .get(
+        validateBotRequestHeaders,
+        async (_: express.Request, res: express.Response) => {
+          const { trendingSummary } = await findTrendingCoinsApi();
+          res.json({ trendingSummary });
         },
       );
 

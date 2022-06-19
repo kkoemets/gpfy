@@ -52,4 +52,15 @@ describe('CryptoDataController', function () {
         expect(res.text).to.contains('Ethereum Token/ETH');
       });
   });
+
+  it('Find trending summary', function () {
+    return chai
+      .request(server)
+      .get('/coinmarketcap/trending')
+      .set('userid', 'kek')
+      .set('username', 'usr')
+      .then((res) => {
+        expect(res.text).to.not.null;
+      });
+  });
 });
