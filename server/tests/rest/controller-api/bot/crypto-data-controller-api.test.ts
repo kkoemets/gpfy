@@ -28,6 +28,6 @@ describe('cryptoDataControllerApi', function () {
     const { trendingSummary }: { trendingSummary: string } =
       await findTrendingCoinsApi();
     expect(trendingSummary).not.null;
-    expect(trendingSummary.split('\n').length).to.equal(10);
+    expect(trendingSummary.split('\n').length).to.equal(40);
   });
 });

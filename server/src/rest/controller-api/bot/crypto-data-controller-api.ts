@@ -60,7 +60,10 @@ export const findTrendingCoinsApi: () => Promise<{
       .slice(0, 10)
       .map(
         ({ position, coinName, price, _24hChange, mcap }) =>
-          `#${position} ${coinName} 💵${price} 2️⃣4️⃣↕️${_24hChange} 🐂${mcap} `,
+          `#${position} ${coinName}
+      💵${price}
+      2️⃣4️⃣↕️${_24hChange}
+      🐂${mcap} `,
       )
       .join('\n'),
   };

@@ -99,6 +99,15 @@ def rainbow(update: Update, context: CallbackContext) -> None:
         get_json(update, SERVER_URL + '/bot/images/rainbow')['base64Img'])))
 
 
+def trending(update: Update, _) -> None:
+    response_json = get_json(update, SERVER_URL + '/coinmarketcap/trending')
+    logger.info(response_json)
+    text = response_json['trendingSummary']
+    logging.info(text)
+    update_command_calls(update)
+    update.message.reply_text(text)
+
+
 def get_headers(update: Update):
     return {'userid': update.message.from_user.id,
             'username': update.message.from_user.first_name}
@@ -123,5 +132,6 @@ commands = [
     ("last10", last_10, "Show last ten used commands"),
     ("2year", _2_year, "Show btc 2-Year MA Multiplier"),
     ("rainbow", rainbow, "Show btc rainbow graph"),
+    ("trending", trending, "Show trending coins"),
     ("help", help_command, "List commands")
 ]
