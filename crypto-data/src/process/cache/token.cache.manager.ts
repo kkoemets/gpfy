@@ -7,26 +7,26 @@ const myCache = new CacheContainer(new MemoryStorage());
 const log = createLogger();
 
 export const getCachedContractByName = async ({
-  coinOfficialName,
+    coinOfficialName,
 }: {
-  coinOfficialName: string;
+    coinOfficialName: string;
 }): Promise<string | null> => {
-  log.info('Trying to find cached contract for-' + coinOfficialName);
-  const contract = await myCache.getItem<string>(coinOfficialName);
-  if (!contract) {
-    log.info('Did not find');
-    return null;
-  }
-  log.info(`Found cached contract-${contract}`);
-  return contract;
+    log.info('Trying to find cached contract for-' + coinOfficialName);
+    const contract = await myCache.getItem<string>(coinOfficialName);
+    if (!contract) {
+        log.info('Did not find');
+        return null;
+    }
+    log.info(`Found cached contract-${contract}`);
+    return contract;
 };
 
 export const setCachedContractByName = async ({
-  coinOfficialName,
-  contract,
+    coinOfficialName,
+    contract,
 }: {
-  coinOfficialName: string;
-  contract: string;
+    coinOfficialName: string;
+    contract: string;
 }): Promise<void> => {
-  await myCache.setItem(coinOfficialName, contract, { ttl: 86400000 });
+    await myCache.setItem(coinOfficialName, contract, { ttl: 86400000 });
 };

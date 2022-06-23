@@ -3,15 +3,13 @@ import { InversifyContainer } from '../../../../src/injection/inversify.containe
 import { LookIntoBitcoinApi } from '../../../../src/process/api/lookintobitcoin/look-into-bitcoin.api';
 import { INVERSIFY_TYPES } from '../../../../src/injection/inversify.types';
 
-const api: LookIntoBitcoinApi = InversifyContainer.get<LookIntoBitcoinApi>(
-  INVERSIFY_TYPES.LookIntoBitcoinApi,
-);
+const api: LookIntoBitcoinApi = InversifyContainer.get<LookIntoBitcoinApi>(INVERSIFY_TYPES.LookIntoBitcoinApi);
 
 describe('LookIntoBitcoinApi', function () {
-  it('Find', async function () {
-    const { base64Img, originUrl } = await api.findBtc2YearMovingAverageGraph();
+    it('Find', async function () {
+        const { base64Img, originUrl } = await api.findBtc2YearMovingAverageGraph();
 
-    expect(base64Img).to.be.not.null;
-    expect(originUrl).to.be.not.null;
-  });
+        expect(base64Img).to.be.not.null;
+        expect(originUrl).to.be.not.null;
+    });
 });

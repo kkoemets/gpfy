@@ -4,24 +4,21 @@ import { INVERSIFY_TYPES } from '../injection/inversify.types';
 import { LookIntoBitcoinApi } from './api/lookintobitcoin/look-into-bitcoin.api';
 
 export interface RainbowChart {
-  base64Img: string;
-  originUrl: string;
+    base64Img: string;
+    originUrl: string;
 }
 
 export const findRainbowChart: () => Promise<RainbowChart> = async () => {
-  return InversifyContainer.get<BlockChainCenterApi>(
-    INVERSIFY_TYPES.BlockChainCenterApi,
-  ).findRainbowGraph();
+    return InversifyContainer.get<BlockChainCenterApi>(INVERSIFY_TYPES.BlockChainCenterApi).findRainbowGraph();
 };
 
 export interface Btc2YearMovingAverage {
-  base64Img: string;
-  originUrl: string;
+    base64Img: string;
+    originUrl: string;
 }
 
-export const findBtc2YearMovingAverage: () => Promise<Btc2YearMovingAverage> =
-  async () => {
+export const findBtc2YearMovingAverage: () => Promise<Btc2YearMovingAverage> = async () => {
     return InversifyContainer.get<LookIntoBitcoinApi>(
-      INVERSIFY_TYPES.LookIntoBitcoinApi,
+        INVERSIFY_TYPES.LookIntoBitcoinApi,
     ).findBtc2YearMovingAverageGraph();
-  };
+};

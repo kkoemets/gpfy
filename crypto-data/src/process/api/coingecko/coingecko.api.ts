@@ -1,7 +1,3 @@
 export interface CoingeckoApi {
-  findContract: ({
-    coinOfficialName,
-  }: {
-    coinOfficialName: string;
-  }) => Promise<string | null>;
+    findContract: ({ coinOfficialName }: { coinOfficialName: string }) => Promise<string | null>;
 }

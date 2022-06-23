@@ -15,43 +15,34 @@ import { BlockChainCenterRestClient } from '../process/api/blockchaincenter/bloc
 import { BlockChainCenterApi } from '../process/api/blockchaincenter/block-chain-center.api';
 
 export class InversifyConfig {
-  private readonly _container: Container;
+    private readonly _container: Container;
 
-  constructor() {
-    this._container = new Container({ skipBaseClassChecks: true });
+    constructor() {
+        this._container = new Container({ skipBaseClassChecks: true });
 
-    this._container
-      .bind<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi)
-      .to(CoinmarketcapRestClient)
-      .inSingletonScope();
+        this._container
+            .bind<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi)
+            .to(CoinmarketcapRestClient)
+            .inSingletonScope();
 
-    this._container
-      .bind<CoingeckoApi>(INVERSIFY_TYPES.CoingeckoApi)
-      .to(CoingeckoRestClient)
-      .inSingletonScope();
+        this._container.bind<CoingeckoApi>(INVERSIFY_TYPES.CoingeckoApi).to(CoingeckoRestClient).inSingletonScope();
 
-    this._container
-      .bind<DexGuruApi>(INVERSIFY_TYPES.DexGuruApi)
-      .to(DexGuruRestClient)
-      .inSingletonScope();
+        this._container.bind<DexGuruApi>(INVERSIFY_TYPES.DexGuruApi).to(DexGuruRestClient).inSingletonScope();
 
-    this._container
-      .bind<BscscanApi>(INVERSIFY_TYPES.BscscanApi)
-      .to(BscscanRestClient)
-      .inSingletonScope();
+        this._container.bind<BscscanApi>(INVERSIFY_TYPES.BscscanApi).to(BscscanRestClient).inSingletonScope();
 
-    this._container
-      .bind<LookIntoBitcoinApi>(INVERSIFY_TYPES.LookIntoBitcoinApi)
-      .to(LookIntoBitcoinRestClient)
-      .inSingletonScope();
+        this._container
+            .bind<LookIntoBitcoinApi>(INVERSIFY_TYPES.LookIntoBitcoinApi)
+            .to(LookIntoBitcoinRestClient)
+            .inSingletonScope();
 
-    this._container
-      .bind<BlockChainCenterApi>(INVERSIFY_TYPES.BlockChainCenterApi)
-      .to(BlockChainCenterRestClient)
-      .inSingletonScope();
-  }
+        this._container
+            .bind<BlockChainCenterApi>(INVERSIFY_TYPES.BlockChainCenterApi)
+            .to(BlockChainCenterRestClient)
+            .inSingletonScope();
+    }
 
-  get container(): Container {
-    return this._container;
-  }
+    get container(): Container {
+        return this._container;
+    }
 }

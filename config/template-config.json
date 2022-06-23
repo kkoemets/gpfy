@@ -1,7 +1,7 @@
 {
   "server": {
     "templateFile": "server-configuration.template",
-    "outputFile": "../server/src/configuration.ts"
+    "outputFile": "../crypto-data/src/configuration.ts"
   },
   "client": {
     "templateFile": "client-configuration.template",
