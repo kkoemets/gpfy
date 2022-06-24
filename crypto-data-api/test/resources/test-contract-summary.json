@@ -1,0 +1,29 @@
+{
+  "dexContractSummary": {
+    "AMM": "pancakeswap",
+    "address": "0x27ae27110350b98d564b9a3eed31baebc82d878d",
+    "blockNumber": 10008555,
+    "decimals": 18,
+    "description": "CumRocket/CUMMIES",
+    "id": "0x27ae27110350b98d564b9a3eed31baebc82d878d-bsc",
+    "liquidityChange24h": 0.054230300863415175,
+    "liquidityETH": 27935.881428880497,
+    "liquidityUSD": 1312827.5099728112,
+    "logoURI": null,
+    "name": "CumRocket",
+    "network": "bsc",
+    "priceETH": 0.000735736673232168,
+    "priceETHChange24h": 0.025615043102659454,
+    "priceUSD": 0.0342100739479065,
+    "priceUSDChange24h": 0.05120190259111898,
+    "symbol": "CUMMIES",
+    "timestamp": 1625917251,
+    "txns24h": 1008,
+    "txns24hChange": -0.24324324324324326,
+    "verified": false,
+    "volume24h": 6320338.066437049,
+    "volume24hETH": 4595.380621407692,
+    "volume24hUSD": 212257.50296985506,
+    "volumeChange24h": -0.42360584320815353
+  }
+}

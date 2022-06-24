@@ -15,36 +15,47 @@ describe('DataController (e2e)', () => {
         await app.init();
     });
 
-    it('/bot/images/2YearMovingAvg (GET)', () => {
+    it('Find market cap summary', function () {
+        return request(app.getHttpServer()).get('/coinmarketcap/mcap-summary').expect(200);
+    });
+
+    it('Should return response on call by coin full name - ethereum', function () {
         return request(app.getHttpServer())
-            .get('/bot/images/2YearMovingAvg')
-            .expect(200)
-            .expect('findBtc2YearMovingAverage');
+            .get('/bot/contract/summary?coinFullName=ethereum')
+            .then((res) => {
+                expect(res.text).toMatch('Ethereum Token/ETH');
+            });
+    });
+
+    it('Should return response on call by coin full name - cumrocket', function () {
+        return request(app.getHttpServer())
+            .get('/bot/contract/summary?coinFullName=cumrocket')
+            .then((res) => {
+                expect(res.text).toMatch('CumRocket/CUMMIES');
+            });
+    });
+
+    it('Should return response on call', function () {
+        return request(app.getHttpServer())
+            .get('/bot/contract/summary?contract=0x27ae27110350b98d564b9a3eed31baebc82d878d')
+            .then((res) => {
+                expect(res.text).toMatch('CumRocket/CUMMIES');
+            });
+    });
+
+    it('/bot/images/2YearMovingAvg (GET)', () => {
+        return request(app.getHttpServer()).get('/bot/images/2YearMovingAvg').expect(200);
     });
 
     it('/bot/images/rainbow (GET)', () => {
-        return request(app.getHttpServer()).get('/bot/images/rainbow').expect(200).expect('findRainbowChart');
+        return request(app.getHttpServer()).get('/bot/images/rainbow').expect(200);
     });
 
     it('/coinmarketcap/mcap-summary (GET)', () => {
-        return request(app.getHttpServer())
-            .get('/coinmarketcap/mcap-summary')
-            .expect(200)
-            .expect('findMarketCapSummary');
-    });
-
-    it('/bot/contract/summary (GET)', () => {
-        return request(app.getHttpServer())
-            .get('/bot/contract/summary')
-            .expect(200)
-            .expect(
-                'contract\n' +
-                    '  //                 ? await findContractSummaryApi(contract)\n' +
-                    "  //                 : await findContractSummaryByNameApi(coinFullName || '')",
-            );
+        return request(app.getHttpServer()).get('/coinmarketcap/mcap-summary').expect(200);
     });
 
     it('/coinmarketcap/trending (GET)', () => {
-        return request(app.getHttpServer()).get('/coinmarketcap/trending').expect(200).expect('findTrendingCoins');
+        return request(app.getHttpServer()).get('/coinmarketcap/trending').expect(200);
     });
 });
