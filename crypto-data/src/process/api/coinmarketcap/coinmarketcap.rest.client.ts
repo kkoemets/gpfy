@@ -3,7 +3,6 @@ import { createLogger } from '../../../util/log';
 import fetch from 'node-fetch';
 import { RestClient } from '../rest.client';
 import { parseTrendingTable } from './parse-trending-table';
-import { COULD_NOT_FIND_CONTRACT } from '../../errors';
 
 const log = createLogger();
 
@@ -75,7 +74,7 @@ export class CoinmarketcapRestClient extends RestClient implements Coinmarketcap
 
         log.debug('Tables found-' + htmlTableElements.length);
         if (!htmlTableElements.length) {
-            return COULD_NOT_FIND_CONTRACT();
+            return Promise.reject(Error('Could not find summary (missing data table)'));
         }
 
         const retrievedData: Promise<{ valueText: string; value: string }[]> = htmlTableElements

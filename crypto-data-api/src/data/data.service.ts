@@ -9,7 +9,6 @@ import { INVERSIFY_TYPES } from 'crypto-data/lib/src/injection/inversify.types';
 import { CoinmarketcapApi } from 'crypto-data/lib/src/process/api/coinmarketcap/coinmarketcap.api';
 import { findGreedIndex, findSummary, findSummaryByName } from 'crypto-data';
 import { ContractSummary } from 'crypto-data/lib/src/process/crypto-data';
-import { COULD_NOT_FIND_CONTRACT, COULD_NOT_FIND_MARKETCAP } from 'crypto-data/lib/src/process/errors';
 import {
     createMarketCapSummaryTemplate,
     createSummaryTemplate,
@@ -27,31 +26,6 @@ export class DataService {
         const { originUrl, base64Img }: Btc2YearMovingAverage = await _findBtc2YearMovingAverage();
         return { originUrl, base64Img };
     }
-
-    findContractSummaryApi = async (contract: string): Promise<string> => {
-        return createSummaryTemplate(await findSummary(contract));
-    };
-
-    findContractSummaryByNameApi = async (coinOfficialNameInput: string): Promise<string> => {
-        const coinmarketcapApi: CoinmarketcapApi = InversifyContainer.get<CoinmarketcapApi>(
-            INVERSIFY_TYPES.CoinmarketcapApi,
-        );
-
-        const coinOfficialName = coinOfficialNameInput?.trim()?.toLowerCase();
-        if (!coinOfficialName) {
-            return COULD_NOT_FIND_CONTRACT();
-        }
-
-        const contractSummary: ContractSummary = await findSummaryByName(coinOfficialName).catch((error) => error);
-
-        if (contractSummary instanceof Error) {
-            return createSummaryTemplateFromCmcSummary(
-                await coinmarketcapApi.findCoinSummaryFromCmc({ coinOfficialName }),
-            );
-        }
-
-        return createSummaryTemplate(contractSummary);
-    };
 
     async findTrendingCoins(): Promise<{ trendingSummary: string }> {
         return {
@@ -79,7 +53,7 @@ export class DataService {
 
         const { mcap, volume24H, btcDominance, ethDominance } = await coinmarketcapApi.findMarketCapSummary();
         if (!mcap) {
-            return COULD_NOT_FIND_MARKETCAP();
+            return Promise.reject('Failed to mcap find summary');
         }
 
         const { value: fearIndex, value_classification: fearClass } = await findGreedIndex();
@@ -94,5 +68,30 @@ export class DataService {
                 fearClass,
             }),
         };
+    };
+
+    findContractSummaryApi = async (contract: string): Promise<string> => {
+        return createSummaryTemplate(await findSummary(contract));
+    };
+
+    findContractSummaryByNameApi = async (coinOfficialNameInput: string): Promise<string> => {
+        const coinmarketcapApi: CoinmarketcapApi = InversifyContainer.get<CoinmarketcapApi>(
+            INVERSIFY_TYPES.CoinmarketcapApi,
+        );
+
+        const coinOfficialName = coinOfficialNameInput?.trim()?.toLowerCase();
+        if (!coinOfficialName) {
+            return Promise.reject('Failed to find contract summary');
+        }
+
+        const contractSummary: ContractSummary = await findSummaryByName(coinOfficialName).catch((error) => error);
+
+        if (contractSummary instanceof Error) {
+            return createSummaryTemplateFromCmcSummary(
+                await coinmarketcapApi.findCoinSummaryFromCmc({ coinOfficialName }),
+            );
+        }
+
+        return createSummaryTemplate(contractSummary);
     };
 }

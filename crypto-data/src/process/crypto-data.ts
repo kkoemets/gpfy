@@ -8,7 +8,6 @@ import { BscscanApi } from './api/bscscan/bscscan.api';
 import { getCachedContractByName, setCachedContractByName } from './cache/token.cache.manager';
 import { CoingeckoApi } from './api/coingecko/coingecko.api';
 import { CoinmarketcapApi } from './api/coinmarketcap/coinmarketcap.api';
-import { COULD_NOT_FIND_CONTRACT } from './errors';
 
 const log = createLogger();
 
@@ -69,7 +68,7 @@ export const findSummaryByName = async (coinOfficialName: string): Promise<Contr
             coinOfficialName,
         }));
     if (!contract) {
-        return COULD_NOT_FIND_CONTRACT();
+        return Promise.reject(Error('Could not find summary (did not find contract address)'));
     }
 
     await setCachedContractByName({ coinOfficialName, contract });
