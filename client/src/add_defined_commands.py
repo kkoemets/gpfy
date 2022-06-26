@@ -114,6 +114,7 @@ def get_headers(update: Update):
 
 
 def get_json(update, url):
+    logger.info("Getting json from-" + url)
     response_json = json.loads(
         urllib.request.urlopen(urllib.request.Request(
             url, headers=get_headers(update))).read().decode('utf8'))

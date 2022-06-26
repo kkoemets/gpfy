@@ -70,11 +70,11 @@ export class DataService {
         };
     };
 
-    findContractSummaryApi = async (contract: string): Promise<string> => {
-        return createSummaryTemplate(await findSummary(contract));
+    findContractSummaryApi = async (contract: string): Promise<{ summaryText: string }> => {
+        return { summaryText: createSummaryTemplate(await findSummary(contract)) };
     };
 
-    findContractSummaryByNameApi = async (coinOfficialNameInput: string): Promise<string> => {
+    findContractSummaryByNameApi = async (coinOfficialNameInput: string): Promise<{ summaryText: string }> => {
         const coinmarketcapApi: CoinmarketcapApi = InversifyContainer.get<CoinmarketcapApi>(
             INVERSIFY_TYPES.CoinmarketcapApi,
         );
@@ -86,12 +86,13 @@ export class DataService {
 
         const contractSummary: ContractSummary = await findSummaryByName(coinOfficialName).catch((error) => error);
 
-        if (contractSummary instanceof Error) {
-            return createSummaryTemplateFromCmcSummary(
-                await coinmarketcapApi.findCoinSummaryFromCmc({ coinOfficialName }),
-            );
-        }
-
-        return createSummaryTemplate(contractSummary);
+        return {
+            summaryText:
+                contractSummary instanceof Error
+                    ? createSummaryTemplateFromCmcSummary(
+                          await coinmarketcapApi.findCoinSummaryFromCmc({ coinOfficialName }),
+                      )
+                    : createSummaryTemplate(contractSummary),
+        };
     };
 }

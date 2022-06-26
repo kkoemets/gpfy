@@ -1,5 +1,5 @@
 {
   "telegramToken": "your_token",
-  "serverHost": "http://localhost",
+  "serverHost": "http://docker-network",
   "serverPort": "3001"
 }

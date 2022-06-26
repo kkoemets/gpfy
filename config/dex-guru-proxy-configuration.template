@@ -1,2 +1,0 @@
-dex_guru_proxy_host = {$dexGuruProxyHost}
-dex_guru_proxy_port = {$dexGuruProxyPort}

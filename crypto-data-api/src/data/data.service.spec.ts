@@ -25,11 +25,11 @@ describe('DataService', () => {
     });
 
     it('Find BNB', async function () {
-        return expect(await service.findContractSummaryByNameApi('bnb')).toMatch('BNB');
+        return expect(JSON.stringify(await service.findContractSummaryByNameApi('bnb'))).toMatch('BNB');
     });
 
     it('Find BTC', async function () {
-        return expect(await service.findContractSummaryByNameApi('bitcoin')).toMatch('Bitcoin');
+        return expect(JSON.stringify(await service.findContractSummaryByNameApi('bitcoin'))).toMatch('Bitcoin');
     });
 
     it('Find trending summary', async function () {

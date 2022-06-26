@@ -1,14 +1,6 @@
 {
-  "server": {
-    "templateFile": "server-configuration.template",
-    "outputFile": "../crypto-data/src/configuration.ts"
-  },
   "client": {
     "templateFile": "client-configuration.template",
     "outputFile": "../client/src/configuration.py"
-  },
-  "dexGuruProxy": {
-    "templateFile": "dex-guru-proxy-configuration.template",
-    "outputFile": "../proxy/configuration.py"
   }
 }

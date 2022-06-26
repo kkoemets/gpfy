@@ -3,7 +3,7 @@ const fs = require("fs");
 const args = process.argv.filter((arg) => arg.includes("--")).map((arg) => arg.replace("--", ""));
 
 if (args.length !== 1) {
-    throw new Error("Only parameter ´--file´ is supported, and it must exist!");
+    throw new Error("Only parameter ´--<file_name.json>´ is supported, and it must exist!");
 }
 
 const readJson = (dir) => JSON.parse(fs.readFileSync(dir).toString());

@@ -1,2 +1,0 @@
-export const dexGuruProxyHost = {$dexGuruProxyHost};
-export const dexGuruProxyPort = {$dexGuruProxyPort};
