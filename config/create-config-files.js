@@ -9,7 +9,7 @@ if (args.length !== 1) {
 const readJson = (dir) => JSON.parse(fs.readFileSync(dir).toString());
 const replacementsJson = readJson(`${__dirname}/${args.find((a) => a)}`);
 
-const { client, server, dexGuruProxy } = readJson(`${__dirname}/template-config.json`);
+const { client } = readJson(`${__dirname}/template-config.json`);
 const writeFileFunctions = [client].map(({ templateFile, outputFile }) => {
     const template = fs.readFileSync(`${__dirname}/${templateFile}`).toString();
 
