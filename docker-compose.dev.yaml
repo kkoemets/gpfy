@@ -6,7 +6,6 @@ services:
   crypto-data-api:
     networks:
       - docker-network
-    image: nikolaik/python-nodejs:python3.10-nodejs16-alpine
     build:
       dockerfile: crypto-api.dev.Dockerfile
       context: ./docker
