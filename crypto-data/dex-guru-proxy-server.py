@@ -20,4 +20,4 @@ def catch_all(path):
 
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=3124)
+    app.run(host='localhost', port=3002)

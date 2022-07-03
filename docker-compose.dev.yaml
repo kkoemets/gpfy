@@ -1,22 +1,26 @@
-version: "3.8"
+version: "3.3"
 networks:
   docker-network:
     driver: bridge
 services:
   crypto-data-api:
-    image: nikolaik/python-nodejs:python3.10-nodejs16-alpine
     networks:
       - docker-network
+    image: nikolaik/python-nodejs:python3.10-nodejs16-alpine
+    build:
+      dockerfile: crypto-api.dev.Dockerfile
+      context: ./docker
     ports:
       - "3001:3001"
     volumes:
       - ./crypto-data/dex-guru-proxy-server.py:/crypto-data-api/dex-guru-proxy-server.py
       - ./crypto-data/requirements.txt:/crypto-data-api/requirements.txt
+      - ./crypto-data/install-puppeteer-extra.sh:/crypto-data-api/install-puppeteer-extra.sh
       - ./crypto-data-api/dist:/crypto-data-api
       - ./crypto-data-api/package.json:/crypto-data-api/package.json
       - ./crypto-data-api/crypto-data-1.0.2.tgz:/crypto-data-api/crypto-data-1.0.2.tgz
     command: >
-      sh -c "cd /crypto-data-api && pip3 install -r requirements.txt && python3 dex-guru-proxy-server.py & cd /crypto-data-api && npm install && node main.js"
+      sh -c "cd /crypto-data-api && npm install && node main.js & cd /crypto-data-api && pip3 install -r requirements.txt && python3 dex-guru-proxy-server.py"
   telegram-client:
     image: python:3.10-alpine
     networks:
@@ -28,3 +32,5 @@ services:
       - ./client/requirements.txt:/telegram-client/requirements.txt
     command: >
       sh -c "cd /telegram-client && pip3 install -r requirements.txt && python3 run_telegram_bot.py"
+    depends_on:
+      - crypto-data-api

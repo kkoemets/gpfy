@@ -34,6 +34,7 @@ export abstract class PuppeteerRestClient extends RestClient {
             await fs.promises.unlink(this.screenshotPath);
         }
 
+        logger.info('Configuring browser');
         const getBrowser = async (): Promise<Browser> => {
             try {
                 return await puppeteer.launch({
@@ -53,6 +54,7 @@ export abstract class PuppeteerRestClient extends RestClient {
 
         const page = await browser.newPage();
         await page.setViewport(this.viewport);
+        await page.setDefaultNavigationTimeout(120000)
 
         await page.goto(this.url);
         await page.waitForTimeout(this.timeout);
