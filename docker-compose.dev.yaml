@@ -7,7 +7,7 @@ services:
     networks:
       - docker-network
     build:
-      dockerfile: crypto-api.dev.Dockerfile
+      dockerfile: crypto-data-api.dev.Dockerfile
       context: ./docker
     ports:
       - "3001:3001"
@@ -20,9 +20,11 @@ services:
     command: >
       sh -c "cd /crypto-data-api && npm install && node main.js"
   telegram-client:
-    image: python:3.10-alpine
     networks:
       - docker-network
+    build:
+      dockerfile: telegram-client.dev.Dockerfile
+      context: ./docker
     ports:
       - "2999:2999"
     volumes:
