@@ -1,6 +1,6 @@
 {
   "name": "crypto-data",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Module for accessing crypto data",
   "engines": {
     "node": ">= v16.14.0 <17"

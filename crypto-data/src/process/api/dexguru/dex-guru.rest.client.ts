@@ -8,7 +8,7 @@ const log = createLogger();
 
 export default class DexGuruRestClient extends RestClient implements DexGuruApi {
     async findContractSummary({ contract }: { contract: string }): Promise<DexContractSummary> {
-        const url = `http://localhost:3002/v1/tokens/search/${contract}`;
+        const url = `https://api.dex.guru/v1/tokens/search/${contract}`;
         log.info(`Requesting ${url}`);
         const { data } = await getJson(url);
         return data.find(({ AMM }: { AMM: string }) => AMM === 'pancakeswap') || data[0];
