@@ -1,5 +1,5 @@
 {
   "telegramToken": "your_token",
-  "serverHost": "http://docker-network",
+  "serverHost": "http://crypto-data-api",
   "serverPort": "3001"
 }

@@ -43,6 +43,7 @@ const createData = (table: HTMLTableElement) => {
                     return `${isDown ? '-' : ''}${priceChange}`;
                 })
                 .map((value) => value.match('(?<=<span>)(.*?)(?=</span>)')?.find(isTruthy) || value)
+                .map((value) => value.match('(?<=">)(.*)(?=<\\/p>)')?.find(isTruthy) || value)
                 .map((value: string) => value.replace(/\s{2,}/g, ' ').trim());
 
             return {

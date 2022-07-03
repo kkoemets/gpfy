@@ -14,7 +14,8 @@ def catch_all(path):
     full_path = dex_guru_host + path;
     print('Requesting-' + full_path)
     responseJson = json.loads(urllib.request.urlopen(
-        urllib.request.Request(dex_guru_host + path, headers={'User-Agent': 'Mozilla/5.0'})).read().decode('utf8'))
+        urllib.request.Request(dex_guru_host + path, headers={'User-Agent': 'Mozilla/5.0'}))
+                              .read().decode('utf8'))
     return responseJson
 
 

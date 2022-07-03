@@ -9,9 +9,6 @@ services:
       - docker-network
     ports:
       - "3001:3001"
-    build:
-      context: ./crypto-data-api/dist
-      target: prod
     volumes:
       - ./crypto-data/dex-guru-proxy-server.py:/crypto-data-api/dex-guru-proxy-server.py
       - ./crypto-data/requirements.txt:/crypto-data-api/requirements.txt
@@ -26,9 +23,6 @@ services:
       - docker-network
     ports:
       - "2999:2999"
-    build:
-      context: ./client/
-      target: prod
     volumes:
       - ./client/src:/telegram-client
       - ./client/requirements.txt:/telegram-client/requirements.txt

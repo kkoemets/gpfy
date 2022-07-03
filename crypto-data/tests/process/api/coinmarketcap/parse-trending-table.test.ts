@@ -30,4 +30,10 @@ describe('parseTrendingTable', function () {
         expect(first._7dChange).to.equal('-33.27%');
         expect(first._30Change).to.equal('-33.72%');
     });
+
+    it('Parse data - with neutral', async function () {
+        parseTrendingTable({
+            trendingHtmlPage: fs.readFileSync(`${__dirname}/trending_table_table_with_neutral_mcap.html`).toString(),
+        }).forEach(({ mcap }) => expect(mcap).to.match(new RegExp('^[\\d,$]*$')));
+    });
 });
