@@ -12,13 +12,15 @@ services:
     ports:
       - "3001:3001"
     volumes:
-      - ./crypto-data/requirements.txt:/crypto-data-api/requirements.txt
       - ./crypto-data/install-puppeteer-extra.sh:/crypto-data-api/install-puppeteer-extra.sh
-      - ./crypto-data-api/dist:/crypto-data-api
+      - ./crypto-data-api/nest-cli.json:/crypto-data-api/nest-cli.json
+      - ./crypto-data-api/tsconfig.build.json:/crypto-data-api/tsconfig.build.json
+      - ./crypto-data-api/tsconfig.json:/crypto-data-api/tsconfig.json
       - ./crypto-data-api/package.json:/crypto-data-api/package.json
-      - ./crypto-data-api/crypto-data-1.0.3.tgz:/crypto-data-api/crypto-data-1.0.3.tgz
+      - ./crypto-data-api/src:/crypto-data-api/src
+      - ./crypto-data-api/crypto-data-1.0.4.tgz:/crypto-data-api/crypto-data-1.0.4.tgz
     command: >
-      sh -c "cd /crypto-data-api && npm install && node main.js"
+      sh -c "cd /crypto-data-api && npm install && npm run build && node dist/main.js"
   telegram-client:
     networks:
       - docker-network

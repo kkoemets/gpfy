@@ -21,14 +21,14 @@ describe('parseTrendingTable', function () {
             _24hVol: string;
         } = result[0];
 
-        expect(first._24hVol).to.equal('$32,895,414,238');
-        expect(first.price).to.equal('$19,304.86');
-        expect(first.mcap).to.equal('$368,152,388,590');
+        expect(first._24hVol).to.equal('$519,957,279');
+        expect(first.price).to.equal('$7.47');
+        expect(first.mcap).to.equal('$970,698,353');
         expect(first.position).to.equal('1');
-        expect(first.coinName).to.equal('Bitcoin');
-        expect(first._24hChange).to.equal('-8.61%');
-        expect(first._7dChange).to.equal('-33.27%');
-        expect(first._30Change).to.equal('-33.72%');
+        expect(first.coinName).to.equal('Aptos');
+        expect(first._24hChange).to.equal('-1.80%');
+        expect(first._7dChange).to.equal('-10.95%');
+        expect(first._30Change).to.equal('-10.95%');
     });
 
     it('Parse data - with neutral', async function () {

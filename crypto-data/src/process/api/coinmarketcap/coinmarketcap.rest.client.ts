@@ -14,34 +14,36 @@ export class CoinmarketcapRestClient extends RestClient implements Coinmarketcap
         ethDominance: string;
     }> {
         const html = await getHtml('https://coinmarketcap.com/');
+        const document: Document = this.toDocument(html);
+        const globalStatsContent = Array.from(document.getElementsByClassName('cmc-global-stats__inner-content'))
+            ?.find((el) => el)
+            ?.getElementsByTagName('span');
+        console.log(globalStatsContent?.length);
 
-        const findValue = (start: string, end: string) => {
-            const removeAlignment = (foundValue: string) => foundValue.replace('<!-- -->', '');
+        if (!globalStatsContent || globalStatsContent.length < 8) {
+            return Promise.reject(Error('Could not find mcap global stats'));
+        }
 
-            return removeAlignment(html.substring(html.indexOf(start) + start.length, html.indexOf(end)));
-        };
+        const findDataFromAnchorElement = (index: number) =>
+            globalStatsContent[index].getElementsByTagName('a')?.item(0)?.textContent || '';
 
-        const withCommonEndPart = (s: string) => '</a></span><span class="sc-19xuzw1-0 bOVkgr">' + s;
-
-        const mcap = findValue('href="/charts/" class="cmc-link">', withCommonEndPart('24h Vol'));
+        const mcapIndex = 2;
+        const mcap = findDataFromAnchorElement(mcapIndex);
         log.info('Found market cap-' + mcap);
 
-        const volume24H = findValue(
-            '24h Vol<!-- -->:  <a href="/charts/" class="cmc-link">',
-            withCommonEndPart('Dominance'),
-        );
+        const volume24HIndex = 3;
+        const volume24H = findDataFromAnchorElement(volume24HIndex);
         log.info(`Found volume 24h-${volume24H}`);
 
-        const btcDominance = findValue(
-            'dominance-percentage" class="cmc-link">BTC<!-- -->: <!-- -->',
-            '<!-- --> <!-- -->ETH',
-        );
+        const dominanceIndex = 4;
+        const dominanceData: string[] = findDataFromAnchorElement(dominanceIndex).split(/\s+/);
+
+        const btcPercentageIndex = 1;
+        const btcDominance = dominanceData[btcPercentageIndex];
         log.info(`Found found btc dominance-${btcDominance}`);
 
-        const ethDominance = findValue(
-            '<!-- -->ETH<!-- -->: <!-- -->',
-            withCommonEndPart('<span class="icon-Gas-Filled"'),
-        );
+        const ethPercentageIndex = 3;
+        const ethDominance = dominanceData[ethPercentageIndex];
         log.info(`Found found eth dominance-${ethDominance}`);
 
         return { mcap, volume24H, btcDominance, ethDominance };

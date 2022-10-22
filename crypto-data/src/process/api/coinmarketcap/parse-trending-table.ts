@@ -35,7 +35,7 @@ const createData = (table: HTMLTableElement) => {
                 )
                 .map((cell) => cell?.innerHTML || '')
                 .map((value) => {
-                    const priceChange = value.match('(?<=</span>)(.*?)(?=<!--)')?.find(isTruthy);
+                    const priceChange = value.match('(?<=</span>)(.*?)(?=</span>)')?.find(isTruthy);
                     if (!priceChange) {
                         return value;
                     }
@@ -50,9 +50,9 @@ const createData = (table: HTMLTableElement) => {
                 position: values[0],
                 coinName: values[1],
                 price: values[2],
-                _24hChange: `${values[3]}%`,
-                _7dChange: `${values[4]}%`,
-                _30Change: `${values[5]}%`,
+                _24hChange: `${values[3]}`,
+                _7dChange: `${values[4]}`,
+                _30Change: `${values[5]}`,
                 mcap: values[6],
                 _24hVol: values[7],
             } as unknown as TrendingCoinData;
