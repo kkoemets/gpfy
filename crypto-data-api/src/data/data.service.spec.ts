@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DataService } from './data.service';
+import { CoinPrice, CoinsPrices, DataService } from './data.service';
 
 describe('DataService', () => {
     let service: DataService;
@@ -36,5 +36,20 @@ describe('DataService', () => {
         const { trendingSummary }: { trendingSummary: string } = await service.findTrendingCoins();
         expect(trendingSummary).not.toBeNull();
         expect(trendingSummary.split('\n').length).toEqual(40);
+    });
+
+    it('Find ETH price', async function () {
+        const result: CoinPrice = await service.findCoinPriceInUsd('ethereum', 0.1432);
+        expect(result).not.toBeNull();
+        expect(result.currency).toEqual('USD');
+    });
+
+    it('Find ETH & BTC price', async function () {
+        const result: CoinsPrices = await service.findCoinsPricesInUsd([
+            { coinOfficialName: 'ethereum', amount: 0.1432 },
+            { coinOfficialName: 'bitcoin', amount: 0.1432 },
+        ]);
+        expect(result.prices.length).toEqual(2);
+        expect(result.totalValue).not.toBeNull();
     });
 });

@@ -21,5 +21,6 @@ describe('DataController', () => {
         expect(controller.findMarketCapSummary).toBeDefined();
         expect(controller.findContractSummary).toBeDefined();
         expect(controller.findTrendingCoins).toBeDefined();
+        expect(controller.findCoinsPricesInUsd).toBeDefined();
     });
 });

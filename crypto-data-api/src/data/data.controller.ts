@@ -1,5 +1,5 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { DataService } from './data.service';
+import { Controller, Get, Post, Query, Req } from '@nestjs/common';
+import { CoinsPrices, DataService } from './data.service';
 
 @Controller()
 export class DataController {
@@ -27,6 +27,16 @@ export class DataController {
         return await (contract
             ? this.ds.findContractSummaryApi(contract)
             : this.ds.findContractSummaryByNameApi(coinFullName));
+    }
+
+    @Post('/bot/contract/price')
+    async findCoinsPricesInUsd(@Req() request): Promise<CoinsPrices> {
+        return await this.ds.findCoinsPricesInUsd(
+            request.body.query.map((e) => ({
+                amount: Number(e.amount?.toString().trim()),
+                coinOfficialName: e.coinFullName?.toString().trim(),
+            })),
+        );
     }
 
     @Get('/coinmarketcap/trending')

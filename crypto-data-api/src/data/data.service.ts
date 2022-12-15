@@ -15,6 +15,19 @@ import {
     createSummaryTemplateFromCmcSummary,
 } from './contract-summary';
 
+export type CoinPrice = {
+    coinFullName: string;
+    fullUnitPrice: string;
+    amount: string;
+    amountPrice: string;
+    currency: string;
+};
+
+export type CoinsPrices = {
+    prices: CoinPrice[];
+    totalValue: { amount: string; currency: string };
+};
+
 @Injectable()
 export class DataService {
     async findRainbowChart(): Promise<{ originUrl: string; base64Img: string }> {
@@ -94,5 +107,51 @@ export class DataService {
                       )
                     : createSummaryTemplate(contractSummary),
         };
+    };
+
+    findCoinPriceInUsd = async (coinOfficialName: string, amount: number): Promise<CoinPrice> => {
+        const coinmarketcapApi: CoinmarketcapApi = InversifyContainer.get<CoinmarketcapApi>(
+            INVERSIFY_TYPES.CoinmarketcapApi,
+        );
+
+        const fullUnitPrice: string =
+            (await coinmarketcapApi.findCoinSummaryFromCmc({ coinOfficialName }))
+                .find(({ valueText }) => valueText)
+                ?.value.replace(new RegExp(/[$,]/g), '') || '';
+        return {
+            coinFullName: coinOfficialName,
+            fullUnitPrice,
+            amountPrice: this.formatAmount((amount * Number(fullUnitPrice)).toString()),
+            currency: 'USD',
+            amount: amount.toString(),
+        } as CoinPrice;
+    };
+
+    findCoinsPricesInUsd = async (
+        data: {
+            coinOfficialName: string;
+            amount: number;
+        }[],
+    ): Promise<CoinsPrices> => {
+        const prices: CoinPrice[] = await Promise.all(
+            data.map(({ coinOfficialName, amount }) => this.findCoinPriceInUsd(coinOfficialName, amount)),
+        );
+        return {
+            prices,
+            totalValue: {
+                amount: this.formatAmount(
+                    prices
+                        .map(({ amountPrice }) => amountPrice)
+                        .map(Number)
+                        .reduce((a, b) => a + b)
+                        .toString(),
+                ),
+                currency: prices.find((e) => e).currency,
+            },
+        };
+    };
+
+    private formatAmount = (string) => {
+        return string.match(new RegExp('^(\\d+.\\d{2})\\d*$'))[1];
     };
 }
