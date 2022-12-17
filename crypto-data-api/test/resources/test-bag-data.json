@@ -1,0 +1,78 @@
+{
+  "prices": [
+    {
+      "coinFullName": "bitcoin",
+      "fullUnitPrice": "16715.52",
+      "amountPrice": "2887.60",
+      "currency": "USD",
+      "amount": "0.17275"
+    },
+    {
+      "coinFullName": "ethereum",
+      "fullUnitPrice": "1181.00",
+      "amountPrice": "784.06",
+      "currency": "USD",
+      "amount": "0.6639"
+    },
+    {
+      "coinFullName": "chainlink",
+      "fullUnitPrice": "6.00",
+      "amountPrice": "71.97",
+      "currency": "USD",
+      "amount": "11.995"
+    },
+    {
+      "coinFullName": "polkadot",
+      "fullUnitPrice": "4.69",
+      "amountPrice": "614.85",
+      "currency": "USD",
+      "amount": "131.1"
+    },
+    {
+      "coinFullName": "bnb",
+      "fullUnitPrice": "238.93",
+      "amountPrice": "319.44",
+      "currency": "USD",
+      "amount": "1.337"
+    },
+    {
+      "coinFullName": "dash",
+      "fullUnitPrice": "42.72",
+      "amountPrice": "82.35",
+      "currency": "USD",
+      "amount": "1.9279"
+    },
+    {
+      "coinFullName": "solana",
+      "fullUnitPrice": "12.32",
+      "amountPrice": "49.30",
+      "currency": "USD",
+      "amount": "4.002"
+    },
+    {
+      "coinFullName": "dogecoin",
+      "fullUnitPrice": "0.0775",
+      "amountPrice": "50.47",
+      "currency": "USD",
+      "amount": "651.3"
+    },
+    {
+      "coinFullName": "monero",
+      "fullUnitPrice": "142.73",
+      "amountPrice": "117.00",
+      "currency": "USD",
+      "amount": "0.81973086"
+    },
+    {
+      "coinFullName": "iota",
+      "fullUnitPrice": "0.1697",
+      "amountPrice": "86.98",
+      "currency": "USD",
+      "amount": "512.556"
+    }
+  ],
+  "totalValue": {
+    "amount": "5064.01",
+    "currency": "USD"
+  }
+}

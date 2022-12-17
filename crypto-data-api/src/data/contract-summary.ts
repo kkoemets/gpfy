@@ -1,4 +1,5 @@
 import { ContractSummary } from 'crypto-data/lib/src/process/crypto-data';
+import { CoinsPrices } from './data.service';
 
 export const createSummaryTemplate = (summary: ContractSummary): string => {
     const {
@@ -62,6 +63,22 @@ ${Number(fearIndex) > 50 ? '🐂' : '🐻'}Fear/Greed index:
         ${fearIndex}
 🦈Fear classification: 
         ${fearClass}`;
+};
+
+export const createBagSummaryTemplate = (coinPrices: CoinsPrices) => {
+    const formatCurrency = (currency) => (currency === 'USD' ? '$' : currency);
+
+    return `💰Bag value: ${coinPrices.totalValue.amount}${formatCurrency(
+        coinPrices.totalValue.currency,
+    )}${coinPrices.prices
+        .map(({ coinFullName, fullUnitPrice, amount, amountPrice, currency }, index) => {
+            const formattedCurrency = formatCurrency(currency);
+            return `\n  ${index + 1}. ${coinFullName.toUpperCase()}
+    💲Unit price: ${formattedCurrency}${fullUnitPrice}
+    🏧Amount: ${amount}
+    💹Price: ${formattedCurrency}${amountPrice}`;
+        })
+        .join('')}`;
 };
 
 const round = (num: number, decimals: number) => +`${Math.round(Number(num + 'e+' + decimals))}e-${decimals}`;

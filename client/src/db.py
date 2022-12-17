@@ -10,28 +10,31 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 COMMANDS_KEY = 'last_10_tracked_command_calls'
+BAG_KEY = 'bag'
 COUNT_KEY = 'command_calls_count'
 USER_ID = 'id'
 
 
 def find_last_ten_commands(update):
-    found_user, _ = find_user(update)
+    found_user, _ = find_user_with_current_request_data(update)
     if found_user is None:
         return []
     return found_user[COMMANDS_KEY].copy()
 
 
 def update_command_calls(update):
-    found_user, user_request_data = find_user(update)
+    found_user, current_request_data = find_user_with_current_request_data(update)
 
     text = update.message.text
     if found_user is not None:
-        return update_calls(found_user, text)
+        update_calls(found_user, text)
+        return
 
-    logger.info("Adding new user-{0}".format(str(user_request_data)))
-    user_request_data[COUNT_KEY] = 1
-    user_request_data[COMMANDS_KEY] = [text]
-    db.insert(user_request_data)
+    logger.info("Adding new user-{0}".format(str(current_request_data)))
+    current_request_data[COUNT_KEY] = 1
+    current_request_data[COMMANDS_KEY] = [text]
+    current_request_data[BAG_KEY] = {}
+    db.insert(current_request_data)
 
 
 def update_calls(found_user, text):
@@ -54,13 +57,76 @@ def update_count(found_user):
 
 
 def find_user(update):
-    user_request_data = update.message.from_user.to_dict()
-    results = db.search(Query().id == user_request_data[USER_ID])
+    current_request_data = update.message.from_user.to_dict()
+    results = db.search(Query().id == current_request_data[USER_ID])
     if len(results) > 1:
         raise Exception("Error, multiple entries per one user")
 
     if len(results) == 0:
-        return None, user_request_data
+        return None, current_request_data
 
     found_user = results[0]
-    return found_user, user_request_data
+    return found_user, current_request_data
+
+
+def find_user_with_current_request_data(update):
+    current_request_data = update.message.from_user.to_dict()
+    results = db.search(Query().id == current_request_data[USER_ID])
+    if len(results) > 1:
+        raise Exception("Error, multiple entries per one user")
+
+    if len(results) == 0:
+        return None, current_request_data
+
+    found_user = results[0]
+    return found_user, current_request_data
+
+
+def add_to_bag(update, coin_full_name, amount):
+    found_user, current_request_data = find_user_with_current_request_data(update)
+
+    if found_user is None:
+        current_request_data[COUNT_KEY] = 1
+        current_request_data[COMMANDS_KEY] = []
+        current_request_data[BAG_KEY] = {}
+        db.insert(current_request_data)
+        return
+
+    current_bag = found_user.get(BAG_KEY)
+
+    if current_bag is None:
+        found_user[BAG_KEY] = {coin_full_name: amount}
+        db.insert(current_request_data)
+        db.update(found_user, Query().id == found_user[USER_ID])
+        return
+
+    current_bag[coin_full_name] = amount
+    db.update(found_user, Query().id == found_user[USER_ID])
+
+
+def remove_from_bag(update, coin_full_name):
+    found_user, _ = find_user_with_current_request_data(update)
+    if found_user is None:
+        return
+
+    current_bag = found_user.get(BAG_KEY)
+    if current_bag is None:
+        return
+
+    if current_bag.get(coin_full_name) is None:
+        return
+
+    current_bag.pop(coin_full_name)
+    db.update(found_user, Query().id == found_user[USER_ID])
+
+
+def find_bag(update):
+    found_user, _ = find_user_with_current_request_data(update)
+    if found_user is None:
+        return {}
+
+    current_bag = found_user.get(BAG_KEY)
+    if current_bag is None:
+        return {}
+
+    return current_bag

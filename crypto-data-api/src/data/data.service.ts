@@ -10,6 +10,7 @@ import { CoinmarketcapApi } from 'crypto-data/lib/src/process/api/coinmarketcap/
 import { findGreedIndex, findSummary, findSummaryByName } from 'crypto-data';
 import { ContractSummary } from 'crypto-data/lib/src/process/crypto-data';
 import {
+    createBagSummaryTemplate,
     createMarketCapSummaryTemplate,
     createSummaryTemplate,
     createSummaryTemplateFromCmcSummary,
@@ -121,6 +122,15 @@ export class DataService {
             currency: 'USD',
             amount: amount.toString(),
         } as CoinPrice;
+    };
+
+    findBagSummary = async (
+        data: {
+            coinOfficialName: string;
+            amount: number;
+        }[],
+    ): Promise<{ bagSummary: string }> => {
+        return { bagSummary: createBagSummaryTemplate(await this.findCoinsPricesInUsd(data)) };
     };
 
     findCoinsPricesInUsd = async (
