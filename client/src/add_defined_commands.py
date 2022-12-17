@@ -126,7 +126,7 @@ def bag_add(update: Update, cb: CallbackContext):
     try:
         url = SERVER_URL + '/bot/contract/summary?coinFullName=' + coin_full_name
         log_request(url)
-        get_json(update, url)
+        get_json(url)
     except urllib.error.HTTPError:
         update.message.reply_text('Unknown coin ´{0}´ not added to the bag'.format(coin_full_name))
         return
