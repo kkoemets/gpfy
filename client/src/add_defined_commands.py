@@ -117,7 +117,7 @@ def bag_add(update: Update, cb: CallbackContext):
         update.message.reply_text('Incorrect arguments, correct example: `/bag_add bitcoin 0.001`')
         return
 
-    coin_full_name = args[0]
+    coin_full_name = args[0].lower()
     amount = args[1]
     if not re.compile(r'^\d*[.]?\d*$').match(amount):
         update.message.reply_text('Incorrect amount argument, correct example: `/bag_add bitcoin 0.001`')
@@ -143,7 +143,7 @@ def bag_remove(update: Update, cb: CallbackContext):
         update.message.reply_text('Incorrect arguments, correct example: `/bag_remove bitcoin`')
         return
 
-    coin_full_name = args[0]
+    coin_full_name = args[0].lower()
 
     update_command_calls(update)
     remove_from_bag(update, coin_full_name)
