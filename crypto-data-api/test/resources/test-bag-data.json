@@ -73,6 +73,15 @@
   ],
   "totalValue": {
     "amount": "5064.01",
-    "currency": "USD"
-  }
+    "currency": "USD",
+    "btc": "1.432400"
+  },
+  "btcPrice": {
+    "coinFullName": "bitcoin",
+    "fullUnitPrice": "16715.52",
+    "amountPrice": "2887.60",
+    "currency": "USD",
+    "amount": "0.17275"
+  },
+  "btc": "1.323"
 }

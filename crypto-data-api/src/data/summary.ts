@@ -68,15 +68,21 @@ ${Number(fearIndex) > 50 ? '🐂' : '🐻'}Fear/Greed index:
 export const createBagSummaryTemplate = (coinPrices: CoinsPrices) => {
     const formatCurrency = (currency) => (currency === 'USD' ? '$' : currency);
 
-    return `💰Bag value: ${coinPrices.totalValue.amount}${formatCurrency(
-        coinPrices.totalValue.currency,
-    )}${coinPrices.prices
+    const formatAmount = (string) => string.match(new RegExp('^(\\d+.\\d{2})\\d*$'))[1];
+
+    const { amount, btc, currency }: { amount: string; currency: string; btc: string } = coinPrices.totalValue;
+    return `💰Bag value: ${formatCurrency(currency)}${formatAmount(amount)} / ₿${btc}${coinPrices.prices
         .map(({ coinFullName, fullUnitPrice, amount, amountPrice, currency }, index) => {
             const formattedCurrency = formatCurrency(currency);
+
+            const calculatePriceInBtc = () =>
+                Number((Number(amountPrice) / Number(coinPrices.btcPrice.fullUnitPrice)).toFixed(8));
+
             return `\n  ${index + 1}. ${coinFullName.toUpperCase()}
-    💲Unit price: ${formattedCurrency}${fullUnitPrice}
+    💲Unit price: ${formattedCurrency}${formatAmount(fullUnitPrice)}
     🏧Amount: ${amount}
-    💹Price: ${formattedCurrency}${amountPrice}`;
+    💹Price: ${formattedCurrency}${formatAmount(amountPrice)}
+      ₿ ${calculatePriceInBtc().toString()}`;
         })
         .join('')}`;
 };

@@ -14,7 +14,7 @@ import {
     createMarketCapSummaryTemplate,
     createSummaryTemplate,
     createSummaryTemplateFromCmcSummary,
-} from './contract-summary';
+} from './summary';
 
 export type CoinPrice = {
     coinFullName: string;
@@ -26,7 +26,8 @@ export type CoinPrice = {
 
 export type CoinsPrices = {
     prices: CoinPrice[];
-    totalValue: { amount: string; currency: string };
+    totalValue: { amount: string; currency: string; btc: string };
+    btcPrice: CoinPrice;
 };
 
 @Injectable()
@@ -91,10 +92,6 @@ export class DataService {
     };
 
     findContractSummaryByNameApi = async (coinOfficialNameInput: string): Promise<{ summaryText: string }> => {
-        const coinmarketcapApi: CoinmarketcapApi = InversifyContainer.get<CoinmarketcapApi>(
-            INVERSIFY_TYPES.CoinmarketcapApi,
-        );
-
         const coinOfficialName = coinOfficialNameInput?.trim()?.toLowerCase();
         if (!coinOfficialName) {
             return Promise.reject('Failed to findCoinSummaryFromCmc contract summary');
@@ -115,10 +112,11 @@ export class DataService {
             (await this.findCoinSummaryFromCmc(coinOfficialName))
                 .find(({ valueText }) => valueText)
                 ?.value.replace(new RegExp(/[$,]/g), '') || '';
+
         return {
             coinFullName: coinOfficialName,
             fullUnitPrice,
-            amountPrice: this.formatAmount((amount * Number(fullUnitPrice)).toString()),
+            amountPrice: (amount * Number(fullUnitPrice)).toString(),
             currency: 'USD',
             amount: amount.toString(),
         } as CoinPrice;
@@ -139,21 +137,28 @@ export class DataService {
             amount: number;
         }[],
     ): Promise<CoinsPrices> => {
+        const btcPrice: CoinPrice = await this.findCoinPriceInUsd('bitcoin', 1);
+
         const prices: CoinPrice[] = await Promise.all(
             data.map(({ coinOfficialName, amount }) => this.findCoinPriceInUsd(coinOfficialName, amount)),
         );
+
+        const totalValueInFiat: { amount: string; currency: string } = {
+            amount: prices
+                .map(({ amountPrice }) => amountPrice)
+                .map(Number)
+                .reduce((a, b) => a + b)
+                .toString(),
+            currency: prices.find((e) => e).currency,
+        };
+
         return {
             prices,
             totalValue: {
-                amount: this.formatAmount(
-                    prices
-                        .map(({ amountPrice }) => amountPrice)
-                        .map(Number)
-                        .reduce((a, b) => a + b)
-                        .toString(),
-                ),
-                currency: prices.find((e) => e).currency,
+                ...totalValueInFiat,
+                btc: Number((Number(totalValueInFiat.amount) / Number(btcPrice.fullUnitPrice)).toFixed(8)).toString(),
             },
+            btcPrice: btcPrice,
         };
     };
 
@@ -173,8 +178,4 @@ export class DataService {
         this.cacheManager.set(coinOfficialName, foundSummary, 5 * 60);
         return foundSummary;
     }
-
-    private formatAmount = (string) => {
-        return string.match(new RegExp('^(\\d+.\\d{2})\\d*$'))[1];
-    };
 }
