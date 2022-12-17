@@ -1,12 +1,26 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CoinPrice, CoinsPrices, DataService } from './data.service';
+import { CACHE_MANAGER } from '@nestjs/common';
 
 describe('DataService', () => {
     let service: DataService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [DataService],
+            providers: [
+                DataService,
+                {
+                    provide: CACHE_MANAGER,
+                    useValue: {
+                        get: async () => {
+                            return null;
+                        },
+                        set: async () => {
+                            return null;
+                        },
+                    },
+                },
+            ],
         }).compile();
 
         service = module.get<DataService>(DataService);

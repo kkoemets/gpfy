@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import {
     Btc2YearMovingAverage,
     findBtc2YearMovingAverage as _findBtc2YearMovingAverage,
@@ -30,6 +30,8 @@ export type CoinsPrices = {
 
 @Injectable()
 export class DataService {
+    constructor(@Inject(CACHE_MANAGER) private cacheManager) {}
+
     async findRainbowChart(): Promise<{ originUrl: string; base64Img: string }> {
         const { originUrl, base64Img } = await _findRainbowChart();
         return { originUrl, base64Img };
@@ -66,7 +68,7 @@ export class DataService {
 
         const { mcap, volume24H, btcDominance, ethDominance } = await coinmarketcapApi.findMarketCapSummary();
         if (!mcap) {
-            return Promise.reject('Failed to mcap find summary');
+            return Promise.reject('Failed to mcap findCoinSummaryFromCmc summary');
         }
 
         const { value: fearIndex, value_classification: fearClass } = await findGreedIndex();
@@ -94,7 +96,7 @@ export class DataService {
 
         const coinOfficialName = coinOfficialNameInput?.trim()?.toLowerCase();
         if (!coinOfficialName) {
-            return Promise.reject('Failed to find contract summary');
+            return Promise.reject('Failed to findCoinSummaryFromCmc contract summary');
         }
 
         const contractSummary: ContractSummary = await findSummaryByName(coinOfficialName).catch((error) => error);
@@ -102,20 +104,14 @@ export class DataService {
         return {
             summaryText:
                 contractSummary instanceof Error
-                    ? createSummaryTemplateFromCmcSummary(
-                          await coinmarketcapApi.findCoinSummaryFromCmc({ coinOfficialName }),
-                      )
+                    ? createSummaryTemplateFromCmcSummary(await this.findCoinSummaryFromCmc(coinOfficialName))
                     : createSummaryTemplate(contractSummary),
         };
     };
 
     findCoinPriceInUsd = async (coinOfficialName: string, amount: number): Promise<CoinPrice> => {
-        const coinmarketcapApi: CoinmarketcapApi = InversifyContainer.get<CoinmarketcapApi>(
-            INVERSIFY_TYPES.CoinmarketcapApi,
-        );
-
         const fullUnitPrice: string =
-            (await coinmarketcapApi.findCoinSummaryFromCmc({ coinOfficialName }))
+            (await this.findCoinSummaryFromCmc(coinOfficialName))
                 .find(({ valueText }) => valueText)
                 ?.value.replace(new RegExp(/[$,]/g), '') || '';
         return {
@@ -150,6 +146,23 @@ export class DataService {
             },
         };
     };
+
+    private async findCoinSummaryFromCmc(coinOfficialName: string): Promise<{ valueText: string; value: string }[]> {
+        const coinmarketcapApi: CoinmarketcapApi = InversifyContainer.get<CoinmarketcapApi>(
+            INVERSIFY_TYPES.CoinmarketcapApi,
+        );
+
+        const cachedValue = await this.cacheManager.get(coinOfficialName);
+        if (cachedValue) {
+            return cachedValue;
+        }
+
+        const foundSummary: { valueText: string; value: string }[] = await coinmarketcapApi.findCoinSummaryFromCmc({
+            coinOfficialName,
+        });
+        this.cacheManager.set(coinOfficialName, foundSummary, 5 * 60);
+        return foundSummary;
+    }
 
     private formatAmount = (string) => {
         return string.match(new RegExp('^(\\d+.\\d{2})\\d*$'))[1];
