@@ -88,7 +88,17 @@ describe('contactSummary', function () {
             '    💲Unit price: $0.16\n' +
             '    🏧Amount: 512.556\n' +
             '    💹Price: $86.98\n' +
-            '      ₿ 0.00520355';
+            '      ₿ 0.00520355\n' +
+            '  11. KNOW\n' +
+            '    💲Unit price: $0.00012\n' +
+            '    🏧Amount: 512.556\n' +
+            '    💹Price: $0.00012\n' +
+            '      ₿ 0.00000001\n' +
+            '  12. NOME\n' +
+            '    💲Unit price: $0.001232\n' +
+            '    🏧Amount: 512.556\n' +
+            '    💹Price: $0.001232\n' +
+            '      ₿ 0.00000007';
         expect(actual).toEqual(expected);
     });
 });

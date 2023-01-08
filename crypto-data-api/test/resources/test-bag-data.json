@@ -69,6 +69,20 @@
       "amountPrice": "86.98",
       "currency": "USD",
       "amount": "512.556"
+    },
+    {
+      "coinFullName": "know",
+      "fullUnitPrice": "0.00012",
+      "amountPrice": "0.00012",
+      "currency": "USD",
+      "amount": "512.556"
+    },
+    {
+      "coinFullName": "nome",
+      "fullUnitPrice": "0.001232423523",
+      "amountPrice": "0.001232423523",
+      "currency": "USD",
+      "amount": "512.556"
     }
   ],
   "totalValue": {
