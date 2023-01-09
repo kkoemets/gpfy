@@ -69,7 +69,7 @@ export const createBagSummaryTemplate = (coinPrices: CoinsPrices) => {
     const formatCurrency = (currency) => (currency === 'USD' ? '$' : currency);
 
     const formatAmount = (string) =>
-        string.substring(0, string.length < 4 ? string.length : 4) === '0.00'
+        string.substring(0, Math.min(string.length, 4)) === '0.00'
             ? Number(
                   Number(string)
                       .toFixed(20)
