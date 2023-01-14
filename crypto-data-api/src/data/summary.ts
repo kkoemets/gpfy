@@ -1,32 +1,4 @@
-import * as numeral from 'numeral';
-
-import { ContractSummary } from 'crypto-data/lib/src/process/crypto-data';
 import { CoinsPrices } from './data.service';
-
-export const createSummaryTemplate = (summary: ContractSummary): string => {
-    const {
-        dexContractSummary: { description, priceUSD, txns24h, volume24hUSD, priceUSDChange24h, liquidityUSD, AMM },
-        holdersAmount,
-    } = summary;
-
-    const round = (num: number, format: string) => numeral(num).format(format);
-
-    return `${description}
-      💵Current price:
-            $${round(priceUSD, '0,0.000000')}
-      💳Transactions (24h):
-            ${txns24h}
-      ↔Volume: (24h):
-            $${round(volume24hUSD, '0,0.00')}
-      🧐Price change (24h):
-            $${round(priceUSDChange24h, '0,0.000000')}
-      💸Liquidity:
-            $${round(liquidityUSD, '0,0.00')}
-      🤴🏼Holders (BSC):
-            ${holdersAmount || 'N/A'} 
-      📈Stats provided by:
-            ${AMM?.toUpperCase()}`;
-};
 
 export const createSummaryTemplateFromCmcSummary = (summary: { valueText: string; value: string }[]): string => {
     const emojis = ['💵', '↔', '🧐', '💸', '💳', '🐂', '✊'];

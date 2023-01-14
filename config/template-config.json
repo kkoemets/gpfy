@@ -1,6 +1,0 @@
-{
-  "client": {
-    "templateFile": "client-configuration.template",
-    "outputFile": "../client/src/configuration.py"
-  }
-}

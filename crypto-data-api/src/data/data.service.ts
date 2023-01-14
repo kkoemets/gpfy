@@ -1,21 +1,20 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import {
-    Btc2YearMovingAverage,
     findBtc2YearMovingAverage as _findBtc2YearMovingAverage,
+    findCoinsPricesInUsd as _findCoinsPricesInUsd,
+    findCoinSummaryFromCmc as _findCoinSummaryFromCmc,
+    findGreedIndex as _findGreedIndex,
+    findMarketCapSummary as _findMarketCapSummary,
     findRainbowChart as _findRainbowChart,
-} from 'crypto-data/lib/src/process/crypto-images';
-import { InversifyContainer } from 'crypto-data/lib/src/injection/inversify.container';
-import { INVERSIFY_TYPES } from 'crypto-data/lib/src/injection/inversify.types';
-import { CoinmarketcapApi } from 'crypto-data/lib/src/process/api/coinmarketcap/coinmarketcap.api';
-import { findGreedIndex, findSummary, findSummaryByName } from 'crypto-data';
-import { ContractSummary } from 'crypto-data/lib/src/process/crypto-data';
+    findTrendingCoins as _findTrendingCoins,
+} from 'crypto-data/lib/src/index';
 import {
     createBagSummaryTemplate,
     createMarketCapSummaryTemplate,
-    createSummaryTemplate,
     createSummaryTemplateFromCmcSummary,
     createTrendingCoinsSummary,
 } from './summary';
+import { Btc2YearMovingAverage } from 'crypto-data/lib/src/process/crypto-images';
 
 export type CoinPrice = {
     coinFullName: string;
@@ -47,27 +46,19 @@ export class DataService {
 
     async findTrendingCoins(): Promise<{ trendingSummary: string }> {
         return {
-            trendingSummary: createTrendingCoinsSummary(
-                (
-                    await InversifyContainer.get<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi).findTrendingCoins()
-                ).slice(0, 10),
-            ),
+            trendingSummary: createTrendingCoinsSummary((await _findTrendingCoins()).slice(0, 10)),
         };
     }
 
     findMarketCapSummary = async (): Promise<{
         cmcSummary: string;
     }> => {
-        const coinmarketcapApi: CoinmarketcapApi = InversifyContainer.get<CoinmarketcapApi>(
-            INVERSIFY_TYPES.CoinmarketcapApi,
-        );
-
-        const { mcap, volume24H, btcDominance, ethDominance } = await coinmarketcapApi.findMarketCapSummary();
+        const { mcap, volume24H, btcDominance, ethDominance } = await _findMarketCapSummary();
         if (!mcap) {
             return Promise.reject('Failed to mcap findCoinSummaryFromCmc summary');
         }
 
-        const { value: fearIndex, value_classification: fearClass } = await findGreedIndex();
+        const { value: fearIndex, value_classification: fearClass } = await _findGreedIndex();
 
         return {
             cmcSummary: createMarketCapSummaryTemplate({
@@ -81,39 +72,10 @@ export class DataService {
         };
     };
 
-    findContractSummaryApi = async (contract: string): Promise<{ summaryText: string }> => {
-        return { summaryText: createSummaryTemplate(await findSummary(contract)) };
-    };
-
     findContractSummaryByNameApi = async (coinOfficialNameInput: string): Promise<{ summaryText: string }> => {
-        const coinOfficialName = coinOfficialNameInput?.trim()?.toLowerCase();
-        if (!coinOfficialName) {
-            return Promise.reject('Failed to findCoinSummaryFromCmc contract summary');
-        }
-
-        const contractSummary: ContractSummary = await findSummaryByName(coinOfficialName).catch((error) => error);
-
         return {
-            summaryText:
-                contractSummary instanceof Error
-                    ? createSummaryTemplateFromCmcSummary(await this.findCoinSummaryFromCmc(coinOfficialName))
-                    : createSummaryTemplate(contractSummary),
+            summaryText: createSummaryTemplateFromCmcSummary(await this.findCoinSummaryFromCmc(coinOfficialNameInput)),
         };
-    };
-
-    findCoinPriceInUsd = async (coinOfficialName: string, amount: number): Promise<CoinPrice> => {
-        const fullUnitPrice: string =
-            (await this.findCoinSummaryFromCmc(coinOfficialName))
-                .find(({ valueText }) => valueText)
-                ?.value.replace(new RegExp(/[$,]/g), '') || '';
-
-        return {
-            coinFullName: coinOfficialName,
-            fullUnitPrice,
-            amountPrice: (amount * Number(fullUnitPrice)).toString(),
-            currency: 'USD',
-            amount: amount.toString(),
-        } as CoinPrice;
     };
 
     findBagSummary = async (
@@ -122,51 +84,16 @@ export class DataService {
             amount: number;
         }[],
     ): Promise<{ bagSummary: string }> => {
-        return { bagSummary: createBagSummaryTemplate(await this.findCoinsPricesInUsd(data)) };
-    };
-
-    findCoinsPricesInUsd = async (
-        data: {
-            coinOfficialName: string;
-            amount: number;
-        }[],
-    ): Promise<CoinsPrices> => {
-        const btcPrice: CoinPrice = await this.findCoinPriceInUsd('bitcoin', 1);
-
-        const prices: CoinPrice[] = await Promise.all(
-            data.map(({ coinOfficialName, amount }) => this.findCoinPriceInUsd(coinOfficialName, amount)),
-        );
-
-        const totalValueInFiat: { amount: string; currency: string } = {
-            amount: prices
-                .map(({ amountPrice }) => amountPrice)
-                .map(Number)
-                .reduce((a, b) => a + b)
-                .toString(),
-            currency: prices.find((e) => e).currency,
-        };
-
-        return {
-            prices,
-            totalValue: {
-                ...totalValueInFiat,
-                btc: Number((Number(totalValueInFiat.amount) / Number(btcPrice.fullUnitPrice)).toFixed(8)).toString(),
-            },
-            btcPrice: btcPrice,
-        };
+        return { bagSummary: createBagSummaryTemplate(await _findCoinsPricesInUsd({ data })) };
     };
 
     private async findCoinSummaryFromCmc(coinOfficialName: string): Promise<{ valueText: string; value: string }[]> {
-        const coinmarketcapApi: CoinmarketcapApi = InversifyContainer.get<CoinmarketcapApi>(
-            INVERSIFY_TYPES.CoinmarketcapApi,
-        );
-
         const cachedValue = await this.cacheManager.get(coinOfficialName);
         if (cachedValue) {
             return cachedValue;
         }
 
-        const foundSummary: { valueText: string; value: string }[] = await coinmarketcapApi.findCoinSummaryFromCmc({
+        const foundSummary: { valueText: string; value: string }[] = await _findCoinSummaryFromCmc({
             coinOfficialName,
         });
         this.cacheManager.set(coinOfficialName, foundSummary, 5 * 60);

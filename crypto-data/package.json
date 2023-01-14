@@ -3,7 +3,7 @@
   "version": "1.0.5",
   "description": "Module for accessing crypto data",
   "engines": {
-    "node": ">= v16.14.0 <17"
+    "node": ">= v18.13.0"
   },
   "main": "./lib/src/index.js",
   "types": "./lib/src/index.d.ts",
@@ -57,7 +57,7 @@
     "node-fetch": "^2.6.1",
     "node-ts-cache": "^4.4.0",
     "node-ts-cache-storage-memory": "^4.4.0",
-    "puppeteer": "^14.4.1",
+    "puppeteer": "^19.5.2",
     "reflect-metadata": "^0.1.13",
     "tslib": "~2.4.0",
     "tslog": "^3.3.3",

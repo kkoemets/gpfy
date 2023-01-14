@@ -1,35 +1,8 @@
 import * as fs from 'fs';
-import { ContractSummary } from 'crypto-data/lib/src/process/crypto-data';
-import { createBagSummaryTemplate, createSummaryTemplate, createTrendingCoinsSummary } from './summary';
+import { createBagSummaryTemplate, createTrendingCoinsSummary } from './summary';
 import { CoinsPrices } from './data.service';
 
 describe('contactSummary', function () {
-    it('Correct format', function () {
-        const summary: ContractSummary = JSON.parse(
-            fs.readFileSync(__dirname + '/../../test/resources/test-contract-summary.json').toString(),
-        );
-
-        const actual = createSummaryTemplate(summary);
-
-        const expected =
-            'CumRocket/CUMMIES\n' +
-            '      💵Current price:\n' +
-            '            $0.034210\n' +
-            '      💳Transactions (24h):\n' +
-            '            1008\n' +
-            '      ↔Volume: (24h):\n' +
-            '            $212,257.50\n' +
-            '      🧐Price change (24h):\n' +
-            '            $0.051202\n' +
-            '      💸Liquidity:\n' +
-            '            $1,312,827.51\n' +
-            '      🤴🏼Holders (BSC):\n' +
-            '            N/A \n' +
-            '      📈Stats provided by:\n' +
-            '            PANCAKESWAP';
-        expect(actual).toEqual(expected);
-    });
-
     it('Bag summary', function () {
         const data: CoinsPrices = JSON.parse(
             fs.readFileSync(__dirname + '/../../test/resources/test-bag-data.json').toString(),

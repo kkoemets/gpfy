@@ -56,7 +56,7 @@ def last_10(update: Update, _: CallbackContext) -> None:
 
 def cummies(update: Update, _: CallbackContext) -> None:
     url = SERVER_URL + \
-          '/bot/contract/summary?contract=0x27ae27110350b98d564b9a3eed31baebc82d878d'
+          '/bot/contract/summary?coinFullName=cumrocket'
     log_request(url)
     find_coin_summary_and_respond(update, url)
 

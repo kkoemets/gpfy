@@ -22,10 +22,8 @@ export class DataController {
 
     @Get('/bot/contract/summary')
     async findContractSummary(@Query() query): Promise<{ summaryText: string }> {
-        const { contract, coinFullName } = query;
-        return await (contract
-            ? this.ds.findContractSummaryApi(contract)
-            : this.ds.findContractSummaryByNameApi(coinFullName));
+        const { coinFullName } = query;
+        return await this.ds.findContractSummaryByNameApi(coinFullName);
     }
 
     @Post('/bot/bag/calculate')

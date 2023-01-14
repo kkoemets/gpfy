@@ -1,3 +1,0 @@
-TELEGRAM_TOKEN = {$telegramToken}
-SERVER_HOST = {$serverHost}
-SERVER_PORT = {$serverPort}

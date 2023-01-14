@@ -1,10 +1,5 @@
-/bscscan-telegram.iml
 /.idea/
 /venv/
-/proxy/configuration.py
-/client/src/configuration.py
-/config/bot-dev.json
-/config/bot-docker-dev.json
 /client/logs/*.log
 /client/src/db.json
 /client/db.json
