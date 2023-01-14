@@ -1,20 +1,10 @@
-import { DexContractSummary } from './api/dexguru/dex-contract-summary';
 import fetch from 'node-fetch';
 import { createLogger } from '../util/log';
 import { InversifyContainer } from '../injection/inversify.container';
-import { DexGuruApi } from './api/dexguru/dex-guru.api';
+import { CoinmarketcapApi, MarketCapSummary, TrendingCoinData } from './api/coinmarketcap/coinmarketcap.api';
 import { INVERSIFY_TYPES } from '../injection/inversify.types';
-import { BscscanApi } from './api/bscscan/bscscan.api';
-import { getCachedContractByName, setCachedContractByName } from './cache/token.cache.manager';
-import { CoingeckoApi } from './api/coingecko/coingecko.api';
-import { CoinmarketcapApi } from './api/coinmarketcap/coinmarketcap.api';
 
 const log = createLogger();
-
-export interface ContractSummary {
-    dexContractSummary: DexContractSummary;
-    holdersAmount: string | null;
-}
 
 export interface GreedIndex {
     value: string;
@@ -22,6 +12,20 @@ export interface GreedIndex {
     timestamp: string;
     time_until_update: string;
 }
+
+export type CoinPrice = {
+    coinFullName: string;
+    fullUnitPrice: string;
+    amount: string;
+    amountPrice: string;
+    currency: string;
+};
+
+export type CoinsPrices = {
+    prices: CoinPrice[];
+    totalValue: { amount: string; currency: string; btc: string };
+    btcPrice: CoinPrice;
+};
 
 export const findGreedIndex = async (): Promise<GreedIndex> => {
     log.info('Finding greed index');
@@ -31,47 +35,75 @@ export const findGreedIndex = async (): Promise<GreedIndex> => {
         })
     ).json()) as { data: object[] };
 
-    log.info(data);
-
     return { ...(data.data[0] as GreedIndex) };
 };
 
-export const findSummary = async (contract: string): Promise<ContractSummary> => {
-    log.info(`Finding summary for contract ${contract}`);
-    const dexContractSummary: DexContractSummary = await InversifyContainer.get<DexGuruApi>(
-        INVERSIFY_TYPES.DexGuruApi,
-    ).findContractSummary({
-        contract,
-    });
+export const findTrendingCoins: () => Promise<TrendingCoinData[]> = async () => {
+    return InversifyContainer.get<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi).findTrendingCoins();
+};
 
-    const { holdersAmount } =
-        dexContractSummary.network === 'bsc'
-            ? await InversifyContainer.get<BscscanApi>(INVERSIFY_TYPES.BscscanApi).findHolders({
-                  bscContract: contract,
-              })
-            : {
-                  holdersAmount: null,
-              };
+export const findMarketCapSummary: () => Promise<MarketCapSummary> = async () => {
+    return InversifyContainer.get<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi).findMarketCapSummary();
+};
+
+export const findCoinSummaryFromCmc: ({
+    coinOfficialName,
+}: {
+    coinOfficialName: string;
+}) => Promise<{ valueText: string; value: string }[]> = ({ coinOfficialName }: { coinOfficialName: string }) => {
+    return InversifyContainer.get<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi).findCoinSummaryFromCmc({
+        coinOfficialName,
+    });
+};
+
+export const findCoinsPricesInUsd: ({
+    data,
+}: {
+    data: { coinOfficialName: string; amount: number }[];
+}) => Promise<CoinsPrices> = async ({
+    data,
+}: {
+    data: {
+        coinOfficialName: string;
+        amount: number;
+    }[];
+}): Promise<CoinsPrices> => {
+    const btcPrice: CoinPrice = await findCoinPriceInUsd('bitcoin', 1);
+
+    const prices: CoinPrice[] = await Promise.all(
+        data.map(({ coinOfficialName, amount }) => findCoinPriceInUsd(coinOfficialName, amount)),
+    );
+
+    const totalValueInFiat: { amount: string; currency: string } = {
+        amount: prices
+            .map(({ amountPrice }) => amountPrice)
+            .map(Number)
+            .reduce((a, b) => a + b)
+            .toString(),
+        currency: prices.find((e) => e)?.currency || 'USD',
+    };
+
     return {
-        dexContractSummary,
-        holdersAmount,
+        prices,
+        totalValue: {
+            ...totalValueInFiat,
+            btc: Number((Number(totalValueInFiat.amount) / Number(btcPrice.fullUnitPrice)).toFixed(8)).toString(),
+        },
+        btcPrice: btcPrice,
     };
 };
 
-export const findSummaryByName = async (coinOfficialName: string): Promise<ContractSummary> => {
-    log.info(`Finding for-${coinOfficialName}`);
+export const findCoinPriceInUsd = async (coinOfficialName: string, amount: number): Promise<CoinPrice> => {
+    const fullUnitPrice: string =
+        (await findCoinSummaryFromCmc({ coinOfficialName }))
+            .find(({ valueText }) => valueText)
+            ?.value.replace(new RegExp(/[$,]/g), '') || '';
 
-    const contract =
-        (await getCachedContractByName({ coinOfficialName })) ||
-        (await InversifyContainer.get<CoingeckoApi>(INVERSIFY_TYPES.CoingeckoApi).findContract({ coinOfficialName })) ||
-        (await InversifyContainer.get<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi).findContract({
-            coinOfficialName,
-        }));
-    if (!contract) {
-        return Promise.reject(Error('Could not find summary (did not find contract address)'));
-    }
-
-    await setCachedContractByName({ coinOfficialName, contract });
-
-    return await findSummary(contract);
+    return {
+        coinFullName: coinOfficialName,
+        fullUnitPrice,
+        amountPrice: (amount * Number(fullUnitPrice)).toString(),
+        currency: 'USD',
+        amount: amount.toString(),
+    } as CoinPrice;
 };

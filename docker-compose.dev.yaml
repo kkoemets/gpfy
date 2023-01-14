@@ -18,7 +18,7 @@ services:
       - ./crypto-data-api/tsconfig.json:/crypto-data-api/tsconfig.json
       - ./crypto-data-api/package.json:/crypto-data-api/package.json
       - ./crypto-data-api/src:/crypto-data-api/src
-      - ./crypto-data-api/crypto-data-1.0.4.tgz:/crypto-data-api/crypto-data-1.0.4.tgz
+      - ./crypto-data-api/crypto-data-1.0.5.tgz:/crypto-data-api/crypto-data-1.0.5.tgz
     command: >
       sh -c "cd /crypto-data-api && npm install && npm run build && node dist/main.js"
   telegram-client:

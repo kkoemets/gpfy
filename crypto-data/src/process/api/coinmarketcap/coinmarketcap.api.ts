@@ -1,33 +1,31 @@
 export type TrendingCoinData = {
-  position: string;
-  coinName: string;
-  price: string;
-  _24hChange: string;
-  _7dChange: string;
-  _30Change: string;
-  mcap: string;
-  _24hVol: string;
+    position: string;
+    coinName: string;
+    price: string;
+    _24hChange: string;
+    _7dChange: string;
+    _30Change: string;
+    mcap: string;
+    _24hVol: string;
 };
 
-export interface CoinmarketcapApi {
-  findMarketCapSummary: () => Promise<{
+export interface MarketCapSummary {
     mcap: string;
     volume24H: string;
     btcDominance: string;
     ethDominance: string;
-  }>;
+}
 
-  findContract: ({
-    coinOfficialName,
-  }: {
-    coinOfficialName: string;
-  }) => Promise<string | null>;
+export interface CoinmarketcapApi {
+    findMarketCapSummary: () => Promise<MarketCapSummary>;
 
-  findCoinSummaryFromCmc: ({
-    coinOfficialName,
-  }: {
-    coinOfficialName: string;
-  }) => Promise<{ valueText: string; value: string }[]>;
+    findContract: ({ coinOfficialName }: { coinOfficialName: string }) => Promise<string | null>;
 
-  findTrendingCoins: () => Promise<TrendingCoinData[]>;
+    findCoinSummaryFromCmc: ({
+        coinOfficialName,
+    }: {
+        coinOfficialName: string;
+    }) => Promise<{ valueText: string; value: string }[]>;
+
+    findTrendingCoins: () => Promise<TrendingCoinData[]>;
 }

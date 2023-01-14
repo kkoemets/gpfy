@@ -5,30 +5,48 @@ import {
     RainbowChart,
 } from './process/crypto-images';
 import {
-    ContractSummary,
+    CoinPrice,
+    findCoinPriceInUsd as _findCoinPriceInUsd,
+    findCoinsPricesInUsd as _findCoinsPricesInUsd,
+    findCoinSummaryFromCmc as _findCoinSummaryFromCmc,
     findGreedIndex as _findGreedIndex,
-    findSummary as _findSummary,
-    findSummaryByName as _findSummaryByName,
+    findMarketCapSummary as _findMarketCapSummary,
+    findTrendingCoins as _findTrendingCoins,
     GreedIndex,
 } from './process/crypto-data';
 import { InversifyContainer } from './injection/inversify.container';
 import { Container } from 'inversify';
 import { INVERSIFY_TYPES } from './injection/inversify.types';
+import { MarketCapSummary, TrendingCoinData } from './process/api/coinmarketcap/coinmarketcap.api';
 
-export const findBtc2YearMovingAverage: () => Promise<Btc2YearMovingAverage> = () => _findBtc2YearMovingAverage();
-export const findRainbowChart: () => Promise<RainbowChart> = () => _findRainbowChart();
-export const findGreedIndex: () => Promise<GreedIndex> = () => _findGreedIndex();
-export const findSummary: (contract: string) => Promise<ContractSummary> = (contract: string) => _findSummary(contract);
-export const findSummaryByName: (coinOfficialName: string) => Promise<ContractSummary> = (coinOfficialName: string) =>
-    _findSummaryByName(coinOfficialName);
 export const container: Container = InversifyContainer;
 export const containerTypes: {
     BlockChainCenterApi: symbol;
-    CoingeckoApi: symbol;
     CoinmarketcapApi: symbol;
     RestController: symbol;
-    BscscanApi: symbol;
-    DexGuruApi: symbol;
     LookIntoBitcoinApi: symbol;
     ExpressApplication: symbol;
 } = INVERSIFY_TYPES;
+
+export const findBtc2YearMovingAverage: () => Promise<Btc2YearMovingAverage> = async () => _findBtc2YearMovingAverage();
+export const findRainbowChart: () => Promise<RainbowChart> = async () => _findRainbowChart();
+export const findGreedIndex: () => Promise<GreedIndex> = async () => _findGreedIndex();
+export const findTrendingCoins: () => Promise<TrendingCoinData[]> = async () => _findTrendingCoins();
+export const findMarketCapSummary: () => Promise<MarketCapSummary> = async () => _findMarketCapSummary();
+export const findCoinSummaryFromCmc: ({
+    coinOfficialName,
+}: {
+    coinOfficialName: string;
+}) => Promise<{ valueText: string; value: string }[]> = async ({ coinOfficialName }) =>
+    _findCoinSummaryFromCmc({ coinOfficialName });
+
+export const findCoinPriceInUsd: ({
+    coinFullName,
+    amount,
+}: {
+    coinFullName: string;
+    amount: number;
+}) => Promise<CoinPrice> = async ({ coinFullName, amount }) => _findCoinPriceInUsd(coinFullName, amount);
+
+export const findCoinsPricesInUsd = async ({ data }: { data: { coinOfficialName: string; amount: number }[] }) =>
+    _findCoinsPricesInUsd({ data });

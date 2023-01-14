@@ -1,4 +1,4 @@
-import { CoinmarketcapApi, TrendingCoinData } from './coinmarketcap.api';
+import { CoinmarketcapApi, MarketCapSummary, TrendingCoinData } from './coinmarketcap.api';
 import { createLogger } from '../../../util/log';
 import fetch from 'node-fetch';
 import { RestClient } from '../rest.client';
@@ -7,12 +7,7 @@ import { parseTrendingTable } from './parse-trending-table';
 const log = createLogger();
 
 export class CoinmarketcapRestClient extends RestClient implements CoinmarketcapApi {
-    async findMarketCapSummary(): Promise<{
-        mcap: string;
-        volume24H: string;
-        btcDominance: string;
-        ethDominance: string;
-    }> {
+    async findMarketCapSummary(): Promise<MarketCapSummary> {
         const document: Document = this.toDocument(await getHtml('https://coinmarketcap.com/'));
         const globalStatisticsElements = Array.from(document.getElementsByClassName('cmc-global-stats__inner-content'))
             ?.find((el) => el)
