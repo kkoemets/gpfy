@@ -14,6 +14,7 @@ import {
     createMarketCapSummaryTemplate,
     createSummaryTemplate,
     createSummaryTemplateFromCmcSummary,
+    createTrendingCoinsSummary,
 } from './summary';
 
 export type CoinPrice = {
@@ -46,18 +47,11 @@ export class DataService {
 
     async findTrendingCoins(): Promise<{ trendingSummary: string }> {
         return {
-            trendingSummary: (
-                await InversifyContainer.get<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi).findTrendingCoins()
-            )
-                .slice(0, 10)
-                .map(
-                    ({ position, coinName, price, _24hChange, mcap }) =>
-                        `#${position} ${coinName}
-      💵${price}
-      2️⃣4️⃣↕️${_24hChange}
-      🐂${mcap} `,
-                )
-                .join('\n'),
+            trendingSummary: createTrendingCoinsSummary(
+                (
+                    await InversifyContainer.get<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi).findTrendingCoins()
+                ).slice(0, 10),
+            ),
         };
     }
 

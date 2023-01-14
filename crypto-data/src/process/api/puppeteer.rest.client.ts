@@ -6,6 +6,21 @@ import { createLogger } from '../../util/log';
 
 const logger = createLogger();
 
+const getBrowser = async (): Promise<Browser> => {
+    try {
+        return await puppeteer.launch({
+            headless: true,
+            args: ['--no-sandbox'],
+        });
+    } catch (e) {
+        return await puppeteer.launch({
+            headless: true,
+            executablePath: '/usr/bin/chromium-browser',
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
+    }
+};
+
 export abstract class PuppeteerRestClient extends RestClient {
     private readonly screenshotPath: string;
     private readonly url: string;
@@ -35,26 +50,12 @@ export abstract class PuppeteerRestClient extends RestClient {
         }
 
         logger.info('Configuring browser');
-        const getBrowser = async (): Promise<Browser> => {
-            try {
-                return await puppeteer.launch({
-                    headless: true,
-                    args: ['--no-sandbox'],
-                });
-            } catch (e) {
-                return await puppeteer.launch({
-                    headless: true,
-                    executablePath: '/usr/bin/chromium-browser',
-                    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-                });
-            }
-        };
 
         const browser: Browser = await getBrowser();
 
         const page = await browser.newPage();
         await page.setViewport(this.viewport);
-        await page.setDefaultNavigationTimeout(120000)
+        await page.setDefaultNavigationTimeout(120000);
 
         await page.goto(this.url);
         await page.waitForTimeout(this.timeout);

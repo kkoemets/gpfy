@@ -13,19 +13,17 @@ export class CoinmarketcapRestClient extends RestClient implements Coinmarketcap
         btcDominance: string;
         ethDominance: string;
     }> {
-        const html = await getHtml('https://coinmarketcap.com/');
-        const document: Document = this.toDocument(html);
-        const globalStatsContent = Array.from(document.getElementsByClassName('cmc-global-stats__inner-content'))
+        const document: Document = this.toDocument(await getHtml('https://coinmarketcap.com/'));
+        const globalStatisticsElements = Array.from(document.getElementsByClassName('cmc-global-stats__inner-content'))
             ?.find((el) => el)
             ?.getElementsByTagName('span');
-        console.log(globalStatsContent?.length);
 
-        if (!globalStatsContent || globalStatsContent.length < 8) {
+        if (!globalStatisticsElements || globalStatisticsElements.length < 8) {
             return Promise.reject(Error('Could not find mcap global stats'));
         }
 
         const findDataFromAnchorElement = (index: number) =>
-            globalStatsContent[index].getElementsByTagName('a')?.item(0)?.textContent || '';
+            globalStatisticsElements[index].getElementsByTagName('a')?.item(0)?.textContent || '';
 
         const mcapIndex = 2;
         const mcap = findDataFromAnchorElement(mcapIndex);
@@ -50,9 +48,9 @@ export class CoinmarketcapRestClient extends RestClient implements Coinmarketcap
     }
 
     async findContract({ coinOfficialName }: { coinOfficialName: string }): Promise<string | null> {
-        const html = await getCoinHtml(coinOfficialName);
-        const document: Document = this.toDocument(html);
-        const achorElements: HTMLAnchorElement[] = Array.from(document.getElementsByTagName('a'));
+        const achorElements: HTMLAnchorElement[] = Array.from(
+            this.toDocument(await getCoinHtml(coinOfficialName)).getElementsByTagName('a'),
+        );
 
         const findFromAnchorsTokenAddress = (hrefIncluesAnd: string) =>
             achorElements.find((el) => el.href.includes(hrefIncluesAnd))?.href.replace(hrefIncluesAnd, '');

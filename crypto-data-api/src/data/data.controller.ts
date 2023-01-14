@@ -22,8 +22,7 @@ export class DataController {
 
     @Get('/bot/contract/summary')
     async findContractSummary(@Query() query): Promise<{ summaryText: string }> {
-        const contract = query.contract?.toString().trim();
-        const coinFullName = query.coinFullName?.toString().trim();
+        const { contract, coinFullName } = query;
         return await (contract
             ? this.ds.findContractSummaryApi(contract)
             : this.ds.findContractSummaryByNameApi(coinFullName));
@@ -33,8 +32,8 @@ export class DataController {
     async findBagSummary(@Req() request): Promise<{ bagSummary: string }> {
         return await this.ds.findBagSummary(
             request.body.query.map((e) => ({
-                amount: Number(e.amount?.toString().trim()),
-                coinOfficialName: e.coinFullName?.toString().trim(),
+                amount: Number(e.amount),
+                coinOfficialName: e.coinFullName,
             })),
         );
     }

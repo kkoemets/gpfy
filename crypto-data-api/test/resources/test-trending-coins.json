@@ -1,0 +1,302 @@
+[
+  {
+    "position": "1",
+    "coinName": "Solana",
+    "price": "$16.48",
+    "24hChange": "3.95%",
+    "_7dChange": "22.15%",
+    "_30Change": "19.84%",
+    "mcap": "$6,103,417,330",
+    "_24hVol": "$926,854,862"
+  },
+  {
+    "position": "2",
+    "coinName": "Bitcoin",
+    "price": "$18,853.29",
+    "24hChange": "7.43%",
+    "_7dChange": "11.92%",
+    "_30Change": "6.21%",
+    "mcap": "$363,117,708,279",
+    "_24hVol": "$36,793,846,252"
+  },
+  {
+    "position": "3",
+    "coinName": "BNB",
+    "price": "$287.17",
+    "24hChange": "2.71%",
+    "_7dChange": "11.61%",
+    "_30Change": "6.64%",
+    "mcap": "$45,936,298,850",
+    "_24hVol": "$698,215,757"
+  },
+  {
+    "position": "4",
+    "coinName": "Fetch.ai",
+    "price": "$0.21",
+    "24hChange": "17.12%",
+    "_7dChange": "94.33%",
+    "_30Change": "130.69%",
+    "mcap": "$172,003,431",
+    "_24hVol": "$107,498,696"
+  },
+  {
+    "position": "5",
+    "coinName": "PancakeSwap",
+    "price": "$3.51",
+    "24hChange": "2.11%",
+    "_7dChange": "6.98%",
+    "_30Change": "-6.31%",
+    "mcap": "$569,469,743",
+    "_24hVol": "$59,817,099"
+  },
+  {
+    "position": "6",
+    "coinName": "Shiba Inu",
+    "price": "$0.000009427",
+    "24hChange": "5.61%",
+    "_7dChange": "10.46%",
+    "_30Change": "3.06%",
+    "mcap": "$5,176,186,431",
+    "_24hVol": "$408,380,297"
+  },
+  {
+    "position": "7",
+    "coinName": "Polygon",
+    "price": "$0.9116",
+    "24hChange": "5.51%",
+    "_7dChange": "15.10%",
+    "_30Change": "-0.66%",
+    "mcap": "$7,962,101,091",
+    "_24hVol": "$594,885,524"
+  },
+  {
+    "position": "8",
+    "coinName": "Terra Classic",
+    "price": "$0.0001681",
+    "24hChange": "3.52%",
+    "_7dChange": "9.19%",
+    "_30Change": "0.01%",
+    "mcap": "$1,009,388,632",
+    "_24hVol": "$144,838,679"
+  },
+  {
+    "position": "9",
+    "coinName": "SingularityNET",
+    "price": "$0.09639",
+    "24hChange": "18.19%",
+    "_7dChange": "103.67%",
+    "_30Change": "76.43%",
+    "mcap": "$111,186,004",
+    "_24hVol": "$30,698,940"
+  },
+  {
+    "position": "10",
+    "coinName": "Ethereum",
+    "price": "$1,427.53",
+    "24hChange": "6.45%",
+    "_7dChange": "14.01%",
+    "_30Change": "8.23%",
+    "mcap": "$174,692,974,993",
+    "_24hVol": "$13,451,198,418"
+  },
+  {
+    "position": "11",
+    "coinName": "dYdX",
+    "price": "$1.40",
+    "24hChange": "4.43%",
+    "_7dChange": "19.13%",
+    "_30Change": "-14.36%",
+    "mcap": "$91,963,500",
+    "_24hVol": "$56,394,025"
+  },
+  {
+    "position": "12",
+    "coinName": "XRP",
+    "price": "$0.3768",
+    "24hChange": "1.56%",
+    "_7dChange": "10.41%",
+    "_30Change": "-4.24%",
+    "mcap": "$19,076,326,741",
+    "_24hVol": "$1,272,419,635"
+  },
+  {
+    "position": "13",
+    "coinName": "Moonbeam",
+    "price": "$0.3541",
+    "24hChange": "4.89%",
+    "_7dChange": "10.11%",
+    "_30Change": "-9.32%",
+    "mcap": "$192,773,371",
+    "_24hVol": "$10,576,604"
+  },
+  {
+    "position": "14",
+    "coinName": "FLARE",
+    "price": "$0.04423",
+    "24hChange": "-6.83%",
+    "_7dChange": "-44.50%",
+    "_30Change": "-44.50%",
+    "mcap": "$530,795,010",
+    "_24hVol": "$50,643,103"
+  },
+  {
+    "position": "15",
+    "coinName": "Aptos",
+    "price": "$6.41",
+    "24hChange": "25.35%",
+    "_7dChange": "72.29%",
+    "_30Change": "38.51%",
+    "mcap": "$833,488,521",
+    "_24hVol": "$544,298,642"
+  },
+  {
+    "position": "16",
+    "coinName": "WOO Network",
+    "price": "$0.1707",
+    "24hChange": "0.55%",
+    "_7dChange": "30.02%",
+    "_30Change": "24.51%",
+    "mcap": "$279,470,937",
+    "_24hVol": "$37,760,419"
+  },
+  {
+    "position": "17",
+    "coinName": "Ocean Protocol",
+    "price": "$0.2478",
+    "24hChange": "13.56%",
+    "_7dChange": "34.00%",
+    "_30Change": "47.89%",
+    "mcap": "$151,914,089",
+    "_24hVol": "$87,602,375"
+  },
+  {
+    "position": "18",
+    "coinName": "Illuvium",
+    "price": "$51.58",
+    "24hChange": "9.21%",
+    "_7dChange": "30.97%",
+    "_30Change": "7.62%",
+    "mcap": "$100,598,478",
+    "_24hVol": "$16,886,659"
+  },
+  {
+    "position": "19",
+    "coinName": "DigiByte",
+    "price": "$0.009488",
+    "24hChange": "9.06%",
+    "_7dChange": "17.72%",
+    "_30Change": "17.76%",
+    "mcap": "$151,238,485",
+    "_24hVol": "$5,471,068"
+  },
+  {
+    "position": "20",
+    "coinName": "Waves",
+    "price": "$1.75",
+    "24hChange": "11.72%",
+    "_7dChange": "24.49%",
+    "_30Change": "-2.29%",
+    "mcap": "$192,605,388",
+    "_24hVol": "$229,458,065"
+  },
+  {
+    "position": "21",
+    "coinName": "Terra",
+    "price": "$1.58",
+    "24hChange": "4.10%",
+    "_7dChange": "20.42%",
+    "_30Change": "-4.26%",
+    "mcap": "$201,713,004",
+    "_24hVol": "$100,875,787"
+  },
+  {
+    "position": "22",
+    "coinName": "Civic",
+    "price": "$0.08696",
+    "24hChange": "3.97%",
+    "_7dChange": "11.51%",
+    "_30Change": "-10.37%",
+    "mcap": "$86,963,717",
+    "_24hVol": "$8,685,396"
+  },
+  {
+    "position": "23",
+    "coinName": "SafePal",
+    "price": "$0.4164",
+    "24hChange": "6.36%",
+    "_7dChange": "6.09%",
+    "_30Change": "-10.64%",
+    "mcap": "$135,077,767",
+    "_24hVol": "$13,627,497"
+  },
+  {
+    "position": "24",
+    "coinName": "Litecoin",
+    "price": "$85.41",
+    "24hChange": "3.43%",
+    "_7dChange": "14.56%",
+    "_30Change": "9.99%",
+    "mcap": "$6,152,522,592",
+    "_24hVol": "$945,206,370"
+  },
+  {
+    "position": "25",
+    "coinName": "UNUS SED LEO",
+    "price": "$3.46",
+    "24hChange": "-1.20%",
+    "_7dChange": "-1.93%",
+    "_30Change": "-7.11%",
+    "mcap": "$3,296,804,556",
+    "_24hVol": "$2,400,490"
+  },
+  {
+    "position": "26",
+    "coinName": "STEPN",
+    "price": "$0.3422",
+    "24hChange": "15.57%",
+    "_7dChange": "32.69%",
+    "_30Change": "-13.57%",
+    "mcap": "$205,308,974",
+    "_24hVol": "$105,416,335"
+  },
+  {
+    "position": "27",
+    "coinName": "FTX Token",
+    "price": "$1.37",
+    "24hChange": "4.60%",
+    "_7dChange": "42.77%",
+    "_30Change": "-3.39%",
+    "mcap": "$451,090,911",
+    "_24hVol": "$29,660,408"
+  },
+  {
+    "position": "28",
+    "coinName": "API3",
+    "price": "$1.29",
+    "24hChange": "4.09%",
+    "_7dChange": "18.90%",
+    "_30Change": "-5.90%",
+    "mcap": "$92,723,596",
+    "_24hVol": "$7,164,863"
+  },
+  {
+    "position": "29",
+    "coinName": "0x",
+    "price": "$0.1831",
+    "24hChange": "5.60%",
+    "_7dChange": "16.24%",
+    "_30Change": "-3.99%",
+    "mcap": "$155,172,108",
+    "_24hVol": "$12,300,514"
+  },
+  {
+    "position": "30",
+    "coinName": "Cardano",
+    "price": "$0.3311",
+    "24hChange": "4.92%",
+    "_7dChange": "23.07%",
+    "_30Change": "6.44%",
+    "mcap": "$11,429,078,362",
+    "_24hVol": "$523,166,378"
+  }
+]
