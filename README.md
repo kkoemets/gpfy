@@ -6,14 +6,14 @@ Live version: https://telegram.me/gpfy_bot
 
 ### 1. Prerequisites
 
-#### 1.1. List of prerequisites to run the applications:
+#### 1.1. List of prerequisites to run the applications
 
-##### 1.1.1. In Docker:
+##### 1.1.1. In Docker
 
 1. Docker: `https://docs.docker.com/get-docker/`
 2. Docker Compose: `https://docs.docker.com/compose/install/`
 
-##### 1.1.2. Locally:
+##### 1.1.2. Locally
 
 1. Node.js: `https://nodejs.org/en/download/`
 2. Python 3: `https://www.python.org/downloads/`
@@ -29,6 +29,8 @@ Live version: https://telegram.me/gpfy_bot
 3. Install Python dependencies: `pip install -r requirements.txt` in `telegram-client` directory. To run the client you
    need to have environment variables set up, see `configuration.py`. For further questions please refer
    to `docker-compose.dev.yaml` file.
+4. Start mongoDB: `docker-compose -f docker-compose.dev.yaml up -d bot-database`. For further questions please refer
+   to `docker-compose.dev.yaml` file.
 
 ### 3. Running in Docker
 
@@ -36,13 +38,5 @@ Live version: https://telegram.me/gpfy_bot
 * To run only one service
   run `docker-compose -f docker-compose.dev.yaml up <service_name>`.
 * To run in detached mode add `-d` flag.
-* To stop all
-  services run `docker-compose -f docker-compose.dev.yaml down`.
-* To stop only one service
-  run `docker-compose -f docker-compose.dev.yaml down <service_name>`.
-* To stop all services and remove volumes
-  run `docker-compose -f docker-compose.dev.yaml down -v`.
-* To pass environment variables to `docker-compose` command use
-  `--env-file` flag. For necessary variables please refer to `docker-compose.dev.yaml` file.
 
 License MIT © 2021-2023 Kristjan Koemets.

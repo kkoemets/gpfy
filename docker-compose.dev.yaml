@@ -3,6 +3,20 @@ networks:
   docker-network:
     driver: bridge
 services:
+  bot-database:
+    image: mongo:4.0.3
+    container_name: mongo
+    restart: always
+    networks:
+      - docker-network
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./client/data/db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: test
   crypto-data-api:
     networks:
       - docker-network
@@ -41,5 +55,9 @@ services:
       - TELEGRAM_BOT_TOKEN=YOUR_TOKEN
       - CRYPTO_DATA_API_SERVER_HOST=http://crypto-data-api
       - CRYPTO_DATA_API_SERVER_PORT=3001
+      - DB_HOST=bot-database
+      - DB_PORT=27017
+      - DB_USER=root
+      - DB_PASSWORD=root
     depends_on:
       - crypto-data-api
