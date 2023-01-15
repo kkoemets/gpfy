@@ -3,7 +3,7 @@ import logging
 from telegram import Update
 from telegram.ext import MessageHandler, Filters, CallbackContext
 
-from add_defined_commands import price, add_defined_commands
+from defined_commands import coin_price, add as add_defined_commands
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -41,7 +41,7 @@ def handle_nonstandard_command(update: Update, _: CallbackContext) -> None:
     logger.info("Trying to handle non-standard command-{0}".format(text))
     if "/price@" in text:
         _.args = [str(text.replace("/price@", ""))]
-        price(update, _)
+        coin_price(update, _)
         return
 
     update.message.reply_text(text)
