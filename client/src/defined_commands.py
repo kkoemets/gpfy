@@ -1,35 +1,28 @@
 import base64
 import functools
 import logging
-import re
-import urllib.request
 from io import BytesIO
 from typing import Any
 
-import requests
 from telegram import Update, ForceReply
 from telegram.ext import CallbackContext, CommandHandler
+from telegram.utils.types import JSONDict
 
+import bag_service
+import crypto_data_client
 import user_service
-from configuration import SERVER_HOST, SERVER_PORT
 
-service = user_service.UserService()
+users = user_service.UserService()
+crypto_data = crypto_data_client.CryptoDataClient()
+bags = bag_service.BagService(users, crypto_data)
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
-SERVER_URL = SERVER_HOST + ':' + SERVER_PORT
-CALCULATE_BAG_URL = '/bot/bag/calculate'
-COIN_PRICE_URL = '/bot/contract/summary?coinFullName='
-TWO_YEAR_AVG_URL = '/bot/images/2YearMovingAvg'
-RAINBOW_CHART_URL = '/bot/images/rainbow'
-MCAP_SUMMARY_URL = '/coinmarketcap/mcap-summary'
-TRENDING_URL = '/coinmarketcap/trending'
 
-
-def add(dispatcher):
+def add(dispatcher) -> None:
     """
     Add all the defined commands to the dispatcher
     :param dispatcher:
@@ -38,10 +31,10 @@ def add(dispatcher):
         dispatcher.add_handler(CommandHandler(command[0], command[1]))
 
 
-def _add_user(func):
+def _add_user(func) -> Any:
     def wrapper(*args, **kwargs):
         logger.info('Adding user')
-        service.add_new_user(args[0].message.from_user.to_dict())
+        users.add_new_user(args[0].message.from_user.to_dict())
         return func(*args, **kwargs)
 
     return wrapper
@@ -54,7 +47,7 @@ def _update_command_calls(func) -> Any:
         logger.info(f'arguments-{callback.args}')
         func(*args, **kwargs)
         update = args[0]
-        service.update_command_calls(update.message.from_user.to_dict(), update.message.text)
+        users.update_command_calls(extract_current_request_data_from_update(update), update.message.text)
         return None
 
     return wrapper
@@ -73,26 +66,24 @@ def _start(update: Update, _: CallbackContext) -> None:
 @_add_user
 @_update_command_calls
 def _send_market_cap(update: Update, _: CallbackContext) -> None:
-    update.message.reply_text(_get_json(MCAP_SUMMARY_URL)['cmcSummary'])
+    update.message.reply_text(crypto_data.get_mcap_summary())
 
 
 @_add_user
 @_update_command_calls
 def _send_cummies(update: Update, _: CallbackContext) -> None:
-    _find_coin_summary_and_respond(update, COIN_PRICE_URL + 'cumrocket')
+    update.message.reply_text(crypto_data.get_coin_summary('cumrocket'))
 
 
 @_add_user
 @_update_command_calls
 def coin_price(update: Update, cb: CallbackContext) -> None:
-    arguments = cb.args
-    if len(arguments) != 1:
+    words_in_text = cb.args
+    if len(words_in_text) != 1:
         logger.info("Too many args")
         return
 
-    coin_full_name = arguments.pop()
-    url = COIN_PRICE_URL + coin_full_name
-    _find_coin_summary_and_respond(update, url)
+    update.message.reply_text(crypto_data.get_coin_summary(words_in_text.pop()))
 
 
 @_add_user
@@ -101,112 +92,58 @@ def _send_help(update: Update, _: CallbackContext) -> None:
     update.message.reply_text(
         '\n'.join(list(map(lambda command: '/' + command[0] + ' : ' + command[2], commands))))
 
+
 @_add_user
 @_update_command_calls
 def _send_two_year_chart(update: Update, context: CallbackContext) -> None:
     context.bot.sendPhoto(chat_id=update.message.chat.id, photo=BytesIO(base64.b64decode(
-        _get_json(TWO_YEAR_AVG_URL)['base64Img'])))
+        crypto_data.get_2_year_avg_chart())))
 
 
 @_add_user
 @_update_command_calls
 def _send_rainbow_chart(update: Update, context: CallbackContext) -> None:
     context.bot.sendPhoto(chat_id=update.message.chat.id, photo=BytesIO(base64.b64decode(
-        _get_json(RAINBOW_CHART_URL)['base64Img'])))
+        crypto_data.get_rainbow_chart())))
 
 
 @_add_user
 @_update_command_calls
 def _send_trending(update: Update, _) -> None:
-    update.message.reply_text(_get_json(TRENDING_URL)['trendingSummary'])
+    update.message.reply_text(crypto_data.get_trending_coins())
 
 
 @_add_user
 @_update_command_calls
-def _add_coin_to_bag(update: Update, cb: CallbackContext):
-    args = cb.args
-    if (len(args) != 2):
-        update.message.reply_text('Incorrect arguments, correct example: `/bag_add bitcoin 0.001`')
-        return
-
-    coin_full_name = args[0].lower()
-    amount = args[1]
-    if not re.compile(r'^\d*[.]?\d*$').match(amount):
-        update.message.reply_text('Incorrect amount argument, correct example: `/bag_add bitcoin 0.001`')
-        return
-
-    try:
-        url = COIN_PRICE_URL + coin_full_name
-        _get_json(url)
-    except urllib.error.HTTPError:
-        update.message.reply_text('Unknown coin ´{0}´ not added to the bag'.format(coin_full_name))
-        return
-
-    service.add_to_bag(update.message.from_user.to_dict(), coin_full_name, amount)
-
-    update.message.reply_text('Added ´{0}´ to the bag'.format(coin_full_name))
+def _add_coin_to_bag(update: Update, cb: CallbackContext) -> None:
+    update.message.reply_text(
+        'Added ´{0}´ to the bag'.format(bags.add_coin(extract_current_request_data_from_update(update), cb)))
 
 
 @_add_user
 @_update_command_calls
-def _remove_coin_from_bag(update: Update, cb: CallbackContext):
-    args = cb.args
-    if (len(args) != 1):
-        update.message.reply_text('Incorrect arguments, correct example: `/bag_remove bitcoin`')
-        return
-
-    coin_full_name = args[0].lower()
-    service.remove_from_bag(update.message.from_user.to_dict(), coin_full_name)
-
-    update.message.reply_text('Deleted ´{0}´ from the bag'.format(coin_full_name))
+def _remove_coin_from_bag(update: Update, cb: CallbackContext) -> None:
+    update.message.reply_text(bags.remove_from_bag(extract_current_request_data_from_update(update), cb))
 
 
 @_add_user
 @_update_command_calls
-def _send_bag_data(update: Update, _):
-    bag = service.find_bag(update.message.from_user.to_dict())
-    if len(bag) < 1:
-        update.message.reply_text('Your bag is empty, use `/bag_add` command to add coins to your bag')
-        return
+def _send_bag_data(update: Update, _) -> None:
+    update.message.reply_text(bags.get_bag_data(extract_current_request_data_from_update(update)))
 
-    update.message.reply_text(str(
-        _post_and_get_json(CALCULATE_BAG_URL, {'query': [{'coinFullName': k, 'amount': v} for k, v in bag.items()]})[
-            'bagSummary']))
 
 @_add_user
 def _send_last_ten_commands(update: Update, _: CallbackContext) -> None:
-    last_commands = service.find_last_ten_commands(update.message.from_user.to_dict())
+    last_commands = users.get_last_ten_commands(extract_current_request_data_from_update(update))
     if len(last_commands) < 1:
         update.message.reply_text("Sorry, did not find your command history!\nTry using /help")
     else:
         last_commands.insert(0, 'Your last 10 commands🧐')
         update.message.reply_text("\n".join(last_commands))
 
-def _find_coin_summary_and_respond(update, url):
-    response_json = _get_json(url)
-    logger.info(response_json)
-    text = response_json['summaryText']
-    update.message.reply_text(text)
 
-
-def _get_json(url: str) -> dict:
-    full_url = SERVER_URL + url
-    logger.info(f'Making request to {full_url}')
-    response = requests.get(full_url)
-    response.raise_for_status()
-    j = response.json()
-    logger.info(j)
-    return j
-
-
-def _post_and_get_json(url, data):
-    full_url = SERVER_URL + url
-    logger.info("Getting json from-" + full_url
-                )
-    r = requests.post(full_url, json=data)
-    if not r.ok:
-        raise Exception()
-    return r.json()
+def extract_current_request_data_from_update(update: Update) -> JSONDict:
+    return update.message.from_user.to_dict()
 
 
 commands = [

@@ -15,7 +15,6 @@ def main() -> None:
     configure_commands(dispatcher)
 
     updater.start_polling()
-    updater.idle()
 
 
 if __name__ == '__main__':
