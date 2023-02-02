@@ -116,8 +116,7 @@ def _send_trending(update: Update, _) -> None:
 @_add_user
 @_update_command_calls
 def _add_coin_to_bag(update: Update, cb: CallbackContext) -> None:
-    update.message.reply_text(
-        'Added ´{0}´ to the bag'.format(bags.add_coin(extract_current_request_data_from_update(update), cb)))
+    update.message.reply_text(bags.add_coin(extract_current_request_data_from_update(update), cb))
 
 
 @_add_user
