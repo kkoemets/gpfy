@@ -71,7 +71,12 @@ describe('contactSummary', function () {
             '    💲Unit price: $0.001232\n' +
             '    🏧Amount: 512.556\n' +
             '    💹Price: $0.001232\n' +
-            '      ₿ 0.00000007';
+            '      ₿ 0.00000007\n' +
+            '  13. SAYIN\n' +
+            '    💲Unit price: $0.1\n' +
+            '    🏧Amount: 512.1\n' +
+            '    💹Price: $0.1\n' +
+            '      ₿ 0.00000598';
         expect(actual).toEqual(expected);
     });
 

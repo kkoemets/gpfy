@@ -83,6 +83,13 @@
       "amountPrice": "0.001232423523",
       "currency": "USD",
       "amount": "512.556"
+    },
+    {
+      "coinFullName": "sayin",
+      "fullUnitPrice": "0.1",
+      "amountPrice": "0.1",
+      "currency": "USD",
+      "amount": "512.1"
     }
   ],
   "totalValue": {

@@ -56,7 +56,7 @@ export const createBagSummaryTemplate = (coinPrices: CoinsPrices) => {
                       .toFixed(20)
                       .match(/^-?\d*\.?0*\d{0,4}/)[0],
               ).toString()
-            : string.match(new RegExp('^(\\d+.\\d{2})\\d*$'))[1];
+            : string.match(new RegExp('^(\\d+(\\.\\d{1,2})?)\\d*$'))[1];
 
     const { amount, btc, currency }: { amount: string; currency: string; btc: string } = coinPrices.totalValue;
     return `💰Bag value: ${formatCurrency(currency)}${formatAmount(amount)} / ₿${btc}${coinPrices.prices
