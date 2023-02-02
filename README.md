@@ -34,9 +34,6 @@ Live version: https://telegram.me/gpfy_bot
 
 ### 3. Running in Docker
 
-* Run in terminal from project root `docker-compose -f docker-compose.dev.yaml up` to run all services.
-* To run only one service
-  run `docker-compose -f docker-compose.dev.yaml up <service_name>`.
-* To run in detached mode add `-d` flag.
+* Run in terminal from project root `bash start.sh` to get started with instructions.
 
 License MIT © 2021-2023 Kristjan Koemets.

@@ -10,13 +10,13 @@ const getBrowser = async (): Promise<Browser> => {
     try {
         return await puppeteer.launch({
             headless: true,
-            args: ['--no-sandbox'],
+            args: ['--no-sandbox', "--proxy-server='direct://'", '--proxy-bypass-list=*'],
         });
     } catch (e) {
         return await puppeteer.launch({
             headless: true,
             executablePath: '/usr/bin/chromium-browser',
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            args: ['--no-sandbox', '--disable-setuid-sandbox', "--proxy-server='direct://'", '--proxy-bypass-list=*'],
         });
     }
 };
