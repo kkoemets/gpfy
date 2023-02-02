@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 echo "              ___       "
 echo "             /  _|      "
 echo "   __ _ _ __\| |_ _   _ "
@@ -8,7 +7,8 @@ echo "  / _\` | '_\|  _| | | |"
 echo " | (_| | |_) | | | |_| |"
 echo "  \__, | .__/|_|  \__, |"
 echo "   __/ | |         __/ |"
-echo "  |___/|_|        |___/"
+echo "  |___/|_|        |___/ "
+echo "                        "
 
 # Check if Docker is installed
 if ! [ -x "$(command -v docker)" ]; then
@@ -36,6 +36,12 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   fi
 fi
 
+# Define the Docker Compose file
+DOCKER_COMPOSE_FILE="docker-compose.dev.yaml"
+
+# List of container names
+container_names=(bot-database crypto-data-api telegram-client)
+
 # Check if .env file exists
 if [ ! -f .env ]; then
   echo "Creating .env file..."
@@ -58,16 +64,10 @@ else
   fi
 fi
 
-# Define the Docker Compose file
-DOCKER_COMPOSE_FILE="docker-compose.dev.yaml"
-
-# List of container names
-container_names=(bot-database crypto-data-api telegram-client)
-
 # Function to check if a container is running
 is_container_running() {
   local container_name="$1"
-  if [ "$(docker ps -q -f name="$container_name")" ]; then
+  if docker-compose -f "$DOCKER_COMPOSE_FILE" ps | grep "$container_name" | grep "Up" >/dev/null; then
     return 0
   else
     return 1
@@ -79,7 +79,7 @@ update_container() {
   local container_name="$1"
   if is_container_running "$container_name"; then
     echo "Stopping $container_name container..."
-    docker stop "$container_name"
+    docker-compose -f "$DOCKER_COMPOSE_FILE" stop "$container_name"
   fi
   echo "Building and starting $container_name container..."
   docker-compose -f "$DOCKER_COMPOSE_FILE" --env-file .env up --build -d "$container_name"
