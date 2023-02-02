@@ -12,28 +12,36 @@ echo "                        "
 
 # Check if Docker is installed
 if ! [ -x "$(command -v docker)" ]; then
-  echo "Docker is not installed. Do you want to install it now? (y/n)"
+  echo "Docker is not installed."
+  echo "Do you want to install it now? (y/n)"
   read -r install_docker
   if [ "$install_docker" = "y" ]; then
     curl -fsSL https://get.docker.com -o get-docker.sh
     sh get-docker.sh
+    echo "Docker installed successfully."
   else
     echo "Docker installation cancelled by user. Exiting script."
     exit 1
   fi
+else
+  echo "Docker is already installed."
 fi
 
 # Check if docker-compose is installed
 if ! [ -x "$(command -v docker-compose)" ]; then
-  echo "docker-compose is not installed. Do you want to install it now? (y/n)"
+  echo "docker-compose is not installed."
+  echo "Do you want to install it now? (y/n)"
   read -r install_docker_compose
   if [ "$install_docker_compose" = "y" ]; then
     sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     sudo chmod +x /usr/local/bin/docker-compose
+    echo "docker-compose installed successfully."
   else
     echo "docker-compose installation cancelled by user. Exiting script."
     exit 1
   fi
+else
+  echo "docker-compose is already installed."
 fi
 
 # Define the Docker Compose file
