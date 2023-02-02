@@ -42,6 +42,26 @@ DOCKER_COMPOSE_FILE="docker-compose.dev.yaml"
 # List of container names
 container_names=(bot-database crypto-data-api telegram-client)
 
+# Function to check if a container is running
+is_container_running() {
+  local container_name="$1"
+  if docker-compose -f "$DOCKER_COMPOSE_FILE" ps | grep "$container_name" | grep "Up" >/dev/null; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+running_containers=()
+not_running_containers=()
+for container_name in "${container_names[@]}"; do
+  if is_container_running "$container_name"; then
+    running_containers+=("$container_name")
+  else
+    not_running_containers+=("$container_name")
+  fi
+done
+
 # Check if .env file exists
 if [ ! -f .env ]; then
   echo "Creating .env file..."
@@ -64,16 +84,6 @@ else
   fi
 fi
 
-# Function to check if a container is running
-is_container_running() {
-  local container_name="$1"
-  if docker-compose -f "$DOCKER_COMPOSE_FILE" ps | grep "$container_name" | grep "Up" >/dev/null; then
-    return 0
-  else
-    return 1
-  fi
-}
-
 # Function to update a container
 update_container() {
   local container_name="$1"
@@ -83,29 +93,49 @@ update_container() {
   fi
   echo "Building and starting $container_name container..."
   docker-compose -f "$DOCKER_COMPOSE_FILE" --env-file .env up --build -d "$container_name"
-  echo "Container $container_name restarted successfully 🚀"
+  echo "Container $container_name started successfully 🚀"
 }
 
-if docker-compose -f "$DOCKER_COMPOSE_FILE" ps | grep -q Up; then
-  echo "The following containers are already running from $DOCKER_COMPOSE_FILE:"
-  docker-compose -f "$DOCKER_COMPOSE_FILE" ps
+echo "The following containers are already running from $DOCKER_COMPOSE_FILE:"
+
+if [ ${#running_containers[@]} -gt 0 ]; then
   echo "Do you want to update a specific container? (y/n)"
   read -r update_container_prompt
   if [ "$update_container_prompt" = "y" ]; then
     PS3="Select the container to update: "
-    select container_name in "${container_names[@]}"; do
+    select container_name in "${running_containers[@]}"; do
       if [ -n "$container_name" ]; then
         update_container "$container_name"
-        break
+        exit 0
       else
         echo "Invalid selection. Try again."
       fi
     done
-  else
-    echo "Exiting script without updating any containers."
   fi
 else
   echo "Starting all containers."
   docker-compose -f "$DOCKER_COMPOSE_FILE" --env-file .env up -d
   echo "All containers started successfully 🚀"
+  exit 0
+fi
+
+if [ ${#not_running_containers[@]} -gt 0 ]; then
+  echo "Do you want to start a specific container? (y/n)"
+  read -r update_container_prompt
+  if [ "$update_container_prompt" = "y" ]; then
+    PS3="Select the container to start: "
+    select container_name in "${not_running_containers[@]}"; do
+      if [ -n "$container_name" ]; then
+        update_container "$container_name"
+        exit 0
+      else
+        echo "Invalid selection. Try again."
+      fi
+    done
+  else
+    echo "Exiting script without starting any containers."
+    exit 0
+  fi
+else
+  echo "All containers are running 🚀"
 fi

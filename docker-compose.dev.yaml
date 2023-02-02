@@ -5,7 +5,6 @@ networks:
 services:
   bot-database:
     image: mongo:4.0.3
-    container_name: mongo
     restart: always
     networks:
       - docker-network
