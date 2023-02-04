@@ -9,7 +9,7 @@ export class CronService {
 
     constructor(@Inject(CACHE_MANAGER) private cacheManager, private lruCache: LruCacheService) {}
 
-    @Cron('/3 * * * *')
+    @Cron('*/3 * * * *')
     async updateLeastRecentlyFetchedCoins() {
         this.logger.debug('Updating least recently fetched coins');
         const leastRecentlyFetchedCoins: [string, unknown][] = this.lruCache.getAllEntries();
