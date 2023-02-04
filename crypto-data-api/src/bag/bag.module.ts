@@ -2,11 +2,12 @@ import { CacheModule, MiddlewareConsumer, Module, NestModule, RequestMethod } fr
 import { BagController } from './bag.controller';
 import { BagService } from './bag.service';
 import { QueryTrimMiddleware } from '../common/query.trim.middleware';
+import { LruCacheModule } from '../lru-cache-service/lru.cache.module';
 
 @Module({
     controllers: [BagController],
     providers: [BagService],
-    imports: [CacheModule.register()],
+    imports: [CacheModule.register(), LruCacheModule],
 })
 export class BagModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {

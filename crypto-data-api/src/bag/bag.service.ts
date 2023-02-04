@@ -1,6 +1,7 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { createBagSummaryTemplate } from '../common/summary';
 import { findCoinSummaryFromCmc } from 'crypto-data';
+import { LruCacheService } from '../lru-cache-service/lru.cache.service';
 
 export type CoinPrice = {
     coinFullName: string;
@@ -18,7 +19,7 @@ export type CoinsPrices = {
 
 @Injectable()
 export class BagService {
-    constructor(@Inject(CACHE_MANAGER) private cacheManager) {}
+    constructor(@Inject(CACHE_MANAGER) private cacheManager, private lruCache: LruCacheService) {}
 
     findBagSummary = async (
         data: {
@@ -45,6 +46,8 @@ export class BagService {
             ((await this.cacheManager.get(cacheKey)) ?? (await findSummary()))
                 .find(({ valueText }) => valueText)
                 ?.value.replace(new RegExp(/[$,]/g), '') || '';
+
+        this.lruCache.set(coinOfficialName, coinOfficialName);
 
         return {
             coinFullName: coinOfficialName,

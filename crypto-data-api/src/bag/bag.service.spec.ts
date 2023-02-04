@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BagService } from './bag.service';
 import { CACHE_MANAGER } from '@nestjs/common';
+import { LruCacheService } from '../lru-cache-service/lru.cache.service';
 
 describe('BagService', () => {
     let service: BagService;
@@ -20,6 +21,7 @@ describe('BagService', () => {
                         },
                     },
                 },
+                LruCacheService,
             ],
         }).compile();
 
