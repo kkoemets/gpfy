@@ -30,28 +30,29 @@ export class BagService {
     };
 
     findCoinPriceInUsd = async (coinOfficialName: string, amount: number): Promise<CoinPrice> => {
-        const cacheKey = `bag${coinOfficialName}`;
-        const cachedValue = await this.cacheManager.get(cacheKey);
-        if (cachedValue) {
-            return cachedValue;
-        }
+        const cacheKey = `${coinOfficialName}`;
+
+        const findSummary = async () => {
+            const coinSummary: { valueText: string; value: string }[] = await findCoinSummaryFromCmc({
+                coinOfficialName,
+            });
+
+            this.cacheManager.set(cacheKey, coinSummary, 5 * 60);
+            return coinSummary;
+        };
 
         const fullUnitPrice: string =
-            (await findCoinSummaryFromCmc({ coinOfficialName }))
+            ((await this.cacheManager.get(cacheKey)) ?? (await findSummary()))
                 .find(({ valueText }) => valueText)
                 ?.value.replace(new RegExp(/[$,]/g), '') || '';
 
-        const coinPrice: CoinPrice = {
+        return {
             coinFullName: coinOfficialName,
             fullUnitPrice,
             amountPrice: (amount * Number(fullUnitPrice)).toString(),
             currency: 'USD',
             amount: amount.toString(),
         } as CoinPrice;
-
-        this.cacheManager.set(cacheKey, coinPrice, 5 * 60);
-
-        return coinPrice;
     };
 
     findCoinsPricesInUsd: ({ data }: { data: { coinOfficialName: string; amount: number }[] }) => Promise<CoinsPrices> =
