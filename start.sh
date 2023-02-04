@@ -104,7 +104,7 @@ update_container() {
   echo "Container $container_name started successfully 🚀"
 }
 
-echo "The following containers are already running from $DOCKER_COMPOSE_FILE:"
+echo "Current state of containers from $DOCKER_COMPOSE_FILE:"
 
 if [ ${#running_containers[@]} -gt 0 ]; then
   echo "Do you want to update a specific container? (y/n)"
