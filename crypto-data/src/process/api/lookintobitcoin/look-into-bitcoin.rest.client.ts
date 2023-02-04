@@ -7,10 +7,10 @@ export class LookIntoBitcoinRestClient extends PuppeteerRestClient implements Lo
             url: 'https://www.lookintobitcoin.com/charts/bitcoin-investor-tool/',
             screenshotPath: __dirname + '/btc2YearMovingAverageGraph.png',
             clip: {
-                x: 80,
+                x: 20,
                 y: 130,
-                width: 910,
-                height: 720,
+                width: 950,
+                height: 820,
             },
         });
     }

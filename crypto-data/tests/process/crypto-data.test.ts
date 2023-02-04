@@ -1,7 +1,5 @@
 import { expect } from 'chai';
 import {
-    findCoinPriceInUsd,
-    findCoinsPricesInUsd,
     findCoinSummaryFromCmc,
     findGreedIndex,
     findMarketCapSummary,
@@ -32,24 +30,6 @@ describe('crypto-data', function () {
     it('Find coin summary from cmc', async function () {
         const coinSummary = await findCoinSummaryFromCmc({ coinOfficialName: 'bitcoin' });
         Object.entries(coinSummary).forEach(([, value]) => {
-            expect(value).to.be.not.null;
-        });
-    });
-
-    it('Find coin price in usd', async function () {
-        const coinPrice = await findCoinPriceInUsd('bitcoin', 1);
-        Object.entries(coinPrice).forEach(([, value]) => {
-            expect(value).to.be.not.null;
-        });
-    });
-
-    it('Find coin prices in usd', async function () {
-        const data = [
-            { coinOfficialName: 'bitcoin', amount: 1 },
-            { coinOfficialName: 'ethereum', amount: 1 },
-        ];
-        const coinPrice = await findCoinsPricesInUsd({ data });
-        Object.entries(coinPrice).forEach(([, value]) => {
             expect(value).to.be.not.null;
         });
     });

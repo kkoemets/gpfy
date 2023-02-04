@@ -5,9 +5,6 @@ import {
     RainbowChart,
 } from './process/crypto-images';
 import {
-    CoinPrice,
-    findCoinPriceInUsd as _findCoinPriceInUsd,
-    findCoinsPricesInUsd as _findCoinsPricesInUsd,
     findCoinSummaryFromCmc as _findCoinSummaryFromCmc,
     findGreedIndex as _findGreedIndex,
     findMarketCapSummary as _findMarketCapSummary,
@@ -39,14 +36,3 @@ export const findCoinSummaryFromCmc: ({
     coinOfficialName: string;
 }) => Promise<{ valueText: string; value: string }[]> = async ({ coinOfficialName }) =>
     _findCoinSummaryFromCmc({ coinOfficialName });
-
-export const findCoinPriceInUsd: ({
-    coinFullName,
-    amount,
-}: {
-    coinFullName: string;
-    amount: number;
-}) => Promise<CoinPrice> = async ({ coinFullName, amount }) => _findCoinPriceInUsd(coinFullName, amount);
-
-export const findCoinsPricesInUsd = async ({ data }: { data: { coinOfficialName: string; amount: number }[] }) =>
-    _findCoinsPricesInUsd({ data });
