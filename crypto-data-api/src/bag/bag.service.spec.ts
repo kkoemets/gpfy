@@ -1,12 +1,26 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BagService } from './bag.service';
+import { CACHE_MANAGER } from '@nestjs/common';
 
 describe('BagService', () => {
     let service: BagService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            providers: [BagService],
+            providers: [
+                BagService,
+                {
+                    provide: CACHE_MANAGER,
+                    useValue: {
+                        get: async () => {
+                            return null;
+                        },
+                        set: async () => {
+                            return null;
+                        },
+                    },
+                },
+            ],
         }).compile();
 
         service = module.get<BagService>(BagService);

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { createBagSummaryTemplate } from '../common/summary';
 import { findCoinSummaryFromCmc } from 'crypto-data';
 
@@ -18,6 +18,8 @@ export type CoinsPrices = {
 
 @Injectable()
 export class BagService {
+    constructor(@Inject(CACHE_MANAGER) private cacheManager) {}
+
     findBagSummary = async (
         data: {
             coinOfficialName: string;
@@ -28,18 +30,28 @@ export class BagService {
     };
 
     findCoinPriceInUsd = async (coinOfficialName: string, amount: number): Promise<CoinPrice> => {
+        const cacheKey = `bag${coinOfficialName}`;
+        const cachedValue = await this.cacheManager.get(cacheKey);
+        if (cachedValue) {
+            return cachedValue;
+        }
+
         const fullUnitPrice: string =
             (await findCoinSummaryFromCmc({ coinOfficialName }))
                 .find(({ valueText }) => valueText)
                 ?.value.replace(new RegExp(/[$,]/g), '') || '';
 
-        return {
+        const coinPrice: CoinPrice = {
             coinFullName: coinOfficialName,
             fullUnitPrice,
             amountPrice: (amount * Number(fullUnitPrice)).toString(),
             currency: 'USD',
             amount: amount.toString(),
         } as CoinPrice;
+
+        this.cacheManager.set(cacheKey, coinPrice, 5 * 60);
+
+        return coinPrice;
     };
 
     findCoinsPricesInUsd: ({ data }: { data: { coinOfficialName: string; amount: number }[] }) => Promise<CoinsPrices> =
