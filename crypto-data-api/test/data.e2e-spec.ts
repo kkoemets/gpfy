@@ -43,12 +43,12 @@ describe('DataController (e2e)', () => {
             });
     });
 
-    it('/bot/images/2YearMovingAvg (GET)', () => {
-        return request(app.getHttpServer()).get('/bot/images/2YearMovingAvg').expect(200);
+    it('/images/2YearMovingAvg (GET)', () => {
+        return request(app.getHttpServer()).get('/images/2YearMovingAvg').expect(200);
     });
 
-    it('/bot/images/rainbow (GET)', () => {
-        return request(app.getHttpServer()).get('/bot/images/rainbow').expect(200);
+    it('/images/rainbow (GET)', () => {
+        return request(app.getHttpServer()).get('/images/rainbow').expect(200);
     });
 
     it('/coinmarketcap/mcap-summary (GET)', () => {

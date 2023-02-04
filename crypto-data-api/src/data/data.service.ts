@@ -1,20 +1,15 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import {
-    findBtc2YearMovingAverage as _findBtc2YearMovingAverage,
-    findCoinsPricesInUsd as _findCoinsPricesInUsd,
     findCoinSummaryFromCmc as _findCoinSummaryFromCmc,
     findGreedIndex as _findGreedIndex,
     findMarketCapSummary as _findMarketCapSummary,
-    findRainbowChart as _findRainbowChart,
     findTrendingCoins as _findTrendingCoins,
 } from 'crypto-data/lib/src/index';
 import {
-    createBagSummaryTemplate,
     createMarketCapSummaryTemplate,
     createSummaryTemplateFromCmcSummary,
     createTrendingCoinsSummary,
-} from './summary';
-import { Btc2YearMovingAverage } from 'crypto-data/lib/src/process/crypto-images';
+} from '../common/summary';
 
 export type CoinPrice = {
     coinFullName: string;
@@ -33,16 +28,6 @@ export type CoinsPrices = {
 @Injectable()
 export class DataService {
     constructor(@Inject(CACHE_MANAGER) private cacheManager) {}
-
-    async findRainbowChart(): Promise<{ originUrl: string; base64Img: string }> {
-        const { originUrl, base64Img } = await _findRainbowChart();
-        return { originUrl, base64Img };
-    }
-
-    async findBtc2YearMovingAverage(): Promise<{ originUrl: string; base64Img: string }> {
-        const { originUrl, base64Img }: Btc2YearMovingAverage = await _findBtc2YearMovingAverage();
-        return { originUrl, base64Img };
-    }
 
     async findTrendingCoins(): Promise<{ trendingSummary: string }> {
         return {
@@ -76,15 +61,6 @@ export class DataService {
         return {
             summaryText: createSummaryTemplateFromCmcSummary(await this.findCoinSummaryFromCmc(coinOfficialNameInput)),
         };
-    };
-
-    findBagSummary = async (
-        data: {
-            coinOfficialName: string;
-            amount: number;
-        }[],
-    ): Promise<{ bagSummary: string }> => {
-        return { bagSummary: createBagSummaryTemplate(await _findCoinsPricesInUsd({ data })) };
     };
 
     private async findCoinSummaryFromCmc(coinOfficialName: string): Promise<{ valueText: string; value: string }[]> {

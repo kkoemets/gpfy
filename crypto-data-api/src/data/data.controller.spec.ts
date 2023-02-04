@@ -30,11 +30,8 @@ describe('DataController', () => {
 
     it('should be defined', () => {
         expect(controller).toBeDefined();
-        expect(controller.findBtc2YearMovingAverage).toBeDefined();
-        expect(controller.findRainbowChart).toBeDefined();
         expect(controller.findMarketCapSummary).toBeDefined();
         expect(controller.findContractSummary).toBeDefined();
         expect(controller.findTrendingCoins).toBeDefined();
-        expect(controller.findBagSummary).toBeDefined();
     });
 });

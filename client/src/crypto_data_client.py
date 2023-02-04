@@ -5,10 +5,10 @@ import requests
 from configuration import SERVER_HOST, SERVER_PORT
 
 SERVER_URL = SERVER_HOST + ':' + SERVER_PORT
-CALCULATE_BAG_URL = '/bot/bag/calculate'
+CALCULATE_BAG_URL = '/bag/calculate'
 COIN_PRICE_URL = '/bot/contract/summary?coinFullName='
-TWO_YEAR_AVG_URL = '/bot/images/2YearMovingAvg'
-RAINBOW_CHART_URL = '/bot/images/rainbow'
+TWO_YEAR_AVG_URL = '/images/2YearMovingAvg'
+RAINBOW_CHART_URL = '/images/rainbow'
 MCAP_SUMMARY_URL = '/coinmarketcap/mcap-summary'
 TRENDING_URL = '/coinmarketcap/trending'
 
