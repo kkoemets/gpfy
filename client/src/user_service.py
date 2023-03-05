@@ -2,7 +2,7 @@ import logging
 from typing import Optional, Dict
 
 from pymongo import MongoClient
-from telegram.utils.types import JSONDict
+from telegram._utils.types import JSONDict
 
 from configuration import DB_HOST, DB_PORT, DB_USER, DB_PASSWORD
 

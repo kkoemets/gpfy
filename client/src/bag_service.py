@@ -1,8 +1,8 @@
 import re
 import urllib.request
 
-from telegram.ext import CallbackContext
-from telegram.utils.types import JSONDict
+from telegram._utils.types import JSONDict
+from telegram.ext import ContextTypes
 
 from crypto_data_client import CryptoDataClient
 from user_service import UserService
@@ -13,7 +13,7 @@ class BagService:
         self.user_service = user_service
         self.crypto_data_client = crypto_data_client
 
-    def add_coin(self, current_request_data: JSONDict, cb: CallbackContext) -> str:
+    def add_coin(self, current_request_data: JSONDict, cb: ContextTypes.DEFAULT_TYPE) -> str:
         words_in_message = cb.args
         if len(words_in_message) != 2:
             return 'Incorrect arguments, correct example: `/bag_add bitcoin 0.001`'
@@ -41,7 +41,7 @@ class BagService:
             self.crypto_data_client.get_bag_summary(
                 {'query': [{'coinFullName': k, 'amount': v} for k, v in bag.items()]}))
 
-    def remove_from_bag(self, current_request_data: JSONDict, cb: CallbackContext) -> str:
+    def remove_from_bag(self, current_request_data: JSONDict, cb: ContextTypes.DEFAULT_TYPE) -> str:
         words_in_message = cb.args
         if len(words_in_message) != 1:
             return 'Incorrect arguments, correct example: `/bag_remove bitcoin`'

@@ -1,20 +1,18 @@
 #!/usr/bin/env python
 # pylint: disable=C0116
 
-from telegram.ext import Updater
+from telegram.ext import Application
 
 from configuration import TELEGRAM_TOKEN
 from configure_commands import configure_commands
 
 
 def main() -> None:
-    updater = Updater(TELEGRAM_TOKEN)
+    application = Application.builder().token(TELEGRAM_TOKEN).build()
 
-    dispatcher = updater.dispatcher
+    configure_commands(application)
 
-    configure_commands(dispatcher)
-
-    updater.start_polling()
+    application.run_polling()
 
 
 if __name__ == '__main__':
