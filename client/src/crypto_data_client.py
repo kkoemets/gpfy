@@ -1,6 +1,6 @@
 import logging
 
-import requests
+import aiohttp
 
 from configuration import SERVER_HOST, SERVER_PORT
 
@@ -20,36 +20,36 @@ logger = logging.getLogger(__name__)
 
 class CryptoDataClient:
 
-    def get_mcap_summary(self) -> str:
-        return self._get_json(MCAP_SUMMARY_URL)['cmcSummary']
+    async def get_mcap_summary(self) -> str:
+        return (await self._get_json(MCAP_SUMMARY_URL))['cmcSummary']
 
-    def get_coin_summary(self, coin_full_name: str) -> str:
-        return self._get_json(COIN_PRICE_URL + coin_full_name)['summaryText']
+    async def get_coin_summary(self, coin_full_name: str) -> str:
+        return (await self._get_json(COIN_PRICE_URL + coin_full_name))['summaryText']
 
-    def get_bag_summary(self, bag_query_json: object) -> str:
-        return self._post_and_get_json(CALCULATE_BAG_URL, bag_query_json)['bagSummary']
+    async def get_bag_summary(self, bag_query_json: object) -> str:
+        return (await self._post_and_get_json(CALCULATE_BAG_URL, bag_query_json))['bagSummary']
 
-    def get_2_year_avg_chart(self) -> str:
-        return self._get_json(TWO_YEAR_AVG_URL)['base64Img']
+    async def get_2_year_avg_chart(self) -> str:
+        return (await self._get_json(TWO_YEAR_AVG_URL))['base64Img']
 
-    def get_rainbow_chart(self) -> str:
-        return self._get_json(RAINBOW_CHART_URL)['base64Img']
+    async def get_rainbow_chart(self) -> str:
+        return (await self._get_json(RAINBOW_CHART_URL))['base64Img']
 
-    def get_trending_coins(self) -> str:
-        return self._get_json(TRENDING_URL)['trendingSummary']
+    async def get_trending_coins(self) -> str:
+        return await (self._get_json(TRENDING_URL))['trendingSummary']
 
     @staticmethod
-    def _get_json(url: str) -> dict:
+    async def _get_json(url: str) -> dict:
         full_url = SERVER_URL + url
         logger.info(f'Making GET request to {full_url}')
-        response = requests.get(full_url)
-        response.raise_for_status()
-        return response.json()
+        async with aiohttp.ClientSession() as session:
+            async with session.get(full_url) as response:
+                return await response.json()
 
     @staticmethod
-    def _post_and_get_json(url: str, json: object) -> dict:
+    async def _post_and_get_json(url: str, json: object) -> dict:
         full_url = SERVER_URL + url
         logger.info(f'Making POST request to {full_url}')
-        response = requests.post(full_url, json=json)
-        response.raise_for_status()
-        return response.json()
+        async with aiohttp.ClientSession() as session:
+            async with session.post(full_url, json=json) as response:
+                return await response.json()

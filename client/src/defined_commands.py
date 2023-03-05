@@ -66,13 +66,13 @@ async def _start(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
 @_add_user
 @_update_command_calls
 async def _send_market_cap(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(crypto_data.get_mcap_summary())
+    await update.message.reply_text(await crypto_data.get_mcap_summary())
 
 
 @_add_user
 @_update_command_calls
 async def _send_cummies(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(crypto_data.get_coin_summary('cumrocket'))
+    await update.message.reply_text(await crypto_data.get_coin_summary('cumrocket'))
 
 
 @_add_user
@@ -83,7 +83,7 @@ async def coin_price(update: Update, cb: ContextTypes.DEFAULT_TYPE) -> None:
         logger.info("Too many args")
         return
 
-    await update.message.reply_text(crypto_data.get_coin_summary(words_in_text.pop()))
+    await update.message.reply_text(await crypto_data.get_coin_summary(words_in_text.pop()))
 
 
 @_add_user
@@ -97,38 +97,38 @@ async def _send_help(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
 @_update_command_calls
 async def _send_two_year_chart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await context.bot.sendPhoto(chat_id=update.message.chat.id, photo=BytesIO(base64.b64decode(
-        crypto_data.get_2_year_avg_chart())))
+        await crypto_data.get_2_year_avg_chart())))
 
 
 @_add_user
 @_update_command_calls
 async def _send_rainbow_chart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await context.bot.sendPhoto(chat_id=update.message.chat.id, photo=BytesIO(base64.b64decode(
-        crypto_data.get_rainbow_chart())))
+        await crypto_data.get_rainbow_chart())))
 
 
 @_add_user
 @_update_command_calls
 async def _send_trending(update: Update, _) -> None:
-    await update.message.reply_text(crypto_data.get_trending_coins())
+    await update.message.reply_text(await crypto_data.get_trending_coins())
 
 
 @_add_user
 @_update_command_calls
 async def _add_coin_to_bag(update: Update, cb: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(bags.add_coin(extract_current_request_data_from_update(update), cb))
+    await update.message.reply_text(await bags.add_coin(extract_current_request_data_from_update(update), cb))
 
 
 @_add_user
 @_update_command_calls
 async def _remove_coin_from_bag(update: Update, cb: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(bags.remove_from_bag(extract_current_request_data_from_update(update), cb))
+    await update.message.reply_text(await bags.remove_from_bag(extract_current_request_data_from_update(update), cb))
 
 
 @_add_user
 @_update_command_calls
 async def _send_bag_data(update: Update, _) -> None:
-    await update.message.reply_text(bags.get_bag_data(extract_current_request_data_from_update(update)))
+    await update.message.reply_text(await bags.get_bag_data(extract_current_request_data_from_update(update)))
 
 
 @_add_user

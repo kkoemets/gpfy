@@ -13,7 +13,7 @@ class BagService:
         self.user_service = user_service
         self.crypto_data_client = crypto_data_client
 
-    def add_coin(self, current_request_data: JSONDict, cb: ContextTypes.DEFAULT_TYPE) -> str:
+    async def add_coin(self, current_request_data: JSONDict, cb: ContextTypes.DEFAULT_TYPE) -> str:
         words_in_message = cb.args
         if len(words_in_message) != 2:
             return 'Incorrect arguments, correct example: `/bag_add bitcoin 0.001`'
@@ -24,7 +24,7 @@ class BagService:
             return 'Incorrect amount argument, correct example: `/bag_add bitcoin 0.001`'
 
         try:
-            self.crypto_data_client.get_coin_summary(coin_full_name)
+            await self.crypto_data_client.get_coin_summary(coin_full_name)
         except urllib.error.HTTPError:
             return 'Unknown coin ´{0}´ not added to the bag'.format(coin_full_name)
 
@@ -32,16 +32,16 @@ class BagService:
 
         return 'Added ´{0}´ to the bag'.format(coin_full_name)
 
-    def get_bag_data(self, current_request_data: JSONDict) -> str:
+    async def get_bag_data(self, current_request_data: JSONDict) -> str:
         bag = self.user_service.get_bag(current_request_data)
         if len(bag) < 1:
             return 'Your bag is empty, use `/bag_add` command to add coins to your bag'
 
         return str(
-            self.crypto_data_client.get_bag_summary(
+            await self.crypto_data_client.get_bag_summary(
                 {'query': [{'coinFullName': k, 'amount': v} for k, v in bag.items()]}))
 
-    def remove_from_bag(self, current_request_data: JSONDict, cb: ContextTypes.DEFAULT_TYPE) -> str:
+    async def remove_from_bag(self, current_request_data: JSONDict, cb: ContextTypes.DEFAULT_TYPE) -> str:
         words_in_message = cb.args
         if len(words_in_message) != 1:
             return 'Incorrect arguments, correct example: `/bag_remove bitcoin`'
