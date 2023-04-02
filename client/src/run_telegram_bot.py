@@ -5,7 +5,7 @@ from telegram.ext import Application, ApplicationBuilder, AIORateLimiter
 
 from configuration import TELEGRAM_TOKEN
 from configure_commands import configure_commands
-from src.defined_commands import commands
+from defined_commands import commands
 
 
 def main() -> None:
