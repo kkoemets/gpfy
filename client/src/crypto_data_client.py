@@ -36,7 +36,7 @@ class CryptoDataClient:
         return (await self._get_json(RAINBOW_CHART_URL))['base64Img']
 
     async def get_trending_coins(self) -> str:
-        return await (self._get_json(TRENDING_URL))['trendingSummary']
+        return (await self._get_json(TRENDING_URL))['trendingSummary']
 
     @staticmethod
     async def _get_json(url: str) -> dict:

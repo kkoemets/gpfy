@@ -1,4 +1,3 @@
-import * as LRU from 'lru-cache';
 import LRUCache from 'lru-cache';
 import { Injectable } from '@nestjs/common';
 
@@ -6,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 export class LruCacheService {
     private maxSize = 50;
 
-    private cache: LRUCache<string, unknown> = new LRU({ max: this.maxSize });
+    private cache: LRUCache<string, unknown> = new LRUCache({ max: this.maxSize });
 
     get(key: string): unknown {
         return this.cache.get(key);
@@ -20,7 +19,7 @@ export class LruCacheService {
         return this.cache.size;
     }
 
-    getAllEntries(): [string, unknown][] {
+    getAllEntries(): unknown[][] {
         if (this.cache.size === 0) {
             return [];
         }

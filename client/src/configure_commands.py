@@ -1,9 +1,9 @@
 import logging
 
-from telegram import Update
+from telegram import Update, BotCommand
 from telegram.ext import MessageHandler, filters, Application, ContextTypes
 
-from defined_commands import coin_price, add as add_defined_commands
+from defined_commands import coin_price, add as add_defined_commands, commands
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -12,11 +12,12 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def configure_commands(application: Application) -> None:
+async def configure_commands(application: Application) -> None:
     add_defined_commands(application)
     echo_unknown_message(application)
     try_to_handle_nonstandard_command(application)
     application.add_error_handler(error_handler)
+    await application.bot.set_my_commands(list(map(lambda e: BotCommand('/' + e[0], e[2]), commands)))
 
 
 def echo_unknown_message(dispatcher):

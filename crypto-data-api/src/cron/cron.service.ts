@@ -12,7 +12,7 @@ export class CronService {
     @Cron('*/3 * * * *')
     async updateLeastRecentlyFetchedCoins() {
         this.logger.debug('Updating least recently fetched coins');
-        const leastRecentlyFetchedCoins: [string, unknown][] = this.lruCache.getAllEntries();
+        const leastRecentlyFetchedCoins: unknown[][] = this.lruCache.getAllEntries();
         if (leastRecentlyFetchedCoins.length === 0) {
             this.logger.debug('No coins to fetch');
             return;
