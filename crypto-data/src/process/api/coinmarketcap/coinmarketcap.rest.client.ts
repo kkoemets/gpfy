@@ -9,11 +9,12 @@ const log = createLogger();
 export class CoinmarketcapRestClient extends RestClient implements CoinmarketcapApi {
     async findMarketCapSummary(): Promise<MarketCapSummary> {
         const document: Document = this.toDocument(await getHtml('https://coinmarketcap.com/'));
-        const globalStatisticsElements = Array.from(document.getElementsByClassName('cmc-global-stats__inner-content'))
+        const globalStatisticsElements = Array.from(document.querySelectorAll('div[class*="cmc-global-stats__inner"]'))
             ?.find((el) => el)
-            ?.getElementsByTagName('span');
+            ?.querySelectorAll('div[class*="glo-stat-item"]');
 
-        if (!globalStatisticsElements || globalStatisticsElements.length < 8) {
+        const dominanceIndex = 4;
+        if (!globalStatisticsElements || globalStatisticsElements.length < dominanceIndex) {
             return Promise.reject(Error('Could not find mcap global stats'));
         }
 
@@ -28,7 +29,6 @@ export class CoinmarketcapRestClient extends RestClient implements Coinmarketcap
         const volume24H = findDataFromAnchorElement(volume24HIndex);
         log.info(`Found volume 24h-${volume24H}`);
 
-        const dominanceIndex = 4;
         const dominanceData: string[] = findDataFromAnchorElement(dominanceIndex).split(/\s+/);
 
         const btcPercentageIndex = 1;
