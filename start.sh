@@ -81,6 +81,8 @@ if ! grep -q TELEGRAM_BOT_TOKEN .env; then
   read -r token
   # Save to .env file
   echo TELEGRAM_BOT_TOKEN="$token" >>.env
+  echo DB_USER=root >>.env
+  echo DB_PASSWORD=root >>.env
 else
   echo "Bot token is already configured, do you want update it? (y/n)"
   read -r update_token

@@ -13,9 +13,8 @@ services:
     volumes:
       - ./client/data/db:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-      MONGO_INITDB_DATABASE: test
+      MONGO_INITDB_ROOT_USERNAME: $DB_USER
+      MONGO_INITDB_ROOT_PASSWORD: $DB_PASSWORD
   crypto-data-api:
     networks:
       - docker-network
@@ -56,7 +55,7 @@ services:
       - CRYPTO_DATA_API_SERVER_PORT=3001
       - DB_HOST=bot-database
       - DB_PORT=27017
-      - DB_USER=root
-      - DB_PASSWORD=root
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
     depends_on:
       - crypto-data-api
