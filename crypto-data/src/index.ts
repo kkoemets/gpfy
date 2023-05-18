@@ -14,7 +14,7 @@ import {
 import { InversifyContainer } from './injection/inversify.container';
 import { Container } from 'inversify';
 import { INVERSIFY_TYPES } from './injection/inversify.types';
-import { MarketCapSummary, TrendingCoinData } from './process/api/coinmarketcap/coinmarketcap.api';
+import { CoinSummary, MarketCapSummary, TrendingCoinData } from './process/api/coinmarketcap/coinmarketcap.api';
 
 export const container: Container = InversifyContainer;
 export const containerTypes: {
@@ -34,5 +34,4 @@ export const findCoinSummaryFromCmc: ({
     coinOfficialName,
 }: {
     coinOfficialName: string;
-}) => Promise<{ valueText: string; value: string }[]> = async ({ coinOfficialName }) =>
-    _findCoinSummaryFromCmc({ coinOfficialName });
+}) => Promise<CoinSummary> = async ({ coinOfficialName }) => _findCoinSummaryFromCmc({ coinOfficialName });

@@ -1,32 +1,15 @@
 import { expect } from 'chai';
 import { InversifyContainer } from '../../../../src/injection/inversify.container';
-import { CoinmarketcapApi, TrendingCoinData } from '../../../../src/process/api/coinmarketcap/coinmarketcap.api';
+import {
+    CoinmarketcapApi,
+    CoinSummary,
+    TrendingCoinData,
+} from '../../../../src/process/api/coinmarketcap/coinmarketcap.api';
 import { INVERSIFY_TYPES } from '../../../../src/injection/inversify.types';
 
 const api: CoinmarketcapApi = InversifyContainer.get<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi);
 
 describe('coinmarketcapClient', function () {
-    it('Fetch ethereum', async function () {
-        const contract = await api.findContract({
-            coinOfficialName: 'ethereum',
-        });
-        expect(contract).to.be.equal('0x2170ed0880ac9a755fd29b2688956bd959f933f8');
-    });
-
-    it('Fetch bnb', async function () {
-        const contract = await api.findContract({
-            coinOfficialName: 'bnb',
-        });
-        expect(contract).to.be.equal('0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c');
-    });
-
-    it('Fetch invalid contract', async function () {
-        const contract = await api.findContract({
-            coinOfficialName: 'dsfdsgsd33',
-        });
-        expect(contract).to.be.null;
-    });
-
     it('Fetch market cap summary', async function () {
         const { mcap, volume24H, btcDominance, ethDominance } = await api.findMarketCapSummary();
         expect(mcap).match(new RegExp(/^[zA-Z0-9$,.\\?]*$/)).to.be.not.null;
@@ -35,14 +18,20 @@ describe('coinmarketcapClient', function () {
         expect(ethDominance).not.to.be.null;
     });
 
-    it('Fetch coin summary from cmc', async function () {
-        expect(
-            (
-                await api.findCoinSummaryFromCmc({
-                    coinOfficialName: 'bitcoin',
-                })
-            ).length,
-        ).to.equal(7);
+    it('Fetch coin summary from cmc - bitcoin', async function () {
+        const summary: CoinSummary = await api.findCoinSummaryFromCmc({
+            coinOfficialName: 'bitcoin',
+        });
+        expect(Object.entries(summary).length).to.equal(8);
+        expect(summary.coinName).to.equal('Bitcoin');
+    });
+
+    it('Fetch coin summary from cmc - fetch.ai', async function () {
+        const summary: CoinSummary = await api.findCoinSummaryFromCmc({
+            coinOfficialName: 'fetch',
+        });
+        expect(Object.entries(summary).length).to.equal(8);
+        expect(summary.coinName).to.equal('Fetch.ai');
     });
 
     it('Fetch invalid coin summary from cmc', async function () {

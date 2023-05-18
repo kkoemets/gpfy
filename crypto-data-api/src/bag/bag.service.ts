@@ -2,6 +2,7 @@ import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { createBagSummaryTemplate } from '../common/summary';
 import { findCoinSummaryFromCmc } from 'crypto-data';
 import { LruCacheService } from '../lru-cache-service/lru.cache.service';
+import { CoinSummary } from 'crypto-data/lib/src/process/api/coinmarketcap/coinmarketcap.api';
 
 export type CoinPrice = {
     coinFullName: string;
@@ -34,7 +35,7 @@ export class BagService {
         const cacheKey = `${coinOfficialName}`;
 
         const findSummary = async () => {
-            const coinSummary: { valueText: string; value: string }[] = await findCoinSummaryFromCmc({
+            const coinSummary: CoinSummary = await findCoinSummaryFromCmc({
                 coinOfficialName,
             });
 
@@ -42,10 +43,7 @@ export class BagService {
             return coinSummary;
         };
 
-        const fullUnitPrice: string =
-            ((await this.cacheManager.get(cacheKey)) ?? (await findSummary()))
-                .find(({ valueText }) => valueText)
-                ?.value.replace(new RegExp(/[$,]/g), '') || '';
+        const fullUnitPrice: string = ((await this.cacheManager.get(cacheKey)) ?? (await findSummary())).price;
 
         this.lruCache.set(coinOfficialName, coinOfficialName);
 

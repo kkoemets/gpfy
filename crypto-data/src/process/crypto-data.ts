@@ -1,7 +1,12 @@
 import fetch from 'node-fetch';
 import { createLogger } from '../util/log';
 import { InversifyContainer } from '../injection/inversify.container';
-import { CoinmarketcapApi, MarketCapSummary, TrendingCoinData } from './api/coinmarketcap/coinmarketcap.api';
+import {
+    CoinmarketcapApi,
+    CoinSummary,
+    MarketCapSummary,
+    TrendingCoinData,
+} from './api/coinmarketcap/coinmarketcap.api';
 import { INVERSIFY_TYPES } from '../injection/inversify.types';
 
 const log = createLogger();
@@ -32,11 +37,11 @@ export const findMarketCapSummary: () => Promise<MarketCapSummary> = async () =>
     return InversifyContainer.get<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi).findMarketCapSummary();
 };
 
-export const findCoinSummaryFromCmc: ({
+export const findCoinSummaryFromCmc: ({ coinOfficialName }: { coinOfficialName: string }) => Promise<CoinSummary> = ({
     coinOfficialName,
 }: {
     coinOfficialName: string;
-}) => Promise<{ valueText: string; value: string }[]> = ({ coinOfficialName }: { coinOfficialName: string }) => {
+}) => {
     return InversifyContainer.get<CoinmarketcapApi>(INVERSIFY_TYPES.CoinmarketcapApi).findCoinSummaryFromCmc({
         coinOfficialName,
     });

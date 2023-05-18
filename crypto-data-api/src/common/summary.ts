@@ -1,18 +1,38 @@
 import { CoinsPrices } from '../data/data.service';
+import { CoinSummary } from 'crypto-data/lib/src/process/api/coinmarketcap/coinmarketcap.api';
+import { formatNumber, roundToFourSignificantNumbers } from '../util/rounding.util';
 
-export const createSummaryTemplateFromCmcSummary = (summary: { valueText: string; value: string }[]): string => {
-    const emojis = ['💵', '↔', '🧐', '💸', '💳', '🐂', '✊'];
+export const createSummaryTemplateFromCmcSummary = ({
+    _24High = '',
+    _24TradingVolume,
+    _24hChange,
+    coinName,
+    marketCapDominance,
+    price,
+    rank,
+    volumeMarketCapRatio,
+}: CoinSummary): string => {
+    const roundAndFormat = (number: string): string => {
+        if (number === 'undefined') {
+            return 'N/A';
+        }
+        return formatNumber(roundToFourSignificantNumbers(number));
+    };
 
-    // count helps to circle through the emojis
-    const uniqueEmojiCount: number = emojis.length;
-    return summary
-        .map(({ valueText, value }, index) => {
-            // We circle through the array because we can not be sure about the size of summary
-            const circularIndex: number = ((index % uniqueEmojiCount) + uniqueEmojiCount) % uniqueEmojiCount;
-            return `${emojis[circularIndex] + valueText}: 
-         ${value}\n`;
-        })
-        .join('');
+    return `💵${coinName} Price: 
+         $${roundAndFormat(price)}
+↔️Price Change24h: 
+         ${roundAndFormat(_24hChange)}%
+🧐24h Low / 24h High: 
+         $${`${roundAndFormat(_24High)}/${roundAndFormat(_24High)}`}
+💸Trading Volume24h: 
+         $${roundAndFormat(_24TradingVolume) || 'N/A'}
+💳Volume / Market Cap: 
+         ${roundAndFormat(volumeMarketCapRatio) || 'N/A'}
+🐂Market Dominance: 
+         ${roundAndFormat(marketCapDominance)}%
+✊Market Rank: 
+         #${rank}`;
 };
 
 export const createMarketCapSummaryTemplate = ({

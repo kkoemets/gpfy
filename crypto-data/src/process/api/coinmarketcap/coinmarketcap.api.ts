@@ -16,16 +16,21 @@ export interface MarketCapSummary {
     ethDominance: string;
 }
 
+export interface CoinSummary {
+    coinName: string;
+    price: string;
+    _24hChange: string;
+    _24High: string;
+    _24TradingVolume: string;
+    volumeMarketCapRatio: string;
+    marketCapDominance: string;
+    rank: string;
+}
+
 export interface CoinmarketcapApi {
     findMarketCapSummary: () => Promise<MarketCapSummary>;
 
-    findContract: ({ coinOfficialName }: { coinOfficialName: string }) => Promise<string | null>;
-
-    findCoinSummaryFromCmc: ({
-        coinOfficialName,
-    }: {
-        coinOfficialName: string;
-    }) => Promise<{ valueText: string; value: string }[]>;
+    findCoinSummaryFromCmc: ({ coinOfficialName }: { coinOfficialName: string }) => Promise<CoinSummary>;
 
     findTrendingCoins: () => Promise<TrendingCoinData[]>;
 }

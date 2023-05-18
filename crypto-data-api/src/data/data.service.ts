@@ -10,6 +10,7 @@ import {
     createSummaryTemplateFromCmcSummary,
     createTrendingCoinsSummary,
 } from '../common/summary';
+import { CoinSummary } from 'crypto-data/lib/src/process/api/coinmarketcap/coinmarketcap.api';
 
 export type CoinPrice = {
     coinFullName: string;
@@ -63,13 +64,13 @@ export class DataService {
         };
     };
 
-    private async findCoinSummaryFromCmc(coinOfficialName: string): Promise<{ valueText: string; value: string }[]> {
+    private async findCoinSummaryFromCmc(coinOfficialName: string): Promise<CoinSummary> {
         const cachedValue = await this.cacheManager.get(coinOfficialName);
         if (cachedValue) {
             return cachedValue;
         }
 
-        const foundSummary: { valueText: string; value: string }[] = await _findCoinSummaryFromCmc({
+        const foundSummary: CoinSummary = await _findCoinSummaryFromCmc({
             coinOfficialName,
         });
         this.cacheManager.set(coinOfficialName, foundSummary, 5 * 60);

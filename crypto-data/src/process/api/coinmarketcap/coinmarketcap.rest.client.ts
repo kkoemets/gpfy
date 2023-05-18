@@ -1,4 +1,4 @@
-import { CoinmarketcapApi, MarketCapSummary, TrendingCoinData } from './coinmarketcap.api';
+import { CoinmarketcapApi, CoinSummary, MarketCapSummary, TrendingCoinData } from './coinmarketcap.api';
 import { createLogger } from '../../../util/log';
 import fetch from 'node-fetch';
 import { RestClient } from '../rest.client';
@@ -42,53 +42,36 @@ export class CoinmarketcapRestClient extends RestClient implements Coinmarketcap
         return { mcap, volume24H, btcDominance, ethDominance };
     }
 
-    async findContract({ coinOfficialName }: { coinOfficialName: string }): Promise<string | null> {
-        const achorElements: HTMLAnchorElement[] = Array.from(
-            this.toDocument(await getCoinHtml(coinOfficialName)).getElementsByTagName('a'),
-        );
-
-        const findFromAnchorsTokenAddress = (hrefIncluesAnd: string) =>
-            achorElements.find((el) => el.href.includes(hrefIncluesAnd))?.href.replace(hrefIncluesAnd, '');
-
-        return (
-            findFromAnchorsTokenAddress('https://bscscan.com/token/') ||
-            findFromAnchorsTokenAddress('https://etherscan.io/token/') ||
-            null
-        );
-    }
-
-    async findCoinSummaryFromCmc({
-        coinOfficialName,
-    }: {
-        coinOfficialName: string;
-    }): Promise<{ valueText: string; value: string }[]> {
+    async findCoinSummaryFromCmc({ coinOfficialName }: { coinOfficialName: string }): Promise<CoinSummary> {
         log.info('Retrieving coin summary from coinmarketcap');
         const html: string = await getCoinHtml(coinOfficialName);
         const document: Document = this.toDocument(html);
-        const htmlTableElements: HTMLTableElement[] = Array.from(document.getElementsByTagName('table'));
 
-        log.debug('Tables found-' + htmlTableElements.length);
-        if (!htmlTableElements.length) {
-            return Promise.reject(Error('Could not find summary (missing data table)'));
+        const data: string | null | undefined = document.getElementById('__NEXT_DATA__')?.textContent;
+        if (!data) {
+            return Promise.reject(Error('Could not find summary (missing data)'));
         }
 
-        const retrievedData: Promise<{ valueText: string; value: string }[]> = htmlTableElements
-            .map((table: HTMLTableElement) => slice(table.rows))
-            .find((rows: HTMLTableRowElement[]) => {
-                return rows.find((row: HTMLTableRowElement) => row.innerHTML?.includes('Price'));
-            })
-            ?.map((elements: HTMLTableElement) => {
-                const getHtmlTableCellElements = (tagName: string) =>
-                    elements.getElementsByTagName(tagName).item(0)?.lastChild?.textContent || '';
+        const { high24h, marketCapDominance, price, priceChangePercentage24h, rank, turnover } =
+            JSON.parse(data)?.props?.pageProps?.info?.statistics ||
+            JSON.parse(data)?.props?.pageProps?.detailRes?.detail?.statistics ||
+            {};
 
-                return {
-                    valueText: getHtmlTableCellElements('th'),
-                    value: getHtmlTableCellElements('td'),
-                };
-            });
-        log.info(`Retrieved data${JSON.stringify(retrievedData)}`);
-
-        return retrievedData;
+        return {
+            coinName: `${
+                JSON.parse(data)?.props?.pageProps?.info?.name ||
+                JSON.parse(data)?.props?.pageProps?.detailRes?.detail?.name
+            }`,
+            price: `${price}`,
+            _24hChange: `${priceChangePercentage24h}`,
+            _24High: `${high24h}`,
+            _24TradingVolume:
+                `${JSON.parse(data)?.props?.pageProps?.info?.volume}` ||
+                `${JSON.parse(data)?.props?.pageProps?.detailRes?.detail?.volume}`,
+            volumeMarketCapRatio: `${turnover}`,
+            marketCapDominance: `${marketCapDominance}`,
+            rank: `${rank}`,
+        };
     }
 
     async findTrendingCoins(): Promise<TrendingCoinData[]> {
@@ -112,6 +95,3 @@ const getHtml = async (url: string, coinOfficialName?: string) => {
 
 const getCoinHtml = async (coinOfficialName: string): Promise<string> =>
     await getHtml('https://coinmarketcap.com/currencies', coinOfficialName);
-
-const slice = (elements: NodeListOf<HTMLElement> | HTMLCollectionOf<HTMLElement>) =>
-    Array.prototype.slice.call(elements);
