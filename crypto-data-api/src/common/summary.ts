@@ -19,14 +19,22 @@ export const createSummaryTemplateFromCmcSummary = ({
         return formatNumber(roundToFourSignificantNumbers(number));
     };
 
+    const formatMoney = (number: string): string => {
+        if (number === 'undefined') {
+            return 'N/A';
+        }
+
+        return `$${formatNumber(roundToFourSignificantNumbers(number))}`;
+    };
+
     return `💵${coinName} Price: 
-         $${roundAndFormat(price)}
+         ${formatMoney(price)}
 ↔️Price Change24h: 
          ${roundAndFormat(_24hChange)}%
 🧐24h Low / 24h High: 
-         $${`${roundAndFormat(_24High)}/${roundAndFormat(_24High)}`}
+         ${formatMoney(_24High)}/${formatMoney(_24High)}
 💸Trading Volume24h: 
-         $${roundAndFormat(_24TradingVolume) || 'N/A'}
+         ${formatMoney(_24TradingVolume) || 'N/A'}
 💳Volume / Market Cap: 
          ${roundAndFormat(volumeMarketCapRatio) || 'N/A'}
 🐂Market Dominance: 
