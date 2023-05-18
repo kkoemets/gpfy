@@ -52,7 +52,7 @@ export class CoinmarketcapRestClient extends RestClient implements Coinmarketcap
             return Promise.reject(Error('Could not find summary (missing data)'));
         }
 
-        const { high24h, marketCapDominance, price, priceChangePercentage24h, rank, turnover } =
+        const { low24h, high24h, marketCapDominance, price, priceChangePercentage24h, rank, turnover } =
             JSON.parse(data)?.props?.pageProps?.info?.statistics ||
             JSON.parse(data)?.props?.pageProps?.detailRes?.detail?.statistics ||
             {};
@@ -64,6 +64,7 @@ export class CoinmarketcapRestClient extends RestClient implements Coinmarketcap
             }`,
             price: `${price}`,
             _24hChange: `${priceChangePercentage24h}`,
+            _24Low: `${low24h}`,
             _24High: `${high24h}`,
             _24TradingVolume:
                 `${JSON.parse(data)?.props?.pageProps?.info?.volume}` ||

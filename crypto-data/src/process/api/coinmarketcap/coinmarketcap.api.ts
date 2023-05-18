@@ -20,6 +20,7 @@ export interface CoinSummary {
     coinName: string;
     price: string;
     _24hChange: string;
+    _24Low: string;
     _24High: string;
     _24TradingVolume: string;
     volumeMarketCapRatio: string;

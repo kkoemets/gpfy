@@ -3,7 +3,8 @@ import { CoinSummary } from 'crypto-data/lib/src/process/api/coinmarketcap/coinm
 import { formatNumber, roundToFourSignificantNumbers } from '../util/rounding.util';
 
 export const createSummaryTemplateFromCmcSummary = ({
-    _24High = '',
+    _24Low,
+    _24High,
     _24TradingVolume,
     _24hChange,
     coinName,
@@ -32,11 +33,11 @@ export const createSummaryTemplateFromCmcSummary = ({
 ↔️Price Change24h: 
          ${roundAndFormat(_24hChange)}%
 🧐24h Low / 24h High: 
-         ${formatMoney(_24High)}/${formatMoney(_24High)}
+         ${formatMoney(_24Low)}/${formatMoney(_24High)}
 💸Trading Volume24h: 
-         ${formatMoney(_24TradingVolume) || 'N/A'}
+         ${formatMoney(_24TradingVolume)}
 💳Volume / Market Cap: 
-         ${roundAndFormat(volumeMarketCapRatio) || 'N/A'}
+         ${roundAndFormat(volumeMarketCapRatio)}
 🐂Market Dominance: 
          ${roundAndFormat(marketCapDominance)}%
 ✊Market Rank: 
