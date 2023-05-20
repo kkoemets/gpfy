@@ -35,7 +35,7 @@ services:
       - ./crypto-data-api/package.json:/crypto-data-api/package.json
       - ./crypto-data-api/src:/crypto-data-api/src
     command: >
-      sh -c "cd crypto-data && npm install && npm run build && npm pack && cp crypto-data-1.1.1.tgz ../crypto-data-api/crypto-data-1.1.1.tgz && cd .. && cd /crypto-data-api && npm install && npm run build && node dist/main.js"
+      sh -c "cd crypto-data && npm install && npm run build && npm pack && cp crypto-data-1.1.2.tgz ../crypto-data-api/crypto-data-1.1.2.tgz && cd .. && cd /crypto-data-api && npm install && npm run build && node dist/main.js"
   telegram-client:
     networks:
       - docker-network

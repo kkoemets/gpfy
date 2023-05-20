@@ -51,6 +51,31 @@ describe('coinmarketcapClient', function () {
         expect(volumeMarketCapRatio).to.not.equal('undefined');
     });
 
+    it('Fetch coin summary from cmc - cumrocket', async function () {
+        const {
+            _24High,
+            _24Low,
+            _24TradingVolume,
+            _24hChange,
+            coinName,
+            marketCapDominance,
+            price,
+            rank,
+            volumeMarketCapRatio,
+        }: CoinSummary = await api.findCoinSummaryFromCmc({
+            coinOfficialName: 'cumrocket',
+        });
+        expect(_24High).to.not.not.equal('undefined');
+        expect(_24Low).to.not.equal('undefined');
+        expect(_24TradingVolume).to.not.equal('undefined');
+        expect(_24hChange).to.not.equal('undefined');
+        expect(coinName).to.not.equal('undefined');
+        expect(marketCapDominance).to.not.equal('undefined');
+        expect(price).to.not.equal('undefined');
+        expect(rank).to.not.equal('undefined');
+        expect(volumeMarketCapRatio).to.not.equal('undefined');
+    });
+
     it('Fetch coin summary from cmc - pi', async function () {
         const summary: CoinSummary = await api.findCoinSummaryFromCmc({
             coinOfficialName: 'pinetwork',

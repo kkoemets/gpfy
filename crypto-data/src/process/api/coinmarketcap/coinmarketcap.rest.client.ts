@@ -66,9 +66,10 @@ export class CoinmarketcapRestClient extends RestClient implements Coinmarketcap
             _24hChange: `${priceChangePercentage24h}`,
             _24Low: `${low24h}`,
             _24High: `${high24h}`,
-            _24TradingVolume:
-                `${JSON.parse(data)?.props?.pageProps?.info?.volume}` ||
-                `${JSON.parse(data)?.props?.pageProps?.detailRes?.detail?.volume}`,
+            _24TradingVolume: `${
+                JSON.parse(data)?.props?.pageProps?.info?.volume ||
+                JSON.parse(data)?.props?.pageProps?.detailRes?.detail?.volume
+            }`,
             volumeMarketCapRatio: `${turnover}`,
             marketCapDominance: `${marketCapDominance}`,
             rank: `${rank}`,
