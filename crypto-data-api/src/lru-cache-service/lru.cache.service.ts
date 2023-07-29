@@ -1,5 +1,5 @@
-import LRUCache from 'lru-cache';
 import { Injectable } from '@nestjs/common';
+import { LRUCache } from 'lru-cache';
 
 @Injectable()
 export class LruCacheService {

@@ -1,4 +1,5 @@
-import { CACHE_MANAGER, Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cron } from '@nestjs/schedule';
 import { LruCacheService } from '../lru-cache-service/lru.cache.service';
 import { findCoinSummaryFromCmc } from 'crypto-data';
@@ -7,7 +8,10 @@ import { findCoinSummaryFromCmc } from 'crypto-data';
 export class CronService {
     private readonly logger = new Logger(CronService.name);
 
-    constructor(@Inject(CACHE_MANAGER) private cacheManager, private lruCache: LruCacheService) {}
+    constructor(
+        @Inject(CACHE_MANAGER) private cacheManager,
+        private lruCache: LruCacheService,
+    ) {}
 
     @Cron('*/3 * * * *')
     async updateLeastRecentlyFetchedCoins() {

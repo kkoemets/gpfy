@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataController } from './data.controller';
 import { DataService } from './data.service';
-import { CACHE_MANAGER } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 describe('DataController', () => {
     let controller: DataController;

@@ -1,4 +1,5 @@
-import { CacheModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { CacheModule } from '@nestjs/cache-manager';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronService } from './cron.service';
 import { LruCacheModule } from '../lru-cache-service/lru.cache.module';
