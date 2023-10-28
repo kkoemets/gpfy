@@ -1,19 +1,22 @@
 import { RestClient } from './rest.client';
 import * as fs from 'fs';
-import * as puppeteer from 'puppeteer';
+import puppeteerExtra from 'puppeteer-extra';
 import { Browser, ScreenshotClip, Viewport } from 'puppeteer';
 import { createLogger } from '../../util/log';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 
 const logger = createLogger();
 
+puppeteerExtra.use(StealthPlugin());
+
 const getBrowser = async (): Promise<Browser> => {
     try {
-        return await puppeteer.launch({
+        return await puppeteerExtra.launch({
             headless: true,
             args: ['--no-sandbox', "--proxy-server='direct://'", '--proxy-bypass-list=*'],
         });
     } catch (e) {
-        return await puppeteer.launch({
+        return await puppeteerExtra.launch({
             headless: true,
             executablePath: '/usr/bin/chromium-browser',
             args: ['--no-sandbox', '--disable-setuid-sandbox', "--proxy-server='direct://'", '--proxy-bypass-list=*'],
