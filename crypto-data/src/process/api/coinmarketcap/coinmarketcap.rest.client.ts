@@ -8,8 +8,9 @@ const log = createLogger();
 
 export class CoinmarketcapRestClient extends RestClient implements CoinmarketcapApi {
     async findMarketCapSummary(): Promise<MarketCapSummary> {
-        const document: Document = this.toDocument(await getHtml('https://coinmarketcap.com/'));
-        const globalStatisticsElements = Array.from(document.querySelectorAll('div[class*="cmc-global-stats__inner"]'))
+        const globalStatisticsElements = Array.from(
+            this.toDocument(await getHtml('https://coinmarketcap.com/')).querySelectorAll('div[class*="global-stats"]'),
+        )
             ?.find((el) => el)
             ?.querySelectorAll('div[class*="glo-stat-item"]');
 
