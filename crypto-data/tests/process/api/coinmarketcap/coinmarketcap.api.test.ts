@@ -96,7 +96,7 @@ describe('coinmarketcapClient', function () {
     it('Fetch trending coins from cmc', async function () {
         const results: TrendingCoinData[] = await api.findTrendingCoins();
 
-        expect(results.length).to.equal(30);
+        expect(results.length).to.equal(50);
 
         results.forEach(({ position, coinName, price, _24hChange, _7dChange, _30Change, mcap, _24hVol }) => {
             expect(typeof position).to.equal('string');
