@@ -1,9 +1,11 @@
 import re
 import urllib.request
 
+from telegram import Update
 from telegram._utils.types import JSONDict
 from telegram.ext import ContextTypes
 
+from botutil import extract_message_text
 from crypto_data_client import CryptoDataClient
 from user_service import UserService
 
@@ -13,8 +15,9 @@ class BagService:
         self.user_service = user_service
         self.crypto_data_client = crypto_data_client
 
-    async def add_coin(self, current_request_data: JSONDict, cb: ContextTypes.DEFAULT_TYPE) -> str:
-        words_in_message = cb.args
+    async def add_coin(self, current_request_data: JSONDict, cb: ContextTypes.DEFAULT_TYPE, update: Update) -> str:
+        words_in_message = await self.find_words_in_message(cb, update)
+
         if len(words_in_message) != 2:
             return 'Incorrect arguments, correct example: `/bag_add bitcoin 0.001`'
 
@@ -41,8 +44,10 @@ class BagService:
             await self.crypto_data_client.get_bag_summary(
                 {'query': [{'coinFullName': k, 'amount': v} for k, v in bag.items()]}))
 
-    async def remove_from_bag(self, current_request_data: JSONDict, cb: ContextTypes.DEFAULT_TYPE) -> str:
-        words_in_message = cb.args
+    async def remove_from_bag(self, current_request_data: JSONDict, cb: ContextTypes.DEFAULT_TYPE,
+                              update: Update) -> str:
+        words_in_message = await self.find_words_in_message(cb, update)
+
         if len(words_in_message) != 1:
             return 'Incorrect arguments, correct example: `/bag_remove bitcoin`'
 
@@ -50,3 +55,12 @@ class BagService:
         self.user_service.remove_from_bag(current_request_data, coin_full_name)
 
         return 'Deleted ´{0}´ from the bag'.format(coin_full_name)
+
+    @staticmethod
+    async def find_words_in_message(cb: ContextTypes.DEFAULT_TYPE, update) -> list[str]:
+        words_in_message = cb.args
+        if words_in_message is None:
+            words_in_message = extract_message_text(update).split()
+            words_in_message = words_in_message[1:]
+
+        return words_in_message
