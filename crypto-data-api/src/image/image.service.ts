@@ -3,7 +3,7 @@ import {
     findBtc2YearMovingAverage as _findBtc2YearMovingAverage,
     findRainbowChart as _findRainbowChart,
 } from 'crypto-data';
-import { Btc2YearMovingAverage } from 'crypto-data/lib/src/process/crypto-images';
+import { Btc2YearMovingAverage } from 'crypto-data';
 
 @Injectable()
 export class ImageService {

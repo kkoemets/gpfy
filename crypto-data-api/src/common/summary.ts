@@ -1,5 +1,5 @@
 import { CoinsPrices } from '../data/data.service';
-import { CoinSummary } from 'crypto-data/lib/src/process/api/coinmarketcap/coinmarketcap.api';
+import { CoinSummary } from 'crypto-data';
 import { formatNumber, roundToFourSignificantNumbers } from '../util/rounding.util';
 
 export const createSummaryTemplateFromCmcSummary = ({

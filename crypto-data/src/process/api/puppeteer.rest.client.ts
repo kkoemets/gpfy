@@ -7,7 +7,16 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 
 const logger = createLogger();
 
-puppeteerExtra.use(StealthPlugin());
+const stealthPluginFactory =
+    typeof (StealthPlugin as any) === 'function'
+        ? (StealthPlugin as any)
+        : typeof (StealthPlugin as any)?.default === 'function'
+          ? (StealthPlugin as any).default
+          : undefined;
+
+if (stealthPluginFactory) {
+    puppeteerExtra.use(stealthPluginFactory());
+}
 
 const getBrowser = async (): Promise<Browser> => {
     try {

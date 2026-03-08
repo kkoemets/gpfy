@@ -3,7 +3,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { createBagSummaryTemplate } from '../common/summary';
 import { findCoinSummaryFromCmc } from 'crypto-data';
 import { LruCacheService } from '../lru-cache-service/lru.cache.service';
-import { CoinSummary } from 'crypto-data/lib/src/process/api/coinmarketcap/coinmarketcap.api';
+import { CoinSummary } from 'crypto-data';
 
 export type CoinPrice = {
     coinFullName: string;
