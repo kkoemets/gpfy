@@ -1,6 +1,10 @@
 from typing import Optional
 
-from telegram import Update
+try:
+    from telegram import Update
+except ModuleNotFoundError:  # pragma: no cover - local test fallback when telegram deps are absent
+    class Update:  # pragma: no cover
+        pass
 
 
 def extract_message_text(update: Update) -> Optional[str]:
