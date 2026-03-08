@@ -27,9 +27,11 @@ Head to section 3. and follow the instructions.
 #### 2.1. Installation
 
 1. Clone the repository: `git clone gfpy`
-2. Install dependencies: `npm install` in `crypto-data` and `crypto-data-api` directory to. Pack crypto-data module and
-   use it to install dependencies for `crypto-data-api` module. For further questions please refer
-   to `docker-compose.dev.yaml` file.
+2. Install dependencies:
+   - In `crypto-data`: run `npm install && npm run build`
+   - In `crypto-data-api`: run `npm install`
+   `crypto-data-api` now links `crypto-data` via local file dependency (`file:../crypto-data`), so no manual `npm pack` copy step is needed.
+   For further details please refer to `docker-compose.dev.yaml`.
 3. Install Python dependencies: `pip install -r requirements.txt` in `telegram-client` directory. To run the client you
    need to have environment variables set up, see `configuration.py`. For further questions please refer
    to `docker-compose.dev.yaml` file.

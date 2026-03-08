@@ -5,13 +5,13 @@ import {
     findGreedIndex as _findGreedIndex,
     findMarketCapSummary as _findMarketCapSummary,
     findTrendingCoins as _findTrendingCoins,
-} from 'crypto-data/lib/src/index';
+} from 'crypto-data';
 import {
     createMarketCapSummaryTemplate,
     createSummaryTemplateFromCmcSummary,
     createTrendingCoinsSummary,
 } from '../common/summary';
-import { CoinSummary } from 'crypto-data/lib/src/process/api/coinmarketcap/coinmarketcap.api';
+import { CoinSummary } from 'crypto-data';
 
 export type CoinPrice = {
     coinFullName: string;

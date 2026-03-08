@@ -35,3 +35,7 @@ export const findCoinSummaryFromCmc: ({
 }: {
     coinOfficialName: string;
 }) => Promise<CoinSummary> = async ({ coinOfficialName }) => _findCoinSummaryFromCmc({ coinOfficialName });
+
+export type { Btc2YearMovingAverage, RainbowChart } from './process/crypto-images';
+export type { GreedIndex } from './process/crypto-data';
+export type { CoinSummary, MarketCapSummary, TrendingCoinData } from './process/api/coinmarketcap/coinmarketcap.api';

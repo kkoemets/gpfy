@@ -38,7 +38,8 @@
     "typescript": "5.8.3"
   },
   "scripts": {
-    "build": "rm -rf lib & tsc -p tsconfig.release.json --declaration",
+    "build": "rm -rf lib && tsc -p tsconfig.release.json --declaration",
+    "prepare": "npm run build",
     "lint": "eslint --fix .. --ext .ts,.tsx",
     "test": "mocha --timeout 60000 --require ts-node/register --extensions ts src 'tests/**/*.{ts,tsx}'",
     "package": "npm pack"

@@ -78,11 +78,67 @@ export class CoinmarketcapRestClient extends RestClient implements Coinmarketcap
     }
 
     async findTrendingCoins(): Promise<TrendingCoinData[]> {
-        return parseTrendingTable({
+        const fromStaticHtml = parseTrendingTable({
             trendingHtmlPage: await getHtml('https://coinmarketcap.com/trending-cryptocurrencies/'),
         });
+
+        if (fromStaticHtml.length > 0) {
+            return fromStaticHtml;
+        }
+
+        log.info('Trending page is client-rendered; using CoinMarketCap unified trending API');
+        return await findTrendingCoinsFromApi();
     }
 }
+
+const findTrendingCoinsFromApi = async (): Promise<TrendingCoinData[]> => {
+    const response = await fetch('https://api.coinmarketcap.com/data-api/v3/unified-trending/listing', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'User-Agent': 'Mozilla/5.0',
+        },
+        body: JSON.stringify({ interval: '24h', pageNum: 1, pageSize: 50, boostType: 'hideBoost' }),
+    });
+
+    if (!response.ok) {
+        throw new Error(`CoinMarketCap trending API failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    const list: Record<string, string | number | undefined>[] | undefined = data?.data?.list;
+
+    if (!Array.isArray(list) || list.length === 0) {
+        throw new Error('CoinMarketCap trending API returned no list data');
+    }
+
+    return list.map((coin: Record<string, string | number | undefined>, index: number) => {
+        const requiredFields: string[] = ['tokenName', 'priceUsd', 'pricePercentageChange24h', 'volume24h'];
+
+        const missingFields: string[] = requiredFields.filter((field) => coin[field] === undefined || coin[field] === null);
+        if (missingFields.length > 0) {
+            throw new Error(`CoinMarketCap trending API item ${index} missing fields: ${missingFields.join(', ')}`);
+        }
+
+        const position = coin.listingRank ?? index + 1;
+        const marketCap = coin.marketCap ?? coin.selfReportedMarketCap;
+        if (marketCap === undefined || marketCap === null) {
+            throw new Error(`CoinMarketCap trending API item ${index} missing fields: marketCap/selfReportedMarketCap`);
+        }
+
+        return {
+            position: `${position}`,
+            coinName: `${coin.tokenName}`,
+            price: `${coin.priceUsd}`,
+            _24hChange: `${coin.pricePercentageChange24h}`,
+            _7dChange: `${coin.pricePercentageChange7d ?? ''}`,
+            _30Change: `${coin.pricePercentageChange30d ?? ''}`,
+            mcap: `${marketCap}`,
+            _24hVol: `${coin.volume24h}`,
+        };
+    });
+};
 
 const getHtml = async (url: string, coinOfficialName?: string) => {
     const fullUrl = !coinOfficialName ? `${url}` : `${url}/${coinOfficialName?.toLowerCase()}`;
