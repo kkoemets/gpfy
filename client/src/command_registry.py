@@ -18,9 +18,10 @@ except ModuleNotFoundError:  # pragma: no cover - local test fallback when teleg
             raise NotImplementedError
 
     class CommandHandler:  # pragma: no cover
-        def __init__(self, command: str, handler: Any):
+        def __init__(self, command: str, handler: Any, filters=None):
             self.command = command
             self.handler = handler
+            self.filters = filters
 
     class _ContextTypes:  # pragma: no cover
         DEFAULT_TYPE = Any
@@ -55,9 +56,9 @@ class CommandRegistry:
         self.command_specs = list(command_specs)
         self._command_map = {command.name: command for command in self.command_specs}
 
-    def add_handlers(self, application: Application) -> None:
+    def add_handlers(self, application: Application, message_filter=None) -> None:
         for command in self.command_specs:
-            application.add_handler(CommandHandler(command.name, command.handler))
+            application.add_handler(CommandHandler(command.name, command.handler, filters=message_filter))
 
     def telegram_commands(self) -> list[BotCommand]:
         return [
