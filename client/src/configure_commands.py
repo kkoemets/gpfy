@@ -15,9 +15,11 @@ logger = logging.getLogger(__name__)
 
 async def configure_commands(application: Application) -> None:
     registry = get_command_registry()
-    registry.add_handlers(application)
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
-    application.add_handler(MessageHandler(filters.COMMAND, handle_fallback_command))
+    # Metadata edits (including reaction-related updates) must not replay messages or commands.
+    new_messages = filters.UpdateType.MESSAGE | filters.UpdateType.CHANNEL_POST
+    registry.add_handlers(application, message_filter=new_messages)
+    application.add_handler(MessageHandler(filters.UpdateType.MESSAGE & filters.TEXT & ~filters.COMMAND, echo))
+    application.add_handler(MessageHandler(new_messages & filters.COMMAND, handle_fallback_command))
     application.add_error_handler(error_handler)
     await application.bot.set_my_commands(registry.telegram_commands())
 
@@ -31,11 +33,11 @@ async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    if update.channel_post:
+    message = update.message
+    if not message:
         return
 
-    message = update.effective_message
-    if message and message.text:
+    if message.text:
         await send_reply(update, context, message.text)
     else:
         logger.warning('Echo called but no text message found')
