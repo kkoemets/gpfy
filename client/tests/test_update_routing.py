@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import AsyncMock, Mock, patch
 
 from telegram import Update
-from telegram.ext import Application, ContextTypes, ExtBot
+from telegram.ext import Application, ExtBot
 from telegram.request import BaseRequest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
@@ -22,7 +22,7 @@ with patch.dict(os.environ, {
     'DB_PASSWORD': 'test',
 }), patch('pymongo.MongoClient'):
     import command_handlers
-    from configure_commands import configure_commands, echo
+    from configure_commands import configure_commands
 
 
 class TelegramRequest(BaseRequest):
@@ -143,21 +143,12 @@ class UpdateRoutingTest(unittest.IsolatedAsyncioTestCase):
             await self.application.process_update(update)
         self.assert_silent()
 
-    async def test_echo_itself_ignores_edits_and_channel_posts(self):
-        for kind, chat_type in [
-            ('edited_message', 'supergroup'),
-            ('channel_post', 'channel'),
-            ('edited_channel_post', 'channel'),
-        ]:
-            update = self.message_update(kind, 'BTC signal update', chat_type)
-            context = ContextTypes.DEFAULT_TYPE.from_update(update, self.application)
-            await echo(update, context)
-        self.assert_silent()
-
-    async def test_new_chat_text_still_echoes_once(self):
-        await self.application.process_update(self.message_update('message', 'hello'))
-        self.assertEqual(['hello'], [message['text'] for message in self.request.sent_messages])
-        self.errors.assert_not_awaited()
+    async def test_new_chat_text_is_ignored(self):
+        for chat_type in ['private', 'group', 'supergroup']:
+            with self.subTest(chat_type=chat_type):
+                self.reset_effects()
+                await self.application.process_update(self.message_update('message', 'hello', chat_type))
+                self.assert_silent()
 
     async def test_new_standard_command_still_runs_once(self):
         await self.application.process_update(self.message_update('message', '/price bitcoin'))

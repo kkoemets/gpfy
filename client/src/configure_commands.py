@@ -18,7 +18,6 @@ async def configure_commands(application: Application) -> None:
     # Metadata edits (including reaction-related updates) must not replay messages or commands.
     new_messages = filters.UpdateType.MESSAGE | filters.UpdateType.CHANNEL_POST
     registry.add_handlers(application, message_filter=new_messages)
-    application.add_handler(MessageHandler(filters.UpdateType.MESSAGE & filters.TEXT & ~filters.COMMAND, echo))
     application.add_handler(MessageHandler(new_messages & filters.COMMAND, handle_fallback_command))
     application.add_error_handler(error_handler)
     await application.bot.set_my_commands(registry.telegram_commands())
@@ -30,17 +29,6 @@ async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         await send_reply(update, context, 'Sorry, something went wrong with me.')
     except Exception as exc:
         logger.error(f'Failed to send error message: {exc}')
-
-
-async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    message = update.message
-    if not message:
-        return
-
-    if message.text:
-        await send_reply(update, context, message.text)
-    else:
-        logger.warning('Echo called but no text message found')
 
 
 async def handle_fallback_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
